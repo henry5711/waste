@@ -1,0 +1,21 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: zippyttech
+ */
+
+namespace App\Repositories\{{package}};
+
+use App\Core\CrudRepository;
+use App\Models\{{modelName}};
+
+/** @property {{modelName}} $model */
+class {{modelName}}Repository extends CrudRepository
+{
+
+    public function __construct({{modelName}} $model)
+    {
+        parent::__construct($model);
+    }
+
+}

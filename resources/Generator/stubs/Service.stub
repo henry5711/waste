@@ -1,0 +1,25 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: zippyttech
+ */
+
+namespace App\Services\{{package}};
+
+
+use App\Core\CrudService;
+use App\Repositories\{{package}}\{{modelName}}Repository;
+
+/** @property {{modelName}}Repository $repository */
+class {{modelName}}Service extends CrudService
+{
+
+    protected $name = "{{modelNameSingularLowerCase}}";
+    protected $namePlural = "{{modelNamePluralLowerCase}}";
+
+    public function __construct({{modelName}}Repository $repository)
+    {
+        parent::__construct($repository);
+    }
+
+}
