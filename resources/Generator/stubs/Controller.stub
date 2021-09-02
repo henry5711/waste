@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers\{{package}};
+
+use Illuminate\Http\Request;
+use App\Core\CrudController;
+use App\Services\{{package}}\{{modelName}}Service;
+/** @property {{modelName}}Service $service */
+class {{modelName}}Controller extends CrudController
+{
+    public function __construct({{modelName}}Service $service)
+    {
+        parent::__construct($service);
+    }
+}
