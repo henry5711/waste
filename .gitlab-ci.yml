@@ -1,0 +1,337 @@
+stages:
+  - backup
+  - build
+  - deploy
+  - rollback
+
+dev_backup_job:
+  stage: backup
+  script:
+    - docker image tag devrubick2waste-api:latest devrubick2waste-api:prev || true
+  tags:
+    - devapp
+  only :
+    - develop
+
+dev_build_job:
+  stage: build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=devwaste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=devwaste;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$DEV_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=192.168.0.10;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5433;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devwaste.zippyttech.com;g" .env
+    - docker build -t devrubick2waste-api .
+  when: on_success
+  tags:
+    - devapp
+  only :
+    - develop
+
+dev_deploy_job:
+  stage: deploy
+  script:
+    - docker stop devrubick2waste-api || true
+    - docker rm devrubick2waste-api || true
+    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 10091:80 devrubick2waste-api
+    - docker exec devrubick2waste-api php artisan migrate
+  when: on_success
+  tags:
+    - devapp
+  only:
+    - develop
+
+dev_rollback_job:
+  stage: rollback
+  script:
+    - docker stop devrubick2waste-api || true
+    - docker rm devrubick2waste-api || true
+    - docker image tag devrubick2waste-api:prev devrubick2waste-api:latest || true
+    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 10091:80 devrubick2waste-api
+  when: manual
+  tags:
+    - devapp
+  only:
+    - develop
+
+qa_backup_job:
+  stage: backup
+  script:
+    - docker image tag qarubick2waste-api:latest qarubick2waste-api:prev || true
+  tags:
+    - qaapp
+  only :
+    - qa
+    
+qa_build_job:
+  stage: build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=qarubick2waste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=qarubick2waste;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$QA_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.25;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=qarubick2waste.zippyttech.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://qarubick2account.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://qarubick2client.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://qarubick2notifications.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://qarubick2wallet.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://qarubick2user.zippyttech.com" >> .env 
+    - docker build -t qarubick2waste-api .
+  when: on_success
+  tags:
+    - qaapp
+  only :
+    - qa
+
+qa_deploy_job:
+  stage: deploy
+  script:
+    - docker stop qarubick2waste-api || true
+    - docker rm qarubick2waste-api || true
+    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 8109:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
+    - docker exec qarubick2waste-api php artisan migrate
+  when: on_success
+  tags:
+    - qaapp
+  only:
+    - qa
+
+qa_rollback_job:
+  stage: rollback
+  script:
+    - docker stop qarubick2waste-api || true
+    - docker rm qarubick2waste-api || true
+    - docker image tag qarubick2waste-api:prev qarubick2waste-api:latest || true
+    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 8103:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
+  when: manual
+  tags:
+    - qaapp
+  only:
+    - qa
+
+prod_backup_job:
+  stage: backup
+  script:
+    - docker image tag rubick2waste-api:latest rubick2waste-api:prev || true
+  tags:
+    - prodapp
+  only :
+    - tags
+
+prod_build_job:
+  stage: build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=rubick2waste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=rubick2waste;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$PROD_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.31;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=reservas.berygo.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://rubick2account.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://rubick2client.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://rubick2notifications.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://rubick2wallet.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://rubick2user.zippyttech.com" >> .env 
+    - docker build -t rubick2waste-api .
+  when: on_success
+  tags:
+    - prodapp
+  only :
+    - tags
+
+prod_deploy_job:
+  stage: deploy
+  script:
+    - docker stop rubick2waste-api || true
+    - docker rm rubick2waste-api || true
+    - docker run -d --restart always --name rubick2waste-api --network app -p 9022:80 rubick2waste-api
+    - docker exec rubick2waste-api php artisan migrate
+  when: on_success
+  tags:
+    - prodapp
+  only:
+    - tags
+
+prod_rollback_job:
+  stage: rollback
+  script:
+    - docker stop rubick2waste-api || true
+    - docker rm rubick2waste-api || true
+    - docker image tag rubick2waste-api:prev rubick2waste-api:latest || true
+    - docker run -d --restart always --name rubick2waste-api --network app -p 9022:80 rubick2waste-api
+  when: manual
+  tags:
+    - prodapp
+  only:
+    - tags
+
+berygo_build_job:
+  stage:  build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=wasterubick2berygo;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=wasterubick2berygo;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$ACCOUNT_BERYGO_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-berygo.zippyttech.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://account-berygo.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://client-berygo.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications-berygo.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet-berygo.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://user-berygo.zippyttech.com" >> .env 
+    - docker build -t waste-api .
+  when: on_success
+  tags:
+    - berygo
+  only:
+    - berygo
+
+berygo_deploy_job:
+  stage: deploy
+  script:
+    - docker stop waste-api || true
+    - docker rm waste-api || true
+    - docker run -d --restart always --name waste-api --memory="512m" -v waste-api-images:/var/www/html/public/images -v waste-api-images:/var/www/html/public/logos --network app -p 9022:80 waste-api
+    - docker exec waste-api php artisan migrate
+  when: on_success
+  tags:
+    - berygo
+  only:
+    - berygo
+
+cdg_build_job:
+  stage:  build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=wasterubick2cdg;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=wasterubick2cdg;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$ACCOUNT_CDG_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.31;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-cdg.zippyttech.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://account-cdg.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://client-cdg.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications-cdg.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet-cdg.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://user-cdg.zippyttech.com" >> .env 
+    - docker build -t waste-api .
+  when: on_success
+  tags:
+    - cdg
+  only:
+    - cdg
+
+cdg_deploy_job:
+  stage: deploy
+  script:
+    - docker stop waste-api || true
+    - docker rm waste-api || true
+    - docker run -d --restart always --name waste-api --memory="512m" -v waste-api-images:/var/www/html/public/images -v waste-api-images:/var/www/html/public/logos --network app -p 9022:80 waste-api
+    - docker exec waste-api php artisan migrate
+  when: on_success
+  tags:
+    - cdg
+  only:
+    - cdg
+
+aguaseo_build_job:
+  stage:  build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=rubick2aguaseo-waste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=rubick2aguaseo-waste;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$AGUASEO_ACCOUNT_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.31;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-aguaseo.zippyttech.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://account-aguaseo.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://client-aguaseo.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications-aguaseo.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet-aguaseo.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://user-aguaseo.zippyttech.com" >> .env 
+    - docker build -t aguaseo-waste-api .
+  when: on_success
+  tags:
+    - aguaseo
+  only:
+    - aguaseo
+ 
+aguaseo_deploy_job:
+  stage: deploy
+  script:
+    - docker stop aguaseo-waste-api || true
+    - docker rm aguaseo-waste-api || true
+    - docker run -d --restart always --name aguaseo-waste-api --memory="512m" -v aguaseo-waste-api-images:/var/www/html/public/images -v aguaseo-waste-api-images:/var/www/html/public/logos --network app -p 9022:80 aguaseo-waste-api
+    - docker exec aguaseo-waste-api php artisan migrate
+  when: on_success
+  tags:
+    - aguaseo
+  only:
+    - aguaseo
+ 
+bukewallet_build_job:
+  stage:  build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=wasterubick2bukewallet;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=wasterubick2bukewallet;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$BUKEWALLET_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.31;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-bukewallet.zippyttech.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://account-bukewallet.zippyttech.com" >> .env 
+    - echo "URL_API_CLIENT=https://client-bukewallet.zippyttech.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications-bukewallet.zippyttech.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet-bukewallet.zippyttech.com" >> .env 
+    - echo "URL_API_USER=https://user-bukewallet.zippyttech.com" >> .env 
+    - docker build -t bukewallet-waste-api .
+  when: on_success
+  tags:
+    - bukewallet
+  only:
+    - bukewallet
+ 
+bukewallet_deploy_job:
+  stage: deploy
+  script:
+    - docker stop bukewallet-waste-api || true
+    - docker rm bukewallet-waste-api || true
+    - docker run -d --restart always --name bukewallet-waste-api --memory="512m" -v bukewallet-waste-api-images:/var/www/html/public/images -v bukewallet-waste-api-images:/var/www/html/public/logos --network app -p 9022:80 bukewallet-waste-api
+    - docker exec bukewallet-waste-api php artisan migrate
+  when: on_success
+  tags:
+    - bukewallet
+  only:
+    - bukewallet

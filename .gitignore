@@ -1,0 +1,8 @@
+/vendor
+/.idea
+Homestead.json
+Homestead.yaml
+composer.lock
+database/database.sqlite
+*sublime*
+.env
