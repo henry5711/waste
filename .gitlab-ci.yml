@@ -309,13 +309,13 @@ bukewallet_build_job:
     - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.31;g" .env
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
-    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-bukewallet.zippyttech.com;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste.bukewallet.com;g" .env
     - echo "#API_URL:" >> .env
-    - echo "URL_API_ACCOUNT=https://account-bukewallet.zippyttech.com" >> .env 
-    - echo "URL_API_CLIENT=https://client-bukewallet.zippyttech.com" >> .env 
-    - echo "URL_API_NOTIFICATION=https://notifications-bukewallet.zippyttech.com" >> .env 
-    - echo "URL_API_WALLET=https://wallet-bukewallet.zippyttech.com" >> .env 
-    - echo "URL_API_USER=https://user-bukewallet.zippyttech.com" >> .env 
+    - echo "URL_API_ACCOUNT=https://account.bukewallet.com" >> .env 
+    - echo "URL_API_CLIENT=https://client.bukewallet.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications.bukewallet.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet.bukewallet.com" >> .env 
+    - echo "URL_API_USER=https://user.bukewallet.com" >> .env 
     - docker build -t bukewallet-waste-api .
   when: on_success
   tags:

@@ -5,4 +5,4 @@ Homestead.yaml
 composer.lock
 database/database.sqlite
 *sublime*
-.env
+.env*
