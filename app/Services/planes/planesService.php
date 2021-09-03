@@ -11,6 +11,7 @@ use App\Core\CrudService;
 use App\Core\ImageService;
 use App\Models\planes;
 use App\Models\suscrip;
+use App\Models\suscripciones;
 use App\Repositories\planes\planesRepository;
 use Illuminate\Http\Request;
 
@@ -90,7 +91,7 @@ class planesService extends CrudService
 
     public function _delete($id)
     {
-        $pla=suscrip::where('id_plan',$id)->count();
+        $pla=suscripciones::where('id_plan',$id)->count();
 
         if($pla>0)
         {
