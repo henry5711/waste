@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.10
 LABEL Maintainer="Zippyttech" \
       Description="Lightweight container with Nginx 1.14 & PHP-FPM 7.2 based on Alpine Linux."
 
