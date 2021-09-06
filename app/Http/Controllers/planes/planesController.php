@@ -68,22 +68,22 @@ class planesController extends CrudController
             }
             else
             {
-
+                $p=ucfirst($request->plane);
+                $sp=new planes;
+                $sp->plan=$p;
+                $sp->precio=$request->precio;
+                $sp->Periodicidad=$request->Periodicidad;
+                $sp->condi=$request->condi;
+                $sp->obs=$request->obs;
+                $sp->tipo=$request->tipo;
+                $sp->icon=null;
+                $sp->save();
+    
+    
+                return response()->json(["status" => 201,$sp],201);
+    
             }
-            $p=ucfirst($request->plane);
-            $sp=new planes;
-            $sp->plan=$p;
-            $sp->precio=$request->precio;
-            $sp->Periodicidad=$request->Periodicidad;
-            $sp->condi=$request->condi;
-            $sp->obs=$request->obs;
-            $sp->tipo=$request->tipo;
-            $sp->icon=null;
-            $sp->save();
-
-
-            return response()->json(["status" => 201,$sp],201);
-
+           
 
            
               
