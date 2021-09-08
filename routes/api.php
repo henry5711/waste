@@ -51,7 +51,8 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
 
     /** routes para suscripciones **/ 
-       
+    $router->get('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
+    $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
    $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
