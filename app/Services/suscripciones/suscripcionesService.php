@@ -25,6 +25,7 @@ class suscripcionesService extends CrudService
 
     public function _store(Request $request)
     {
+        $request['prox_cob']=$request->fec_ini;
         $request['sta']="Activa";
         return parent::_store($request);
     }
