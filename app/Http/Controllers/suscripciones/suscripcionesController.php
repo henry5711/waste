@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Core\CrudController;
 use App\Models\suscripciones;
 use App\Services\suscripciones\suscripcionesService;
+use GuzzleHttp\Client;
+
 /** @property suscripcionesService $service */
 class suscripcionesController extends CrudController
 {
@@ -17,7 +19,11 @@ class suscripcionesController extends CrudController
     public function facturar()
     {
         $cobrar=suscripciones::where('sta','Activa')->get();
-        dd($cobrar);
+        $cobrar=json_encode($cobrar);
+        $c=["list"=>$cobrar];
+        $client=new Client();
+        $res=$client->request('POST','https://qarubick2billing.zippyttech.com/api/factura/suscripcion',['json' => $c]);
+        return response()->json('las suscripciones estan siendo procesadas');
     }
 
 
@@ -31,6 +37,6 @@ class suscripcionesController extends CrudController
             $up->save();
         }
 
-        return response()->json('Factiraciones procesadas');
+        return response()->json('Fechas editadas');
     }
 }
