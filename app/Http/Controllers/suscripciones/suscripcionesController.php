@@ -19,4 +19,18 @@ class suscripcionesController extends CrudController
         $cobrar=suscripciones::where('sta','Activa')->get();
         dd($cobrar);
     }
+
+
+    public function editarproxifecha(Request $request)
+    {
+        foreach($request->list as $s)
+        {
+            $susc = $s['id'];
+            $up=suscripciones::where('id',$susc)->first();
+            $up->prox_cob=$s['cobro'];
+            $up->save();
+        }
+
+        return response()->json('Factiraciones procesadas');
+    }
 }
