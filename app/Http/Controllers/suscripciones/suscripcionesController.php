@@ -24,7 +24,6 @@ class suscripcionesController extends CrudController
         $json = [
             'list' =>$cobrar
         ];
-        return $json;
         $client=new Client();
         $res=$client->request('POST','https://qarubick2billing.zippyttech.com/api/factura/suscripcion',['json' => $json]);
         return response()->json('las suscripciones estan siendo procesadas');
