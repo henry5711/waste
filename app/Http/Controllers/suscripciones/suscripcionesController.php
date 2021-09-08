@@ -19,10 +19,15 @@ class suscripcionesController extends CrudController
     public function facturar()
     {
         $cobrar=suscripciones::where('sta','Activa')->get();
-        $cobrar=json_encode($cobrar);
-        $c=["list"=>$cobrar];
+       // $cobrar=json_encode($cobrar);
+        //$c=["list"=>$cobrar];
+        $json = [
+            'list' => array([
+                        $cobrar
+                    ]),
+        ];
         $client=new Client();
-        $res=$client->request('POST','https://qarubick2billing.zippyttech.com/api/factura/suscripcion',['json' => $c]);
+        $res=$client->request('POST','https://qarubick2billing.zippyttech.com/api/factura/suscripcion',['json' => $json]);
         return response()->json('las suscripciones estan siendo procesadas');
     }
 
