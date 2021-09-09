@@ -64,7 +64,7 @@ qa_backup_job:
   script:
     - docker image tag qarubick2waste-api:latest qarubick2waste-api:prev || true
   tags:
-    - qaapp
+    - qarubick2
   only :
     - qa
     
@@ -90,7 +90,7 @@ qa_build_job:
     - docker build -t qarubick2waste-api .
   when: on_success
   tags:
-    - qaapp
+    - qarubick2
   only :
     - qa
 
@@ -103,7 +103,7 @@ qa_deploy_job:
     - docker exec qarubick2waste-api php artisan migrate
   when: on_success
   tags:
-    - qaapp
+    - qarubick2
   only:
     - qa
 
@@ -116,7 +116,7 @@ qa_rollback_job:
     - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 8119:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
   when: manual
   tags:
-    - qaapp
+    - qarubick2
   only:
     - qa
 
