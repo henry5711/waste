@@ -42,4 +42,11 @@ class suscripcionesController extends CrudController
 
         return response()->json('Fechas editadas');
     }
+
+    public function usuariosus(Request $request)
+    {
+        $u=$request->usu;
+        $sus=suscripciones::where('id_sus',$u)->get();
+        return ["list"=>$sus,"total"=>count($sus)];
+    }
 }
