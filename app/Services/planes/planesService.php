@@ -91,7 +91,7 @@ class planesService extends CrudService
 
     public function _delete($id)
     {
-        $pla=suscripciones::where('id_plan',$id)->count();
+        $pla=suscripciones::where('id_sus',$id)->count();
 
         if($pla>0)
         {
