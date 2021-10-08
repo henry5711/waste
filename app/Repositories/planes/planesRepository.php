@@ -17,5 +17,24 @@ class planesRepository extends CrudRepository
     {
         parent::__construct($model);
     }
+     
+    public function _index($request = null, $user = null)
+    {
+        $pl=planes::all();
+        foreach ($pl as $key ) {
+            $f=json_decode($key->condi);
+            $key->condi=$f;
+          }
+          return $pl;
+    }
 
+    public function _show($id)
+    {
+        $pl=planes::where('id',$id)->get();
+        foreach ($pl as $key ) {
+            $f=json_decode($key->condi);
+            $key->condi=$f;
+          }
+          return $pl;
+    }
 }
