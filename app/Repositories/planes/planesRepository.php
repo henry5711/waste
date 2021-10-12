@@ -30,12 +30,23 @@ class planesRepository extends CrudRepository
 
     public function _show($id)
     {
+        
         $pl=planes::where('id',$id)->get();
+        if(!$pl)
+            {
+                return response()->json([
+                    "status" => 404,
+                    'message'=>'Plan no existe'
+                ], 404);
+            }
+        else
+        {
         foreach ($pl as $key ) {
             $f=json_decode($key->condi);
             $key->condi=$f;
           }
 
           return $pl;
+        }
     }
 }
