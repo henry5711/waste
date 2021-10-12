@@ -45,7 +45,7 @@ class planesRepository extends CrudRepository
 
         else
         {
-            return response()->json(["error" => true, "message" => "Plan no existe"], 404);
+            return parent::_show($id);
         }
        
     }
