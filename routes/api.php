@@ -45,7 +45,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('planes/tipo', 'planes\planesController@planetipo');
     $router->get('planes', 'planes\planesController@_index');
     $router->get('planes/{id}', 'planes\planesController@_show');
-    $router->post('planes/p/prueba', 'planes\planesController@guardar');
+    $router->post('planes/guardar/datos', 'planes\planesController@guardar');
     $router->put('planes/{id}', 'planes\planesController@_update');
     $router->delete('planes/{id}', 'planes\planesController@_delete');
 
