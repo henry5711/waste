@@ -55,9 +55,9 @@ class planesService extends CrudService
 
     public function _update($id, Request $request)
     {
-        if (isset($request->plane)) {
+        if (isset($request->plan)) {
           
-            $exist=planes::whereRaw('lower(plan)=?',strtolower($request->plane))->first();
+            $exist=planes::whereRaw('lower(plan)=?',strtolower($request->plan))->first();
 
             if($exist and $exist->id != $id){
                 return response()->json(["error"=>true,"message"=> "Ya existe un plan con este nombre"],422);
@@ -65,10 +65,10 @@ class planesService extends CrudService
 
             else
         {
-            $p=ucfirst($request->plane);
+            $p=ucfirst($request->plan);
             $request['plan']=$p;
             $imageService = new ImageService;
-            $back= $imageService->image($request->input('ico'));
+            $back= $imageService->image($request->input('icon'));
             $request['icon']=$back;
 
             return parent::_update($id,$request);
@@ -78,10 +78,10 @@ class planesService extends CrudService
 
         else
         {
-            $p=ucfirst($request->plane);
+            $p=ucfirst($request->plan);
             $request['plan']=$p;
             $imageService = new ImageService;
-            $back= $imageService->image($request->input('ico'));
+            $back= $imageService->image($request->input('icon'));
             $request['icon']=$back;
 
             return parent::_update($id,$request);
