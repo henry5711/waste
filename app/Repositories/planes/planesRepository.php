@@ -32,11 +32,24 @@ class planesRepository extends CrudRepository
     {
         
         $pl=planes::where('id',$id)->get();
-        foreach ($pl as $key ) {
-            $f=json_decode($key->condi);
-            $key->condi=$f;
-          }
 
-          return $pl[0];
+        if(count($pl)>0)
+        {
+            foreach ($pl as $key ) {
+                $f=json_decode($key->condi);
+                $key->condi=$f;
+              }
+    
+              return $pl[0];
+        }
+
+        else
+        {
+            return response()->json([
+                "status" => 404,
+                'message'=> 'Plan no existe'
+            ], 404);
+        }
+       
     }
 }
