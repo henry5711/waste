@@ -48,7 +48,7 @@ class planesController extends CrudController
 
     public function guardar(Request $request)
     {
-        $exist=planes::whereRaw('lower(plan)=?',strtolower($request->plane))->first();
+        $exist=planes::whereRaw('lower(plan)=?',strtolower($request->plan))->first();
 
         if($exist)
         {
@@ -58,11 +58,11 @@ class planesController extends CrudController
         else
         {
 
-            if (isset($request->ico))
+            if (isset($request->icon))
             {
-                $p=ucfirst($request->plane);
+                $p=ucfirst($request->plan);
                 $imageService = new ImageService;
-                $back= $imageService->image($request->ico);
+                $back= $imageService->image($request->icon);
     
                 $sp=new planes;
                 $sp->plan=$p;
@@ -79,7 +79,7 @@ class planesController extends CrudController
             }
             else
             {
-                $p=ucfirst($request->plane);
+                $p=ucfirst($request->plan);
                 $sp=new planes;
                 $sp->plan=$p;
                 $sp->precio=$request->precio;
