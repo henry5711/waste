@@ -45,10 +45,7 @@ class planesRepository extends CrudRepository
 
         else
         {
-            return response()->json([
-                "status" => 404,
-                'message'=> 'Plan no existe'
-            ], 404);
+            return response()->json(["error" => true, "message" => "Plan no existe"], 404);
         }
        
     }
