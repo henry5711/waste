@@ -100,4 +100,15 @@ class planesController extends CrudController
         }
     }
 
+    public function mostrar($id)
+    {
+        $pl=planes::where('id',$id)->get();
+        foreach ($pl as $key ) {
+            $f=json_decode($key->condi);
+            $key->condi=$f;
+          }
+
+          return $pl;
+    }
+
 }

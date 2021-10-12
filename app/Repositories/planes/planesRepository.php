@@ -35,6 +35,7 @@ class planesRepository extends CrudRepository
             $f=json_decode($key->condi);
             $key->condi=$f;
           }
+
           return $pl;
     }
 }
