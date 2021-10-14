@@ -55,8 +55,7 @@ class planesService extends CrudService
 
     public function _update($id, Request $request)
     {
-        if (isset($request->plan)) {
-          
+       
             $exist=planes::whereRaw('lower(plan)=?',strtolower($request->plan))->first();
 
             if($exist and $exist->id != $id){
@@ -64,29 +63,27 @@ class planesService extends CrudService
             }
 
             else
-        {
-            $p=ucfirst($request->plan);
-            $request['plan']=$p;
-            $imageService = new ImageService;
-            $back= $imageService->image($request->input('icon'));
-            $request['icon']=$back;
-
-            return parent::_update($id,$request);
+            {
+                if(strpos($request->input('icon'), '.zippyttech.com/images/'))
+                {
+                    $p=ucfirst($request->plan);
+                    $request['plan']=$p; 
+                    return parent::_update($id,$request);
+                }
+                else
+                {
+                    $p=ucfirst($request->plan);
+                    $request['plan']=$p;
+                    $imageService = new ImageService;
+                    $back= $imageService->image($request->input('icon'));
+                    $request['icon']=$back;
+        
+                    return parent::_update($id,$request);
+                }
+           
               
-        }
-        }
-
-        else
-        {
-            $p=ucfirst($request->plan);
-            $request['plan']=$p;
-            $imageService = new ImageService;
-            $back= $imageService->image($request->input('icon'));
-            $request['icon']=$back;
-
-            return parent::_update($id,$request);
-              
-        }
+            }
+        
     }
 
     public function _delete($id)
