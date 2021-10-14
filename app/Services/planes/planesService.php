@@ -64,7 +64,7 @@ class planesService extends CrudService
 
             else
             {
-                if(strpos($request->input('icon'), '.zippyttech.com/images/'))
+                if(strpos($request->input('icon'), 'images/'))
                 {
                     $p=ucfirst($request->plan);
                     $request['plan']=$p; 
