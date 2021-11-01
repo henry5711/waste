@@ -4,47 +4,38 @@ stages:
   - deploy
   - rollback
 
-dev_backup_job:
-  stage: backup
-  script:
-    - docker image tag devrubick2waste-api:latest devrubick2waste-api:prev || true
-  tags:
-    - devapp
-  only :
-    - develop
-
 dev_build_job:
   stage: build
   script:
     - cp .env.example .env
     - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
     - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
-    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=devwaste;g" .env
-    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=devwaste;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=devrubick2waste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=devrubick2waste;g" .env
     - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$DEV_DB_PASS;g" .env
-    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=192.168.0.10;g" .env
-    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5433;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.26;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
-    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devwaste.zippyttech.com;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devrubick2waste.zippyttech.com;g" .env
     - docker build -t devrubick2waste-api .
   when: on_success
   tags:
     - devapp
   only :
-    - develop
+    - dev
 
 dev_deploy_job:
   stage: deploy
   script:
     - docker stop devrubick2waste-api || true
     - docker rm devrubick2waste-api || true
-    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 10091:80 devrubick2waste-api
+    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 9022:80 -v devrubick2waste-api-images:/var/www/html/public/images -v devrubick2waste-api-images:/var/www/html/public/logos devrubick2waste-api
     - docker exec devrubick2waste-api php artisan migrate
   when: on_success
   tags:
     - devapp
   only:
-    - develop
+    - dev
 
 dev_rollback_job:
   stage: rollback
@@ -52,12 +43,12 @@ dev_rollback_job:
     - docker stop devrubick2waste-api || true
     - docker rm devrubick2waste-api || true
     - docker image tag devrubick2waste-api:prev devrubick2waste-api:latest || true
-    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 10091:80 devrubick2waste-api
+    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 9022:80 -v devrubick2waste-api-images:/var/www/html/public/images -v devrubick2waste-api-images:/var/www/html/public/logos devrubick2waste-api
   when: manual
   tags:
     - devapp
   only:
-    - develop
+    - dev
 
 qa_backup_job:
   stage: backup
