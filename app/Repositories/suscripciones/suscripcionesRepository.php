@@ -21,15 +21,13 @@ class suscripcionesRepository extends CrudRepository
     public function _index($request = null, $user = null)
     {
         $suscripciones = $this->filtro($request);
+        // $suscripciones = suscripciones::all();
         return $suscripciones;
     }
     public function filtro($request){
         $suscripciones = DB::table('suscripciones')->select(['*'])
-                        ->when($request->id_cliente,function($query,$id_cliente){
-                            return $query->where('id_cliente','=',$id_cliente);
-                        })
-                        ->when($request->id_sus,function($query,$id_cliente){
-                            return $query->where('id_sus','=',$id_cliente);
+                        ->when($request->id_client,function($query,$id_client){
+                            return $query->where('id_client','=',$id_client);
                         })
                         ->when($request->estado,function($query,$estado){
                             return $query->where('sta','=',$estado);
