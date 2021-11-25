@@ -10,6 +10,9 @@ namespace App\Services\suscripciones;
 use App\Core\CrudService;
 use App\Repositories\suscripciones\suscripcionesRepository;
 use Illuminate\Http\Request;
+use App\Models\suscripciones;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /** @property suscripcionesRepository $repository */
 class suscripcionesService extends CrudService
@@ -29,5 +32,7 @@ class suscripcionesService extends CrudService
         $request['sta']="Activa";
         return parent::_store($request);
     }
+
+    
 
 }
