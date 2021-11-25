@@ -20,4 +20,9 @@ class prodetalleController extends CrudController
         $bd=prodetalle::where('id_su',$sus)->get();
         return ["list"=>$bd,"total"=>count($bd)];
     }
+
+    public function _store($request)
+    {
+        return $this->service->_store($request);
+    }
 }

@@ -23,10 +23,13 @@ class prodetalleService extends CrudService
     }
 
     
-    public function _store(Request $request)
+    public function _store($request)
     {
-        $to=$request->precio*$request->cantidad;
-        $request['sub_total']=$to;
-        return parent::_store($request);
+        foreach ($request['productos'] as $producto) {
+            $producto['id_susp'] = $request->id;
+            $to=$producto['precio']*$producto['cantidad'];
+            $producto['sub_total']=$to;
+            $this->repository->_store($producto);
+        }
     }
 }

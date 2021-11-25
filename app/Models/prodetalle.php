@@ -9,5 +9,14 @@ class prodetalle extends CrudModel
 {
     protected $guarded = ['id'];
     protected $table = 'detallepro';
-    protected $fillable = ['id_susp','id_pro','nom_pro','precio','cantidad','impuesto','sub_total','descuento'];
+    protected $fillable = [
+        'id_susp',
+        'id_pro',
+        'nom_pro',
+        'precio',
+        'cantidad',
+        'impuesto',
+        'sub_total',
+        'descuento'
+    ];
 }
