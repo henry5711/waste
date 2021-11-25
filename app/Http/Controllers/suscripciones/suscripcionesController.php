@@ -5,8 +5,11 @@ namespace App\Http\Controllers\suscripciones;
 use Illuminate\Http\Request;
 use App\Core\CrudController;
 use App\Models\suscripciones;
+use App\Rules\CaseSensitive;
+use App\Rules\CaseSensitiveId;
 use App\Services\suscripciones\suscripcionesService;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Validator;
 
 /** @property suscripcionesService $service */
 class suscripcionesController extends CrudController
@@ -16,6 +19,40 @@ class suscripcionesController extends CrudController
         parent::__construct($service);
     }
 
+    public function _store(Request $request)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'numero' => [new CaseSensitive('suscripciones')]
+            ],
+            [
+
+            ]
+            );
+        if ($validator->fails()) {
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+        }
+        return parent::_store($request);
+    }
+
+    public function _update($id, Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+               'numero' => [new CaseSensitiveId('suscripciones',$id)]
+            ],
+            [
+
+            ]
+            );
+        if ($validator->fails()) {
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+        }
+        return parent::_update($id,$request);
+    }
     public function facturar()
     {
         $cobrar=suscripciones::where('sta','Activa')->get();
