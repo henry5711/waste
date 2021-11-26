@@ -58,6 +58,8 @@ class suscripcionesService extends CrudService
         }
     }
 
-    
+    public function verDetalle($id_suscripcion){
+        return $this->repository->verDetalle($id_suscripcion);
+    }
 
 }

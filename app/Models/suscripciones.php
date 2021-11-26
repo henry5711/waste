@@ -10,6 +10,7 @@ class suscripciones extends CrudModel
     protected $guarded = ['id'];
     protected $table = 'suscripciones';
     protected $fillable = [
+        'id',
         'numero',
         'id_client',
         'correo',
@@ -24,4 +25,13 @@ class suscripciones extends CrudModel
         'obs'
     ];
     
+    /**
+     * Get all of the Productos for the suscripciones
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Productos()
+    {
+        return $this->hasMany(prodetalle::class, 'id_susp', 'id');
+    }
 }

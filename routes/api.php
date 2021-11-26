@@ -60,14 +60,20 @@ $router->group(['prefix' => 'api'], function (Router $router) {
    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
 
-   /** routes para prodetalle **/ 
-$router->get('prodetalles/suscripcion', 'prodetalle\prodetalleController@detallesus');
-$router->get('prodetalles', 'prodetalle\prodetalleController@_index');
-$router->get('prodetalles/{id}', 'prodetalle\prodetalleController@_show');
-$router->post('prodetalles', 'prodetalle\prodetalleController@_store');
-$router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
-$router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
-    
+   /**
+    * Agregado por Marcos López
+    */
+    $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
+
+    /**----------------------------------------- */
+    /** routes para prodetalle **/ 
+    $router->get('prodetalles/suscripcion', 'prodetalle\prodetalleController@detallesus');
+    $router->get('prodetalles', 'prodetalle\prodetalleController@_index');
+    $router->get('prodetalles/{id}', 'prodetalle\prodetalleController@_show');
+    $router->post('prodetalles', 'prodetalle\prodetalleController@_store');
+    $router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
+    $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
+        
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
 

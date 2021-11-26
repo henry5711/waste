@@ -19,4 +19,14 @@ class prodetalle extends CrudModel
         'sub_total',
         'descuento'
     ];
+
+    /**
+     * Get the Suscripcion that owns the prodetalle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function Suscripcion()
+    {
+        return $this->belongsTo(suscripciones::class, 'id_susp', 'id');
+    }
 }

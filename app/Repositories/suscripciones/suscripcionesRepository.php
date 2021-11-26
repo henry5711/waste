@@ -49,4 +49,14 @@ class suscripcionesRepository extends CrudRepository
 
         return $suscripciones;
     }
+
+    public function verDetalle($id_suscripcion){
+        $detalle = suscripciones::find($id_suscripcion);
+        $detalle = $detalle->Productos;
+
+        return [
+            "list" => $detalle,
+            "count" => count($detalle)
+        ];
+    }
 }
