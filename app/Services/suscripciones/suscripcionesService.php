@@ -9,12 +9,12 @@ namespace App\Services\suscripciones;
 
 use App\Core\CrudService;
 use App\Http\Controllers\prodetalle\prodetalleController;
+use App\Repositories\prodetalle\prodetalleRepository;
+use App\Services\prodetalle\prodetalleService;
 use App\Models\prodetalle;
 use App\Repositories\suscripciones\suscripcionesRepository;
 use Illuminate\Http\Request;
 use App\Models\suscripciones;
-use App\Repositories\prodetalle\prodetalleRepository;
-use App\Services\prodetalle\prodetalleService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
