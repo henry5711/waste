@@ -24,7 +24,7 @@ class prodetalleRepository extends CrudRepository
         // $detalle = new prodetalle();
         // $detalle
         $detalle = prodetalle::create($data);
-
+        return $detalle;
         // return $this->model::query()->create($this->$data);
     }
 
