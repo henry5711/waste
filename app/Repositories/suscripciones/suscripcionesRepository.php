@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /** @property suscripciones $model */
 class suscripcionesRepository extends CrudRepository
 {
-
+    protected $id_cli;
     public function __construct(suscripciones $model)
     {
         parent::__construct($model);
@@ -48,5 +48,14 @@ class suscripcionesRepository extends CrudRepository
         $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->get();
 
         return $suscripcion;
+    }
+
+    public function buscarCliente($id_client){
+        $this->id_cli = $id_client;
+        $suscripciones = suscripciones::whereHas('Clientes', function($query){
+            return $query->where('id_client','=',$this->id_cli);
+        })->get();
+
+        return $suscripciones;
     }
 }
