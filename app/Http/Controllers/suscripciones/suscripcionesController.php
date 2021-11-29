@@ -63,6 +63,7 @@ class suscripcionesController extends CrudController
         ];
         $client=new Client();
         $endpoint = env('BILLING_API').'factura/suscripcion';
+        
         $res=$client->request('POST',$endpoint,['json' => $json]);
         return response()->json('las suscripciones estan siendo procesadas');
     }
@@ -87,4 +88,9 @@ class suscripcionesController extends CrudController
         $sus=suscripciones::where('id_sus',$u)->get();
         return ["list"=>$sus,"total"=>count($sus)];
     }
+
+    public function verDetalle($id_suscripcion){
+        return $this->service->verDetalle($id_suscripcion);
+    }
+    
 }
