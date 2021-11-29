@@ -95,5 +95,10 @@ class suscripcionesController extends CrudController
     public function verDetalle($id_suscripcion){
         return $this->service->verDetalle($id_suscripcion);
     }
+
+    public function buscarCliente($id_client){
+        
+        return $this->service->buscarCliente($id_client);
+    }
     
 }

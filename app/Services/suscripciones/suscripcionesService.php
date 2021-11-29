@@ -101,5 +101,9 @@ class suscripcionesService extends CrudService
             return $e->getMessage();
         }
     }
+    
+    public function buscarCliente($id_client){
+        return $this->repository->buscarCliente($id_client);
+    }
 
 }
