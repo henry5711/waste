@@ -20,34 +20,7 @@ class suscripcionesRepository extends CrudRepository
 
     public function _index($request = null, $user = null)
     {
-        $suscripciones = $this->filtro($request);
-        // $suscripciones = suscripciones::all();
-        return $suscripciones;
-    }
-    public function filtro($request){
-        $suscripciones = DB::table('suscripciones')->select(['*'])
-                        ->when($request->id_client,function($query,$id_client){
-                            return $query->where('id_client','=',$id_client);
-                        })
-                        ->when($request->estado,function($query,$estado){
-                            return $query->where('sta','=',$estado);
-                        })
-                        ->when($request->nombre,function($query,$nombre){
-                            return $query->where(function($query,$nombre){
-                                return $query->where('nombre','ilike',"%$nombre%")
-                                            ->orwhere('correo','ilike',"%$nombre%");
-                            });
-                        })
-                        ->when($request->numero,function($query,$numero){
-                            return $query->where('numero','ilike',"%$numero%");
-                        })
-                        // ->when($request->fecha_ini,function($query,$inicio){
-                        //     $inicio = Carbon::parse($inicio);
-                            
-                        // });
-                        ->get();
-
-        return $suscripciones;
+        return suscripciones::Filtro($request)->get();
     }
 
     public function verDetalle($id_suscripcion){
@@ -58,5 +31,22 @@ class suscripcionesRepository extends CrudRepository
             "list" => $detalle,
             "count" => count($detalle)
         ];
+    }
+
+    public function verClientes($id_suscripcion){
+        $clientes = suscripciones::find($id_suscripcion);
+        $clientes = $clientes->Clientes;
+
+        return [
+            'list' => $clientes,
+            'count' => count($clientes)
+        ];
+    }
+
+    public function _show($id)
+    {
+        $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->get();
+
+        return $suscripcion;
     }
 }
