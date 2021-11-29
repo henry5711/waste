@@ -25,6 +25,25 @@ class suscripciones extends CrudModel
         'obs'
     ];
     
+
+    public function scopeFiltro($query,$request){
+        return $query->when($request->id_client,function($query,$id_client){
+                        return $query->where('id_client','=',$id_client);
+                    })
+                    ->when($request->estado,function($query,$estado){
+                        return $query->where('sta','=',$estado);
+                    })
+                    ->when($request->nombre,function($query,$nombre){
+                        return $query->where(function($query,$nombre){
+                            return $query->where('nombre','ilike',"%$nombre%")
+                                        ->orwhere('correo','ilike',"%$nombre%");
+                        });
+                    })
+                    ->when($request->numero,function($query,$numero){
+                        return $query->where('numero','ilike',"%$numero%");
+                    });
+    }
+
     /**
      * Get all of the Productos for the suscripciones
      *
@@ -33,5 +52,15 @@ class suscripciones extends CrudModel
     public function Productos()
     {
         return $this->hasMany(prodetalle::class, 'id_susp', 'id');
+    }
+
+    /**
+     * Get all of the Clientes for the suscripciones
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function Clientes()
+    {
+        return $this->hasMany(Clientes::class, 'id_suscripcion', 'id');
     }
 }

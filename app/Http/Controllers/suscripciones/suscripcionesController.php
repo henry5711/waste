@@ -29,6 +29,9 @@ class suscripcionesController extends CrudController
             ],
             [
 
+            ],
+            [
+                'numero' => 'numero de suscripcion'
             ]
             );
         if ($validator->fails()) {
