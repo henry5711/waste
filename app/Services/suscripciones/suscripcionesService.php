@@ -102,8 +102,29 @@ class suscripcionesService extends CrudService
         }
     }
     
-    public function buscarCliente($id_client){
-        return $this->repository->buscarCliente($id_client);
+    public function buscarClienteId($id_client){
+        return $this->repository->buscarClienteId($id_client);
+    }
+
+    public function buscarClienteFiltro($request){
+        return $this->repository->buscarClienteFiltro($request);
+    }
+
+    public function generarNumero(){
+        $bool = false;
+        do {
+            $num = random_int(0,9999);
+            $bool = $this->repository->generarNumero($num);
+        } while (!$bool);
+        $digitos = strlen($num);
+        if($digitos<4){
+            $digitos = 4 - $digitos;
+
+            for ($i=1; $i <= $digitos; $i++) { 
+                $num = "0".$num;
+            }
+        }
+        return "$num";
     }
 
 }

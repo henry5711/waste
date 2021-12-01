@@ -7,6 +7,7 @@
 namespace App\Repositories\suscripciones;
 
 use App\Core\CrudRepository;
+use App\Models\Clientes;
 use App\Models\suscripciones;
 use Illuminate\Support\Facades\DB;
 /** @property suscripciones $model */
@@ -50,12 +51,27 @@ class suscripcionesRepository extends CrudRepository
         return $suscripcion;
     }
 
-    public function buscarCliente($id_client){
+    public function buscarClienteId($id_client){
         $this->id_cli = $id_client;
         $suscripciones = suscripciones::whereHas('Clientes', function($query){
             return $query->where('id_client','=',$this->id_cli);
         })->get();
 
         return $suscripciones;
+    }
+
+    public function buscarClienteFiltro($request){
+        return Clientes::Filtro($request)->get();
+    }
+
+    public function generarNumero($numero){
+        $bool = suscripciones::where('numero',$numero)->first();
+
+        if($bool){
+            return false;
+        }
+        if(!$bool){
+            return true;
+        }
     }
 }
