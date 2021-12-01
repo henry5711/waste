@@ -56,9 +56,15 @@ class suscripcionesController extends CrudController
         }
         return parent::_update($id,$request);
     }
-    public function facturar()
-    {
-        $cobrar=suscripciones::where('sta','Activa')->get();
+    public function facturar(){
+
+        $cobrar=suscripciones::with([
+                            'Clientes',
+                            'Productos'
+                        ])
+                        ->where('sta','Activa')
+                        ->has('Clientes','>')
+                        ->get();
        // $cobrar=json_encode($cobrar);
         //$c=["list"=>$cobrar];
         $json = [
@@ -66,7 +72,7 @@ class suscripcionesController extends CrudController
         ];
         $client=new Client();
         $endpoint = env('BILLING_API').'factura/suscripcion';
-        
+        return $json;
         $res=$client->request('POST',$endpoint,['json' => $json]);
         return response()->json('las suscripciones estan siendo procesadas');
     }
@@ -99,6 +105,13 @@ class suscripcionesController extends CrudController
     public function buscarCliente($id_client){
         
         return $this->service->buscarCliente($id_client);
+    }
+
+    public function generarNumero(){
+        $numero = $this->service->generarNumero();
+        return response()->json([
+            "numero" => $numero
+        ],200);
     }
     
 }

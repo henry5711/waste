@@ -58,4 +58,15 @@ class suscripcionesRepository extends CrudRepository
 
         return $suscripciones;
     }
+
+    public function generarNumero($numero){
+        $bool = suscripciones::where('numero',$numero)->first();
+
+        if($bool){
+            return false;
+        }
+        if(!$bool){
+            return true;
+        }
+    }
 }
