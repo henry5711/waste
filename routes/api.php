@@ -59,9 +59,9 @@ $router->group(['prefix' => 'api'], function (Router $router) {
    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
-    $router->get('buscar/cliente/suscripciones/{id_client}','suscripciones\suscripcionesController@buscarCliente');
+    $router->get('buscar/cliente/suscripciones','suscripciones\suscripcionesController@buscarClienteId');
     $router->get('numero/suscripcion','suscripciones\suscripcionesController@generarNumero');
-   
+    $router->get('filtro/cliente/suscripcion/{id_suscripcion}','suscripciones\suscripcionesController@buscarClienteFiltro');
     /**
     * Agregado por Marcos López
     */

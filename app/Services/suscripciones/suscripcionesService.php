@@ -102,8 +102,12 @@ class suscripcionesService extends CrudService
         }
     }
     
-    public function buscarCliente($id_client){
-        return $this->repository->buscarCliente($id_client);
+    public function buscarClienteId($id_client){
+        return $this->repository->buscarClienteId($id_client);
+    }
+
+    public function buscarClienteFiltro($request){
+        return $this->repository->buscarClienteFiltro($request);
     }
 
     public function generarNumero(){

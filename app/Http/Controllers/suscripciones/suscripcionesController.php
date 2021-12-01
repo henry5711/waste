@@ -102,9 +102,13 @@ class suscripcionesController extends CrudController
         return $this->service->verDetalle($id_suscripcion);
     }
 
-    public function buscarCliente($id_client){
-        
-        return $this->service->buscarCliente($id_client);
+    public function buscarClienteId($id_client){
+        return $this->service->buscarClienteId($id_client);
+    }
+
+    public function buscarClienteFiltro($id_suscripcion, Request $request){
+        $request['id_suscripcion'] = $id_suscripcion;
+        return $this->service->buscarClienteFiltro($request);
     }
 
     public function generarNumero(){
