@@ -10,6 +10,7 @@ namespace App\Services\suscripciones;
 use App\Core\CrudService;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\prodetalle\prodetalleController;
+use App\Http\Mesh\BillingService;
 use App\Models\Clientes;
 use App\Repositories\prodetalle\prodetalleRepository;
 use App\Services\prodetalle\prodetalleService;
@@ -125,6 +126,25 @@ class suscripcionesService extends CrudService
             }
         }
         return "$num";
+    }
+
+    public function mostrarFacturas(){
+       
+        $suscripciones = $this->repository->mostrarFacturas();
+        $sus = [];
+        foreach ($suscripciones as $suscripcion) {
+            $id = $suscripcion->suscripcion;
+            $fecha = $suscripcion->fecha_facturacion;
+            $facturas = new BillingService();
+            $f = $facturas->consultarSuscripciones($id,$fecha);
+            if(count($f) > 0 ){
+                $suscripcion->facturas = $f;
+            }else{
+                $suscripcion->facturas = [];
+            }
+            
+        }
+        return $suscripciones;
     }
 
 }

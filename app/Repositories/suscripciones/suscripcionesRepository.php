@@ -74,4 +74,16 @@ class suscripcionesRepository extends CrudRepository
             return true;
         }
     }
+
+    public function mostrarFacturas(){
+        $suscripciones = DB::table('facturas_generadas')
+        ->select([
+            'suscripcion',
+            'fecha_facturacion'
+        ])
+        ->orderBy('fecha_facturacion','desc')
+        ->get();
+
+        return $suscripciones;
+    }
 }

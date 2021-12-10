@@ -4,11 +4,14 @@ namespace App\Http\Controllers\suscripciones;
 
 use Illuminate\Http\Request;
 use App\Core\CrudController;
+use App\Http\Mesh\BillingService;
 use App\Models\suscripciones;
 use App\Rules\CaseSensitive;
 use App\Rules\CaseSensitiveId;
 use App\Services\suscripciones\suscripcionesService;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /** @property suscripcionesService $service */
@@ -56,8 +59,9 @@ class suscripcionesController extends CrudController
         }
         return parent::_update($id,$request);
     }
-    public function facturar(){
 
+    public function facturar(){
+        
         $cobrar=suscripciones::with([
                             'Clientes',
                             'Productos'
@@ -67,13 +71,19 @@ class suscripcionesController extends CrudController
                         ->get();
        // $cobrar=json_encode($cobrar);
         //$c=["list"=>$cobrar];
+        $fecha = Carbon::now()->format('Y-m-d');
+        foreach ($cobrar as $sus) {
+            DB::table('facturas_generadas')->insertGetId([
+                'suscripcion' => $sus->id,
+                'fecha_facturacion' => $fecha
+            ]);
+        }
         $json = [
             'list' =>$cobrar
         ];
-        $client=new Client();
-        $endpoint = env('BILLING_API').'factura/suscripcion';
-        return $json;
-        $res=$client->request('POST',$endpoint,['json' => $json]);
+        // return $json;
+        $client=new BillingService;
+        return $client->generarFacturas($json);
         return response()->json('las suscripciones estan siendo procesadas');
     }
 
@@ -116,6 +126,10 @@ class suscripcionesController extends CrudController
         return response()->json([
             "numero" => $numero
         ],200);
+    }
+
+    public function mostrarFacturas(){
+        return $this->service->mostrarFacturas();
     }
     
 }
