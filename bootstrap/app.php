@@ -92,7 +92,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register('Nord\Lumen\Cors\CorsServiceProvider');
 //app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class);
-
+$app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -104,7 +104,7 @@ $app->register(\Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::cl
 |
 */
 $app->configure('cors');
-
+$app->configure('healthcheck');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
