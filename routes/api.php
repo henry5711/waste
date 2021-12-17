@@ -67,7 +67,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     * Agregado por Marcos López
     */
     $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
-
+    $router->get('estado/suscripciones/{id_suscripcion}','suscripciones\suscripcionesController@estado');
     /**----------------------------------------- */
 
 

@@ -30,7 +30,7 @@ class prodetalleService extends CrudService
             $producto['id_susp'] = $request->id;
             $to=$producto['precio']*$producto['cantidad'];
             $producto['sub_total']=$to;
-            return $this->repository->_store($producto);
+            $bool[] = $this->repository->_store($producto);
         }
         return $bool;
     }

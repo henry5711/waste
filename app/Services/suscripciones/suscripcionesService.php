@@ -147,4 +147,9 @@ class suscripcionesService extends CrudService
         return $suscripciones;
     }
 
+    public function estado($id,$request){
+        $estado = $request->estado;
+        return $this->repository->estado($id,$estado);
+    }
+
 }
