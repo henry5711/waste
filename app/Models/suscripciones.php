@@ -22,7 +22,8 @@ class suscripciones extends CrudModel
         'periodo',
         'base_ip',
         'impuesto',
-        'obs'
+        'obs',
+        'total'
     ];
     
 
