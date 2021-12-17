@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /** @property suscripcionesService $service */
 class suscripcionesController extends CrudController
@@ -130,6 +131,26 @@ class suscripcionesController extends CrudController
 
     public function mostrarFacturas(){
         return $this->service->mostrarFacturas();
+    }
+
+    public function estado($id_suscripcion,Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'estado' => Rule::in(['Activa','Pausada'])
+            ],
+            [
+                'in' => ':attribute debe ser :values'
+            ]);
+        if ($validator->fails()) {
+            $err = $this->parseMessageBag($validator->getMessageBag());
+            return response()->json(
+                [
+                "error"=>true,
+                "message"=>$err[0][0]
+                ],422);
+        }
+        return $this->service->estado($id_suscripcion,$request);
     }
     
 }

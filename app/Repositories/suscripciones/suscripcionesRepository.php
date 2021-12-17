@@ -86,4 +86,13 @@ class suscripcionesRepository extends CrudRepository
 
         return $suscripciones;
     }
+
+    public function estado($id,$estado){
+        $suscripcion = suscripciones::find($id);
+        $suscripcion->sta = $estado;
+        $suscripcion->save();
+        return response()->json([
+            'message' => 'la suscripción está ahora en estado: ' .$estado
+        ],203);
+    }
 }
