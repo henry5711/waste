@@ -52,6 +52,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
     /** routes para suscripciones **/ 
     $router->get('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
+    $router->get('mostrar/facturas/suscripciones', 'suscripciones\suscripcionesController@mostrarFacturas');
     $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
     $router->get('suscripciones/usuario', 'suscripciones\suscripcionesController@usuariosus');
    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
@@ -66,7 +67,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     * Agregado por Marcos López
     */
     $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
-
+    $router->post('estado/suscripciones','suscripciones\suscripcionesController@estado');
     /**----------------------------------------- */
 
 

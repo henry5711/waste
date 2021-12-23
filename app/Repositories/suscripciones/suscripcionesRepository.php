@@ -21,7 +21,7 @@ class suscripcionesRepository extends CrudRepository
 
     public function _index($request = null, $user = null)
     {
-        return suscripciones::Filtro($request)->get();
+        return suscripciones::Filtro($request)->with(['Clientes','Productos'])->get();
     }
 
     public function verDetalle($id_suscripcion){
@@ -73,5 +73,26 @@ class suscripcionesRepository extends CrudRepository
         if(!$bool){
             return true;
         }
+    }
+
+    public function mostrarFacturas(){
+        $suscripciones = DB::table('facturas_generadas')
+        ->select([
+            'suscripcion',
+            'fecha_facturacion'
+        ])
+        ->orderBy('fecha_facturacion','desc')
+        ->get();
+
+        return $suscripciones;
+    }
+
+    public function estado($id,$estado){
+        $suscripcion = suscripciones::find($id);
+        $suscripcion->sta = $estado;
+        $suscripcion->save();
+        return response()->json([
+            'message' => 'la suscripción está ahora en estado: ' .$estado
+        ],203);
     }
 }
