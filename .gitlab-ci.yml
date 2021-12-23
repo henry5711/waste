@@ -4,7 +4,6 @@ stages:
   - deploy
   - rollback
 
-
 dev_build_job:
   stage: build
   script:
@@ -327,3 +326,42 @@ bukewallet_deploy_job:
     - bukewallet
   only:
     - bukewallet
+
+admiral_build_job:
+  stage:  build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=wasterubick2admiral;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=wasterubick2admiral;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$WASTE_ADMIRAL_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=postgresql;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste.admiral.com;g" .env
+    - echo "#API_URL:" >> .env
+    - echo "URL_API_ACCOUNT=https://account.admiral.com" >> .env 
+    - echo "URL_API_CLIENT=https://client.admiral.com" >> .env 
+    - echo "URL_API_NOTIFICATION=https://notifications.admiral.com" >> .env 
+    - echo "URL_API_WALLET=https://wallet.admiral.com" >> .env 
+    - echo "URL_API_USER=https://user.admiral.com" >> .env 
+    - docker build -t admiral-waste-api .
+  when: on_success
+  tags:
+    - admiral
+  only:
+    - admiral
+ 
+admiral_deploy_job:
+  stage: deploy
+  script:
+    - docker stop admiral-waste-api || true
+    - docker rm admiral-waste-api || true
+    - docker run -d --restart always --name admiral-waste-api --memory="512m" -v admiral-waste-api-images:/var/www/html/public/images -v admiral-waste-api-images:/var/www/html/public/logos --network app -p 9022:80 admiral-waste-api
+    - docker exec admiral-waste-api php artisan migrate
+  when: on_success
+  tags:
+    - admiral
+  only:
+    - admiral
