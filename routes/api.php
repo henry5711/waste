@@ -78,7 +78,14 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->post('prodetalles', 'prodetalle\prodetalleController@_store');
     $router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
     $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
-        
+ 
+    /** routes para Clientes **/ 
+
+    $router->get('clientes', 'Clientes\ClientesController@_index');
+    $router->get('clientes/{id}', 'Clientes\ClientesController@_show');
+    $router->post('clientes', 'Clientes\ClientesController@_store');
+    $router->put('clientes/{id}', 'Clientes\ClientesController@_update');
+    $router->delete('clientes/{id}', 'Clientes\ClientesController@_destroy');
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
 
@@ -87,6 +94,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
         });
 
     });
+
 });
 
     
@@ -97,12 +105,3 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 });
 
  
-
- 
-/** routes para Clientes **/ 
- 
-$router->get('clientes', 'Clientes\ClientesController@_index');
-$router->get('clientes/{id}', 'Clientes\ClientesController@_show');
-$router->post('clientes', 'Clientes\ClientesController@_store');
-$router->put('clientes/{id}', 'Clientes\ClientesController@_update');
-$router->delete('clientes/{id}', 'Clientes\ClientesController@_destroy');

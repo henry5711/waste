@@ -63,15 +63,20 @@ class suscripcionesController extends CrudController
 
     public function facturar(){
         
-        $cobrar=suscripciones::with([
+        $cobrar = suscripciones::with([
                             'Clientes',
                             'Productos'
                         ])
                         ->where('sta','Activa')
                         ->has('Clientes','>')
                         ->get();
-       // $cobrar=json_encode($cobrar);
-        //$c=["list"=>$cobrar];
+                        
+       if( $cobrar->count() == 0 ){
+           return response()->json([
+               "error" => true,
+               "message" => "No hay suscripciones para facturar"
+           ],425);
+       }
         $fecha = Carbon::now()->format('Y-m-d');
         foreach ($cobrar as $sus) {
             DB::table('facturas_generadas')->insertGetId([
