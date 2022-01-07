@@ -151,7 +151,7 @@ class suscripcionesController extends CrudController
                 ],422);
         }
 
-        $id_suscripcion = $request->id;
+        $id_suscripcion = $request->id_suscripcion;
         $estado = $request->estado;
         return $this->service->estado($id_suscripcion,$estado);
     }
