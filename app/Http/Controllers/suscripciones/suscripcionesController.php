@@ -133,11 +133,11 @@ class suscripcionesController extends CrudController
         return $this->service->mostrarFacturas();
     }
 
-    public function estado($id_suscripcion,Request $request){
+    public function estado(Request $request){
         $validator = Validator::make(
             $request->all(),
             [
-                'estado' => Rule::in(['Activa','Pausada'])
+                'estado' => Rule::in(['Activa','Pausada','Cancelada'])
             ],
             [
                 'in' => ':attribute debe ser :values'
