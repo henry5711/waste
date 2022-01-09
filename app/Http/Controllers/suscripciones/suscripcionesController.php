@@ -23,6 +23,23 @@ class suscripcionesController extends CrudController
         parent::__construct($service);
     }
 
+    public function _index(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'estado' => Rule::in(['Activa','Pausada','Cancelada'])
+            ],
+            [
+                'in' => ':attribute debe ser :values'
+            ]
+            );
+        if ($validator->fails()) {
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+        }
+        return parent::_index($request);
+    }
+
     public function _store(Request $request)
     {
 
@@ -68,9 +85,9 @@ class suscripcionesController extends CrudController
                             'Productos'
                         ])
                         ->where('sta','Activa')
-                        ->has('Clientes','>')
+                        ->has('Clientes','>=')
                         ->get();
-                        
+                    
        if( $cobrar->count() == 0 ){
            return response()->json([
                "error" => true,
@@ -87,7 +104,7 @@ class suscripcionesController extends CrudController
         $json = [
             'list' =>$cobrar
         ];
-        // return $json;
+        //return $json;
         $client=new BillingService;
         return $client->generarFacturas($json);
         return response()->json('las suscripciones estan siendo procesadas');
