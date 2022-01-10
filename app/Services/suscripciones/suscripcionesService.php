@@ -148,6 +148,21 @@ class suscripcionesService extends CrudService
     }
 
     public function estado($id,$estado){
+        $suscripcion = suscripciones::find($id);
+
+        if($suscripcion->sta == 'Por Confirmar' && $estado != 'Activa'){
+            return response()->Json([
+                'error' => true,
+                'message' => 'Las suscripciones por confirmar solo pueden pasar a estado Activa'
+            ],425);
+        }
+        if($estado == 'Por Confirmar' && ($suscripcion->sta == 'Activa' || $suscripcion->sta == 'Pausada' || $suscripcion->sta == 'Cancelada')){
+            return response()->Json([
+                'error' => true,
+                'message' => 'Las suscripciones activas, pausadas o canceladas no pueden pasar a estado por confirmar'
+            ],425);
+        }
+
         return $this->repository->estado($id,$estado);
     }
 
