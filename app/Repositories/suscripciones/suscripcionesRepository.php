@@ -51,6 +51,9 @@ class suscripcionesRepository extends CrudRepository
         return $suscripcion;
     }
 
+    /**
+     * Busca todas las suscripciones de un cliente
+     */
     public function buscarClienteId($id_client){
         $this->id_cli = $id_client;
         $suscripciones = suscripciones::whereHas('Clientes', function($query){

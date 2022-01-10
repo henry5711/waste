@@ -10,7 +10,6 @@ class suscripciones extends CrudModel
     protected $guarded = ['id'];
     protected $table = 'suscripciones';
     protected $fillable = [
-        'id',
         'numero',
         'id_client',
         'correo',

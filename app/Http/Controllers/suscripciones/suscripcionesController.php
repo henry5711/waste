@@ -23,6 +23,23 @@ class suscripcionesController extends CrudController
         parent::__construct($service);
     }
 
+    public function _index(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'estado' => Rule::in(['Activa','Pausada','Cancelada'])
+            ],
+            [
+                'in' => ':attribute debe ser :values'
+            ]
+            );
+        if ($validator->fails()) {
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+        }
+        return parent::_index($request);
+    }
+
     public function _store(Request $request)
     {
 
@@ -61,17 +78,33 @@ class suscripcionesController extends CrudController
         return parent::_update($id,$request);
     }
 
-    public function facturar(){
-        
-        $cobrar=suscripciones::with([
-                            'Clientes',
-                            'Productos'
-                        ])
-                        ->where('sta','Activa')
-                        ->has('Clientes','>')
-                        ->get();
-       // $cobrar=json_encode($cobrar);
-        //$c=["list"=>$cobrar];
+    public function facturar($id_suscripcion){
+
+        if($id_suscripcion == 0){
+            $cobrar = suscripciones::with([
+                'Clientes',
+                'Productos'
+            ])
+            ->where('sta','Activa')
+            ->has('Clientes','>=')
+            ->get();
+        }else{
+            $cobrar = suscripciones::with([
+                'Clientes',
+                'Productos'
+            ])
+            ->where('sta','Activa')
+            ->where('id',$id_suscripcion)
+            ->has('Clientes','>=')
+            ->get();
+        }
+       
+       if( $cobrar->count() == 0 ){
+           return response()->json([
+               "error" => true,
+               "message" => "No hay suscripciones para facturar"
+           ],425);
+       }
         $fecha = Carbon::now()->format('Y-m-d');
         foreach ($cobrar as $sus) {
             DB::table('facturas_generadas')->insertGetId([
@@ -82,7 +115,7 @@ class suscripcionesController extends CrudController
         $json = [
             'list' =>$cobrar
         ];
-        // return $json;
+        //return $json;
         $client=new BillingService;
         return $client->generarFacturas($json);
         return response()->json('las suscripciones estan siendo procesadas');
