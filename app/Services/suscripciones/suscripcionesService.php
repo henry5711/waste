@@ -46,7 +46,7 @@ class suscripcionesService extends CrudService
         try{
             
             $request['prox_cob']=$request->fec_ini;
-            $request['sta']="Activa";
+            $request['sta']="Por Confirmar";
             $suscripcion = $this->repository->_store($request);
             $request['id'] = $suscripcion->id;
             
