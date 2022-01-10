@@ -78,16 +78,27 @@ class suscripcionesController extends CrudController
         return parent::_update($id,$request);
     }
 
-    public function facturar(){
-        
-        $cobrar = suscripciones::with([
-                            'Clientes',
-                            'Productos'
-                        ])
-                        ->where('sta','Activa')
-                        ->has('Clientes','>=')
-                        ->get();
-                    
+    public function facturar($id_suscripcion){
+
+        if($id_suscripcion == 0){
+            $cobrar = suscripciones::with([
+                'Clientes',
+                'Productos'
+            ])
+            ->where('sta','Activa')
+            ->has('Clientes','>=')
+            ->get();
+        }else{
+            $cobrar = suscripciones::with([
+                'Clientes',
+                'Productos'
+            ])
+            ->where('sta','Activa')
+            ->where('id',$id_suscripcion)
+            ->has('Clientes','>=')
+            ->get();
+        }
+       
        if( $cobrar->count() == 0 ){
            return response()->json([
                "error" => true,
