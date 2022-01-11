@@ -95,6 +95,7 @@ class suscripcionesRepository extends CrudRepository
         $suscripcion->sta = $estado;
         $suscripcion->save();
         return response()->json([
+            'status' => 202,
             'message' => 'la suscripción está ahora en estado: ' .$estado
         ],200);
     }
