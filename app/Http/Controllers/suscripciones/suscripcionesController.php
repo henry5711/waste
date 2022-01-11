@@ -78,25 +78,33 @@ class suscripcionesController extends CrudController
         return parent::_update($id,$request);
     }
 
-    public function facturar($id_suscripcion){
+    public function facturar(Request $request){
 
-        if($id_suscripcion == 0){
+        if($request->all == true && count($request->suscripciones) == 0){
+            //return 'todas';
             $cobrar = suscripciones::with([
                 'Clientes',
                 'Productos'
             ])
             ->where('sta','Activa')
+            ->has('Clientes','>=')
+            ->get();
+        }else
+        if($request->all == false && count($request->suscripciones) > 0){
+            //return 'determinadas';
+            $cobrar = suscripciones::with([
+                'Clientes',
+                'Productos'
+            ])
+            ->where('sta','Activa')
+            ->whereIn('id',$request->suscripciones)
             ->has('Clientes','>=')
             ->get();
         }else{
-            $cobrar = suscripciones::with([
-                'Clientes',
-                'Productos'
-            ])
-            ->where('sta','Activa')
-            ->where('id',$id_suscripcion)
-            ->has('Clientes','>=')
-            ->get();
+            return response()->json([
+                'error' => true,
+                'message' => 'Incorrecta combinación de parámetros'
+            ],425);
         }
        
        if( $cobrar->count() == 0 ){
@@ -105,6 +113,7 @@ class suscripcionesController extends CrudController
                "message" => "No hay suscripciones para facturar"
            ],425);
        }
+       
         $fecha = Carbon::now()->format('Y-m-d');
         foreach ($cobrar as $sus) {
             DB::table('facturas_generadas')->insertGetId([
