@@ -51,7 +51,8 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
 
     /** routes para suscripciones **/ 
-    $router->get('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
+    $router->post('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
+    $router->get('mostrar/facturas/suscripciones', 'suscripciones\suscripcionesController@mostrarFacturas');
     $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
     $router->get('suscripciones/usuario', 'suscripciones\suscripcionesController@usuariosus');
    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
@@ -59,15 +60,32 @@ $router->group(['prefix' => 'api'], function (Router $router) {
    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
+    $router->get('buscar/cliente/suscripciones/{id_client}','suscripciones\suscripcionesController@buscarClienteId');
+    $router->get('numero/suscripcion','suscripciones\suscripcionesController@generarNumero');
+    $router->get('filtro/cliente/suscripcion/{id_suscripcion}','suscripciones\suscripcionesController@buscarClienteFiltro');
+    /**
+    * Agregado por Marcos López
+    */
+    $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
+    $router->post('estado/suscripciones','suscripciones\suscripcionesController@estado');
+    /**----------------------------------------- */
 
-   /** routes para prodetalle **/ 
-$router->get('prodetalles/suscripcion', 'prodetalle\prodetalleController@detallesus');
-$router->get('prodetalles', 'prodetalle\prodetalleController@_index');
-$router->get('prodetalles/{id}', 'prodetalle\prodetalleController@_show');
-$router->post('prodetalles', 'prodetalle\prodetalleController@_store');
-$router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
-$router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
-    
+
+    /** routes para prodetalle **/ 
+    $router->get('prodetalles/suscripcion', 'prodetalle\prodetalleController@detallesus');
+    $router->get('prodetalles', 'prodetalle\prodetalleController@_index');
+    $router->get('prodetalles/{id}', 'prodetalle\prodetalleController@_show');
+    $router->post('prodetalles', 'prodetalle\prodetalleController@_store');
+    $router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
+    $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
+ 
+    /** routes para Clientes **/ 
+
+    $router->get('clientes', 'Clientes\ClientesController@_index');
+    $router->get('clientes/{id}', 'Clientes\ClientesController@_show');
+    $router->post('clientes', 'Clientes\ClientesController@_store');
+    $router->put('clientes/{id}', 'Clientes\ClientesController@_update');
+    $router->delete('clientes/{id}', 'Clientes\ClientesController@_destroy');
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
 
@@ -76,6 +94,7 @@ $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
         });
 
     });
+
 });
 
     
@@ -86,4 +105,3 @@ $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
 });
 
  
-

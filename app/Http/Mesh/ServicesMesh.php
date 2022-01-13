@@ -27,6 +27,7 @@ class ServicesMesh
         $this->client  = new Client([
             'base_uri' => $this->baseUrl,
             'timeout' => 7,
+            'verify' => false
         ]);
     }
 

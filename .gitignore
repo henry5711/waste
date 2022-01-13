@@ -6,3 +6,5 @@ composer.lock
 database/database.sqlite
 *sublime*
 .env*
+server.bat
+server.sh
