@@ -103,7 +103,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('rutas/{id}', 'rutas\rutasController@_show');
     $router->post('rutas', 'rutas\rutasController@_store');
     $router->put('rutas/{id}', 'rutas\rutasController@_update');
-    $router->delete('rutas/{id}', 'rutas\rutasController@_destroy');
+    $router->delete('rutas/{id}', 'rutas\rutasController@_delete');
 
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
