@@ -8,6 +8,7 @@ namespace App\Services\rutas;
 
 
 use App\Core\CrudService;
+use App\Models\operation;
 use App\Models\rutas;
 use App\Repositories\rutas\rutasRepository;
 use Illuminate\Http\Request;
@@ -27,6 +28,13 @@ class rutasService extends CrudService
     public function _store(Request $request)
     {
        
+        
+        foreach ($request->operaciones as $key) {
+            $ope=operation::find($key);
+            $ope->status='En ruta';
+            $ope->save();
+        }
+        
         $request['status']='CREADA';
 
         $rutu=$this->repository->_store($request);
