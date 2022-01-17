@@ -47,4 +47,11 @@ class rutasService extends CrudService
             $rutu],
             201);
     }
+
+    public function _update($id, Request $request)
+    {
+        $rutu=rutas::find($id);
+        $rutu->Operaciones()->sync($request->operaciones);
+        return parent::_update($id,$request);
+    }
 }
