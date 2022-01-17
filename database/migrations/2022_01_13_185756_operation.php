@@ -21,7 +21,7 @@ class Operation extends Migration
             $table->string('obs',200)->nullable();
             $table->enum('tipo',['web','app']);
             $table->float('peso')->nullable();
-            $table->enum('status',['Creada','Terminada','Cliente NR','Pendiente']);
+            $table->enum('status',['Creada','Terminada','Cliente NR','Pendiente','En ruta']);
             $table->timestamps();
         });
     }

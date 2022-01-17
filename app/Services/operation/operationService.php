@@ -8,6 +8,7 @@ namespace App\Services\operation;
 
 
 use App\Core\CrudService;
+use App\Models\operation;
 use App\Repositories\operation\operationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
