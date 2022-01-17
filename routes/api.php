@@ -87,6 +87,24 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->put('clientes/{id}', 'Clientes\ClientesController@_update');
     $router->delete('clientes/{id}', 'Clientes\ClientesController@_destroy');
 
+    /** routes para operation **/ 
+ 
+    $router->get('operations', 'operation\operationController@_index');
+    $router->get('operations/{id}', 'operation\operationController@_show');
+    $router->post('operations', 'operation\operationController@_store');
+    $router->put('operations/{id}', 'operation\operationController@_update');
+    $router->delete('operations/{id}', 'operation\operationController@_delete');
+
+    /** routes para rutas **/ 
+ 
+    $router->get('rutas', 'rutas\rutasController@_index');
+    $router->get('rutas/all/{id}', 'rutas\rutasController@showrut');
+    $router->get('rutas/{id}', 'rutas\rutasController@_show');
+    $router->post('rutas', 'rutas\rutasController@_store');
+    $router->put('rutas/{id}', 'rutas\rutasController@_update');
+    $router->delete('rutas/{id}', 'rutas\rutasController@_destroy');
+
+
     $router->group(['middleware' => ['authorize']],function () use ($router) {
 
         $router->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($router) {
@@ -104,4 +122,5 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     
 });
 
+ 
  
