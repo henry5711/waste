@@ -121,6 +121,7 @@ class suscripcionesController extends CrudController
                 'fecha_facturacion' => $fecha
             ]);
         }
+        
         $json = [
             'list' =>$cobrar
         ];

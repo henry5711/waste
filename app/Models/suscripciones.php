@@ -33,7 +33,8 @@ class suscripciones extends CrudModel
                     })
                     ->when($request->numero,function($query,$numero){
                         return $query->where('numero','ilike',"%$numero%");
-                    });
+                    })
+                    ->OrderBy('id');
     }
 
     /**
