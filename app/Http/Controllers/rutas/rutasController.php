@@ -17,7 +17,20 @@ class rutasController extends CrudController
 
     public function showrut($id)
     {
+      
         $ruta=rutas::with('Operaciones')->find($id);
+        $ruta->peso_total=$ruta->operaciones->sum('peso');
+        $estado=$ruta->operaciones->where('status','En ruta');
+        
+        if(count($estado)==0)
+        {
+            $r=rutas::find($id);
+            $r->status='TERMINADA';
+            $r->save();
+        }
+        
+
+        
         return $ruta;
     }
 }
