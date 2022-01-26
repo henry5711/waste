@@ -107,4 +107,8 @@ class suscripcionesRepository extends CrudRepository
         $suscripcion->Clientes()->delete();
         return parent::_delete($id);
     }
+
+    public function Filtro($request){
+        return null;
+    }
 }

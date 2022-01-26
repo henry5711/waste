@@ -115,18 +115,13 @@ class suscripcionesController extends CrudController
        }
        
         $fecha = Carbon::now()->format('Y-m-d');
-        foreach ($cobrar as $sus) {
-            DB::table('facturas_generadas')->insertGetId([
-                'suscripcion' => $sus->id,
-                'fecha_facturacion' => $fecha
-            ]);
-        }
+        
         
         $json = [
             'list' =>$cobrar
         ];
         
-        //return $json;
+        return $json;
         $client=new BillingService;
         return $client->generarFacturas($json);
         return response()->json('las suscripciones estan siendo procesadas');
@@ -200,4 +195,7 @@ class suscripcionesController extends CrudController
         return $this->service->estado($id_suscripcion,$estado);
     }
     
+    public function Filtro(Request $request){
+        return $this->service->Filtro($request);
+    }
 }

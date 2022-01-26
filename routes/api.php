@@ -10,6 +10,7 @@
 |
 */
 
+use App\Http\Controllers\suscripciones\suscripcionesController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Router;
@@ -55,14 +56,15 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('mostrar/facturas/suscripciones', 'suscripciones\suscripcionesController@mostrarFacturas');
     $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
     $router->get('suscripciones/usuario', 'suscripciones\suscripcionesController@usuariosus');
-   $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
-   $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
-   $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
-   $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
-   $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
+    $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
+    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
+    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
+    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
+    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
     $router->get('buscar/cliente/suscripciones/{id_client}','suscripciones\suscripcionesController@buscarClienteId');
     $router->get('numero/suscripcion','suscripciones\suscripcionesController@generarNumero');
     $router->get('filtro/cliente/suscripcion/{id_suscripcion}','suscripciones\suscripcionesController@buscarClienteFiltro');
+    $router->get('filtro/suscripcion','suscripciones\suscripcionesController@Filtro');
     /**
     * Agregado por Marcos López
     */

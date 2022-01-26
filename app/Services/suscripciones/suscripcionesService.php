@@ -166,4 +166,8 @@ class suscripcionesService extends CrudService
         return $this->repository->estado($id,$estado);
     }
 
+    public function Filtro($request){
+        return $this->repository->Filtro($request);
+    }
+
 }
