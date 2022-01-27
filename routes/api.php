@@ -105,6 +105,14 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->put('rutas/{id}', 'rutas\rutasController@_update');
     $router->delete('rutas/{id}', 'rutas\rutasController@_delete');
 
+    /** routes para config **/ 
+ 
+    $router->get('configs', 'config\configController@_index');
+    $router->get('configs/{id}', 'config\configController@_show');
+    $router->post('configs', 'config\configController@_store');
+    $router->put('configs/{id}', 'config\configController@_update');
+    $router->delete('configs/{id}', 'config\configController@_delete');
+
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
 
@@ -125,3 +133,11 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
  
  
+ 
+/** routes para config **/ 
+ 
+$router->get('configs', 'config\configController@_index');
+$router->get('configs/{id}', 'config\configController@_show');
+$router->post('configs', 'config\configController@_store');
+$router->put('configs/{id}', 'config\configController@_update');
+$router->delete('configs/{id}', 'config\configController@_delete');
