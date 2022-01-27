@@ -27,13 +27,21 @@ class suscripciones extends CrudModel
     
 
     public function scopeFiltro($query,$request){
+        $bool = false;
+        if($request->fecha_ini != null && $request->fecha_ini != '' && $request->fecha_fin != null && $request->fecha_fin != ''){
+            $bool = true;
+        }
         return $query
                     ->when($request->estado,function($query,$estado){
                         return $query->where('sta','=',$estado);
                     })
                     ->when($request->numero,function($query,$numero){
                         return $query->where('numero','ilike',"%$numero%");
-                    });
+                    })
+                    ->when($bool,function($query) use ($request){
+                        return $query->whereBetween('prox_cob',[$request->fecha_ini,$request->fecha_fin]);
+                    })
+                    ->OrderBy('id');
     }
 
     /**

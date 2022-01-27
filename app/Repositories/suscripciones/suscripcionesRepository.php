@@ -99,4 +99,16 @@ class suscripcionesRepository extends CrudRepository
             'message' => 'la suscripción está ahora en estado: ' .$estado
         ],200);
     }
+
+    public function _delete($id)
+    {
+        $suscripcion = suscripciones::find($id);
+        $suscripcion->Productos()->delete();
+        $suscripcion->Clientes()->delete();
+        return parent::_delete($id);
+    }
+
+    public function Filtro($request){
+        return null;
+    }
 }
