@@ -73,13 +73,18 @@ class operationController extends CrudController
       $hoja->setCellValue('A2',"DEL  $date[0] AL $date[1] ");
       
        //ancho de las celdas
-       $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(200, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(200, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(170, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(170, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(170, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(170, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('G')->setWidth(170, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('G')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('H')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('I')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('L')->setWidth(220, 'px');
 
          //AQUI CENTRO LOS TITULOS
          $archivo->getActiveSheet()->getStyle('A:L')
@@ -105,7 +110,7 @@ class operationController extends CrudController
         
          //TAMAÑO DEL TITULO
          $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
-         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>14, 'color' => [ 'rgb' => '000000' ] ] );
+         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => '000000' ] ] );
          $fila=12;
          foreach ($op as $key) 
          {
