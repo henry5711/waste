@@ -50,8 +50,17 @@ class rutasService extends CrudService
 
     public function _update($id, Request $request)
     {
-        $rutu=rutas::find($id);
-        $rutu->Operaciones()->sync($request->operaciones);
-        return parent::_update($id,$request);
+        if($request->operaciones)
+        {
+            $rutu=rutas::find($id);
+            $rutu->Operaciones()->sync($request->operaciones);
+            return parent::_update($id,$request);
+        }
+
+        else
+        {
+            return parent::_update($id,$request);
+        }
+       
     }
 }

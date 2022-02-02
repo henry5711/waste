@@ -8,6 +8,8 @@ use App\Models\operation;
 use App\Services\operation\operationService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 /** @property operationService $service */
 class operationController extends CrudController
@@ -39,4 +41,100 @@ class operationController extends CrudController
 
         return ["list"=>$op,"total"=>count($op)];
     }
+
+    public function reportope(Request $request)
+    {
+        $op=operation::when($request->date, function($query, $interval){
+            $date = explode('_', $interval);
+            $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+            $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+            return $query->whereBetween(
+                DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+            })
+        ->when($request->name,function($query,$name){
+            //buscar sucursal o usuario
+            return $query->where('name_sucursal','ILIKE',"%$name%");
+        })->get();
+
+     
+        $date = explode('_',$request->date);
+        $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+        $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+
+         //aqui se crea el excel
+       $archivo=new Spreadsheet();
+       //aqui la hoja
+      $hoja=$archivo->getActiveSheet();
+      $hoja->setTitle("Operaciones");
+
+      $hoja->mergeCells('A1:L1');
+      $hoja->mergeCells('A2:L2');
+      $hoja->setCellValue('A1','OPERACIONES DE WASTE');
+      $hoja->setCellValue('A2',"DEL  $date[0] AL $date[1] ");
+      
+       //ancho de las celdas
+       $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('G')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('H')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('I')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('L')->setWidth(220, 'px');
+
+         //AQUI CENTRO LOS TITULOS
+         $archivo->getActiveSheet()->getStyle('A:L')
+         ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+         //COLOR  al primer cuadro
+         $archivo->getActiveSheet()->getStyle('A4:B4')->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('416DA9');
+
+         //titulos
+         $hoja->setCellValue('A4','ID');
+         $hoja->setCellValue('B4','ID CLIENTE O USUARIO');
+         $hoja->setCellValue('C4','NOMBRE SUCURSAL/USUARIO');
+         $hoja->setCellValue('D4','COORDENADA');
+         $hoja->setCellValue('E4','FECHA DE OPERACION');
+         $hoja->setCellValue('F4','FECHA DE REGISTRO');
+         $hoja->setCellValue('G4','USUARIO/CLIENTE');
+         $hoja->setCellValue('H4','PESO');
+         $hoja->setCellValue('I4','TELEFONO');
+         $hoja->setCellValue('J4','WEB/APP');
+         $hoja->setCellValue('K4','REFERENCIA');
+         $hoja->setCellValue('L4','ESTADO');
+        
+         //TAMAÑO DEL TITULO
+         $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
+         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => '000000' ] ] );
+         $fila=12;
+         foreach ($op as $key) 
+         {
+            $hoja->setCellValue('A'.$fila,$key->id);
+            $hoja->setCellValue('B'.$fila,$key->ids);
+            $hoja->setCellValue('C'.$fila,$key->name_sucursal);
+            $hoja->setCellValue('D'.$fila,$key->coordenada);
+            $hoja->setCellValue('E'.$fila,$key->fec_ope);
+            $hoja->setCellValue('F'.$fila,$key->fecha);
+            $hoja->setCellValue('G'.$fila,$key['usu/cli']);
+            $hoja->setCellValue('H'.$fila,$key->peso);
+            $hoja->setCellValue('I'.$fila,$key->tlf);
+            $hoja->setCellValue('J'.$fila,$key->tipo);
+            $hoja->setCellValue('K'.$fila,$key->ref);
+            $hoja->setCellValue('L'.$fila,$key->status);
+
+         }
+
+          //aqui para descargar excel
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="Reporte.xlsx"');
+        $writer=IOFactory::createWriter($archivo,'Xlsx');
+        $writer->save("php://output");
+        exit;
+         
+        }
 }
