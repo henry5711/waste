@@ -105,7 +105,7 @@ class operationController extends CrudController
          $archivo->getActiveSheet()->getStyle('A:L')
          ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
          //COLOR  al primer cuadro
-         $archivo->getActiveSheet()->getStyle('A4:B4')->getFill()
+         $archivo->getActiveSheet()->getStyle('A4:L4')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setRGB('416DA9');
 
@@ -125,8 +125,8 @@ class operationController extends CrudController
         
          //TAMAÑO DEL TITULO
          $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
-         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => '000000' ] ] );
-         $fila=12;
+         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => '000000' ] ] );
+         $fila=5;
          foreach ($op as $key) 
          {
             $hoja->setCellValue('A'.$fila,$key->id);
@@ -141,6 +141,8 @@ class operationController extends CrudController
             $hoja->setCellValue('J'.$fila,$key->tipo);
             $hoja->setCellValue('K'.$fila,$key->ref);
             $hoja->setCellValue('L'.$fila,$key->status);
+            
+            $fila++;
 
          }
 
