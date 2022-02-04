@@ -57,9 +57,16 @@ class operationController extends CrudController
         })->get();
 
      
+        if($request->date==0)
+        {
+            $date='reporte completo';
+        }
+        else
+        {
         $date = explode('_',$request->date);
         $date[0] = Carbon::parse($date[0])->format('Y-m-d');
         $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+        }
 
          //aqui se crea el excel
        $archivo=new Spreadsheet();
@@ -70,7 +77,15 @@ class operationController extends CrudController
       $hoja->mergeCells('A1:L1');
       $hoja->mergeCells('A2:L2');
       $hoja->setCellValue('A1','OPERACIONES DE WASTE');
-      $hoja->setCellValue('A2',"DEL  $date[0] AL $date[1] ");
+       if($request->date==0)
+        {
+            $hoja->setCellValue('A2',"$date");
+        }
+        else
+        {
+            $hoja->setCellValue('A2',"DEL  $date[0] AL $date[1] ");
+        }
+    
       
        //ancho de las celdas
        $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
