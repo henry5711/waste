@@ -141,6 +141,8 @@ class operationController extends CrudController
             $hoja->setCellValue('J'.$fila,$key->tipo);
             $hoja->setCellValue('K'.$fila,$key->ref);
             $hoja->setCellValue('L'.$fila,$key->status);
+            
+            $fila++;
 
          }
 
