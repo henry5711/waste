@@ -50,14 +50,14 @@ class suscripcionesController extends CrudController
                 'clientes' => [ 'required' ]
             ],
             [
-
+                'required' => 'El campo :attribute es requerido'
             ],
             [
                 'numero' => 'numero de suscripcion'
             ]
             );
         if ($validator->fails()) {
-            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
         return parent::_store($request);
     }
@@ -71,11 +71,11 @@ class suscripcionesController extends CrudController
                'clientes' => [ 'required' ]
             ],
             [
-
+                'required' => 'El campo :attribute es requerido'
             ]
             );
         if ($validator->fails()) {
-            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())],422);
+            return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
         return parent::_update($id,$request);
     }
