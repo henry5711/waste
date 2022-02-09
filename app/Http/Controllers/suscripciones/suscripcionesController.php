@@ -46,7 +46,8 @@ class suscripcionesController extends CrudController
         $validator = Validator::make(
             $request->all(),
             [
-                'numero' => [new CaseSensitive('suscripciones')]
+                'numero' => [new CaseSensitive('suscripciones')],
+                'clientes' => [ 'required' ]
             ],
             [
 
@@ -66,7 +67,8 @@ class suscripcionesController extends CrudController
         $validator = Validator::make(
             $request->all(),
             [
-               'numero' => [new CaseSensitiveId('suscripciones',$id)]
+               'numero' => [new CaseSensitiveId('suscripciones',$id)],
+               'clientes' => [ 'required' ]
             ],
             [
 
@@ -173,6 +175,7 @@ class suscripcionesController extends CrudController
     }
 
     public function estado(Request $request){
+        
         $validator = Validator::make(
             $request->all(),
             [
