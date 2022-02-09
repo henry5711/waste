@@ -91,8 +91,10 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
     /** routes para operation **/ 
  
+    $router->get('operations/filter/range', 'operation\operationController@filtro');
     $router->get('operations', 'operation\operationController@_index');
     $router->get('operations/creadas', 'operation\operationController@icreadas');
+    $router->get('operations/filter/report', 'operation\operationController@reportope');
     $router->get('operations/{id}', 'operation\operationController@_show');
     $router->post('operations', 'operation\operationController@_store');
     $router->put('operations/{id}', 'operation\operationController@_update');
@@ -106,6 +108,14 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->post('rutas', 'rutas\rutasController@_store');
     $router->put('rutas/{id}', 'rutas\rutasController@_update');
     $router->delete('rutas/{id}', 'rutas\rutasController@_delete');
+
+    /** routes para config **/ 
+ 
+    $router->get('configs', 'config\configController@_index');
+    $router->get('configs/{id}', 'config\configController@_show');
+    $router->post('configs', 'config\configController@_store');
+    $router->put('configs/{id}', 'config\configController@_update');
+    $router->delete('configs/{id}', 'config\configController@_delete');
 
 
     $router->group(['middleware' => ['authorize']],function () use ($router) {
@@ -127,3 +137,11 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
  
  
+ 
+/** routes para config **/ 
+ 
+$router->get('configs', 'config\configController@_index');
+$router->get('configs/{id}', 'config\configController@_show');
+$router->post('configs', 'config\configController@_store');
+$router->put('configs/{id}', 'config\configController@_update');
+$router->delete('configs/{id}', 'config\configController@_delete');
