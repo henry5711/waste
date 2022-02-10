@@ -75,7 +75,7 @@ qa_build_job:
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=qarubick2waste.zippyttech.com;g" .env
-    - echo "#API_URL:" >> .env
+    - echo "APP_URL=https://qarubick2waste.zippyttech.com" >> .env
     - echo "BILLING_API=qarubick2billing.zippyttech.com/api" >> .env
     - echo "URL_API_ACCOUNT=https://qarubick2account.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://qarubick2client.zippyttech.com" >> .env 
