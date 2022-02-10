@@ -8,6 +8,7 @@ namespace App\Services\suscripciones;
 
 
 use App\Core\CrudService;
+use App\Core\ImageService;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\prodetalle\prodetalleController;
 use App\Http\Mesh\BillingService;
@@ -47,9 +48,13 @@ class suscripcionesService extends CrudService
             
             $request['prox_cob']=$request->fec_ini;
             $request['sta']="Por Confirmar";
+            
+            if($request->ico != null || $request->ico != ''){
+                $request['ico'] = (new ImageService)->image($request->ico);
+            }
+
             $suscripcion = $this->repository->_store($request);
             $request['id'] = $suscripcion->id;
-            
             $this->productos->_store($request);
             $this->clientes->_store($request);
 
@@ -73,9 +78,12 @@ class suscripcionesService extends CrudService
     public function _update($id, Request $request)
     {
         DB::beginTransaction();
-
+        $sus = suscripciones::find($id);
         try{
             $suscripcion = new Request($request->except(['productos','clientes']));
+            if($request->ico != null && $request->ico != '' && $sus->ico != $request->ico){
+                $suscripcion['ico'] = (new ImageService)->image($request->ico);
+            }
             $this->repository->_update($id,$suscripcion);
 
             $clientes = new Request($request->only('clientes'));

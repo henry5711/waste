@@ -59,7 +59,7 @@ class suscripcionesController extends CrudController
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
-        return parent::_store($request);
+        return $this->service->_store($request);
     }
 
     public function _update($id, Request $request)
