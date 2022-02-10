@@ -22,7 +22,9 @@ class suscripciones extends CrudModel
         'base_ip',
         'impuesto',
         'obs',
-        'total'
+        'total',
+        'ico',
+        'titulo'
     ];
     
 
