@@ -38,6 +38,7 @@ class planesRepository extends CrudRepository
             foreach ($pl as $key ) {
                 $f=json_decode($key->condi);
                 $key->condi=$f;
+                $key->icon = env('APP_URL').$key->icon;
               }
     
               return $pl[0];

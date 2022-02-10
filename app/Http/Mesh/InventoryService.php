@@ -46,7 +46,11 @@ class InventoryService extends ServicesMesh
             if ($response->getStatusCode() !== 201){
                 Log::critical($response->getStatusCode() . ":   " .  $response->getBody());
                 return ["id"=> null];
-            }else{
+            }else
+            if  ($response->getStatusCode() === 422){
+
+            }
+            else{
                 // return true;
                 $client = json_decode($response->getBody(),true);
     
