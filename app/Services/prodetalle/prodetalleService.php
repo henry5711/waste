@@ -28,7 +28,7 @@ class prodetalleService extends CrudService
     {
         $bool = [];
         foreach ($request['productos'] as $producto) {
-            if(!$request->has('id_pro')){
+            if(!array_key_exists('id_pro',$producto)){
                $crear_producto = new InventoryService();
                $crear_producto = $crear_producto->guardarProducto($producto);
                $producto['id_pro'] = $crear_producto['id'];
