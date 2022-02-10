@@ -85,16 +85,16 @@ class planesService extends CrudService
 
     public function _delete($id)
     {
-        $pla=suscripciones::where('id_sus',$id)->count();
+        // $pla=suscripciones::where('id_sus',$id)->count();
 
-        if($pla>0)
-        {
-            return response()->json(["error"=>true,"message"=> "Este plan tiene suscripciones no se puede eliminar "],422);
-        }
-        else
-        {
+        // if($pla>0)
+        // {
+        //     return response()->json(["error"=>true,"message"=> "Este plan tiene suscripciones no se puede eliminar "],422);
+        // }
+        // else
+        // {
             return parent::_delete($id);
-        }
+        //}
     }
 
 }
