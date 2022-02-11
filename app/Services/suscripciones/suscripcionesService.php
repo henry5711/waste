@@ -55,9 +55,11 @@ class suscripcionesService extends CrudService
 
             $suscripcion = $this->repository->_store($request);
             $request['id'] = $suscripcion->id;
-            $this->productos->_store($request);
-            $this->clientes->_store($request);
 
+            $productos = $this->productos->_store($request);
+            // return $productos;
+            $clientes = $this->clientes->_store($request);
+            // return $clientes;
                 DB::commit();
             return response()->json([
                 "status" => 201,
@@ -80,10 +82,18 @@ class suscripcionesService extends CrudService
         DB::beginTransaction();
         $sus = suscripciones::find($id);
         try{
+            
             $suscripcion = new Request($request->except(['productos','clientes']));
-            if($request->ico != null && $request->ico != '' && $sus->ico != $request->ico){
-                $suscripcion['ico'] = (new ImageService)->image($request->ico);
+
+            if($request->ico != null && $request->ico != ''){
+                if( ( env('APP_URL') . $sus->ico ) != $request->ico ){
+                    // unlink( ltrim( $sus->ico,'\/' ) );
+                    $request['ico'] = $suscripcion['ico'] = (new ImageService)->image($request->ico);
+                }else{
+                    unset($suscripcion['ico']);
+                }
             }
+            
             $this->repository->_update($id,$suscripcion);
 
             $clientes = new Request($request->only('clientes'));
@@ -92,8 +102,7 @@ class suscripcionesService extends CrudService
             // return $actualizar_clientes;
 
             $productos = new Request($request->only('productos'));
-            $productos['id'] = $id;
-            $actualizar_productos = $this->productos->verificarExistencia($productos);
+            $actualizar_productos = $this->productos->verificarExistencia($productos->productos,$sus);
             // return $actualizar_productos;
 
             DB::commit();

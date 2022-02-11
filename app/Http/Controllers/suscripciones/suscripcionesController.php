@@ -47,7 +47,8 @@ class suscripcionesController extends CrudController
             $request->all(),
             [
                 'numero' => [new CaseSensitive('suscripciones')],
-                'clientes' => [ 'required' ]
+                'clientes' => [ 'required' ],
+                'titulo' => [ new CaseSensitive('suscripciones') ]
             ],
             [
                 'required' => 'El campo :attribute es requerido'
@@ -68,7 +69,8 @@ class suscripcionesController extends CrudController
             $request->all(),
             [
                'numero' => [new CaseSensitiveId('suscripciones',$id)],
-               'clientes' => [ 'required' ]
+               'clientes' => [ 'required' ],
+               'titulo' => [ new CaseSensitiveId('suscripciones',$id) ]
             ],
             [
                 'required' => 'El campo :attribute es requerido'
@@ -77,7 +79,7 @@ class suscripcionesController extends CrudController
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
-        return parent::_update($id,$request);
+        return $this->service->_update($id,$request);
     }
 
     public function facturar(Request $request){
