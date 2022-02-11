@@ -28,4 +28,23 @@ class prodetalleRepository extends CrudRepository
         // return $this->model::query()->create($this->$data);
     }
 
+    public function guardar($data)
+    {
+        // $detalle = new prodetalle();
+        // $detalle
+        $detalle = prodetalle::create($data);
+        return $detalle;
+        // return $this->model::query()->create($this->$data);
+    }
+    
+    public function actualizar($id, $data){
+        $prodetalle = prodetalle::find($id);
+        return $prodetalle->update($data);
+    }
+    public function verificarExistencia($id_productos, $viejos){
+        $eliminar = $viejos->diff(prodetalle::whereIn('id',$id_productos)->get());
+
+        return $eliminar;
+    }
+
 }
