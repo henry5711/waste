@@ -13,6 +13,7 @@ use App\Models\planes;
 use App\Models\suscrip;
 use App\Models\suscripciones;
 use App\Repositories\planes\planesRepository;
+use Exception;
 use Illuminate\Http\Request;
 
 
@@ -64,7 +65,10 @@ class planesService extends CrudService
 
         if($request->icon != null && $request->icon != ''){
             if( ( env('APP_URL') . $plan->icon ) != $request->icon ){
-                unlink( ltrim( $plan->icon,'\/' ) );
+                try{
+                    unlink( ltrim( $plan->icon,'\/' ) );
+                }catch(Exception $e){}
+                
                 $request['icon'] = (new ImageService)->image($request->icon);
             }else{
                 unset($request['icon']);
