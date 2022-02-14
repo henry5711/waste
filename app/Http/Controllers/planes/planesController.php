@@ -61,9 +61,11 @@ class planesController extends CrudController
             if (isset($request->icon))
             {
                 $p=ucfirst($request->plan);
-                $imageService = new ImageService;
-                $back= $imageService->image($request->icon);
-    
+                $back = null;
+                if($request->icon != null && $request->icon != '') {
+                    $imageService = new ImageService;
+                    $back= $imageService->image($request->icon);
+                }
                 $sp=new planes;
                 $sp->plan=$p;
                 $sp->precio=$request->precio;
