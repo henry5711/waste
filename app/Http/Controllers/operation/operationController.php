@@ -163,7 +163,7 @@ class operationController extends CrudController
             ->where(function($query)
             {
                 return $query->orwhere('status','Terminada')
-                             ->orWhere('stauts','Cliente NR');
+                             ->orWhere('status','Cliente NR');
             })
             ->select('id','ids','name_sucursal','status','usu/cli','created_at')->get();
 
