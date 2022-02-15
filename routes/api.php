@@ -93,6 +93,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('operations', 'operation\operationController@_index');
     $router->get('operations/creadas', 'operation\operationController@icreadas');
     $router->get('operations/filter/report', 'operation\operationController@reportope');
+    $router->get('operations/sucursal/mes/report', 'operation\operationController@repodias');
     $router->get('operations/{id}', 'operation\operationController@_show');
     $router->post('operations', 'operation\operationController@_store');
     $router->put('operations/{id}', 'operation\operationController@_update');

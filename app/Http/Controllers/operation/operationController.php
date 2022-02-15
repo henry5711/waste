@@ -154,4 +154,13 @@ class operationController extends CrudController
         exit;
          
         }
+
+        public function repodias(Request $request)
+        {
+            $year=$request->year;
+            $mount=$request->mes;
+            $cope=operation::whereYear('created_at',$year)->whereMonth('created_at',$mount)->where('usu/cli','cliente')->get();
+
+            return $cope;
+        }
 }
