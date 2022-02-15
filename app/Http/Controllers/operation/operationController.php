@@ -165,7 +165,7 @@ class operationController extends CrudController
                 return $query->orwhere('status','Terminada')
                              ->orWhere('status','Cliente NR');
             })
-            ->select('id','ids','name_sucursal','status','usu/cli','created_at',DB::raw('SUM(peso)'))->groupBy('id','ids')->get();
+            ->select('ids','name_sucursal','status','usu/cli','created_at',DB::raw('SUM(peso)'))->groupBy('ids')->get();
 
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
             return $cope;
