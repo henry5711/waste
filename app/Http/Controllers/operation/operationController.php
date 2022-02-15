@@ -164,8 +164,7 @@ class operationController extends CrudController
             {
                 return $query->orwhere('status','Terminada')
                              ->orWhere('status','Cliente NR');
-            })
-           ->get();
+            });
 
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
