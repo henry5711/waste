@@ -160,7 +160,11 @@ class operationController extends CrudController
             $year=$request->year;
             $mount=$request->mes;
             $cope=operation::whereYear('created_at',$year)->whereMonth('created_at',$mount)->where('usu/cli','cliente')
-            ->where('status','Terminada')->Where('status', 'Cliente NR')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('stauts','Cliente NR');
+            })
             ->select('id','ids','name_sucursal','status','usu/cli','created_at')->get();
 
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
