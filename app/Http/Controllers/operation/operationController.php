@@ -169,7 +169,7 @@ class operationController extends CrudController
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
            $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
-           $clientenr=$cope->select('ids',DB::raw('count(*) AS nrcliente'))->where('status','Cliente NR')->groupBy('ids')->get();
+           $clientenr=$cope->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
 
             foreach ($extra as $key)
             {
@@ -177,8 +177,12 @@ class operationController extends CrudController
                 //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
 
-               //cliente nr
-               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nrcliente;
+               if(count($clientenr->where('ids',$key->ids)->first())>0)
+               {
+                   //cliente nr
+               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+              
                  
                
             }
