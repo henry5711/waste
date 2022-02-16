@@ -166,7 +166,7 @@ class operationController extends CrudController
                              ->orWhere('status','Cliente NR');
             });
 
-           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'),DB::raw('COUNT(status WHERE status="Cliente NR")'))->groupBy('ids','name_sucursal')->get();
 
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
             return $extra;
