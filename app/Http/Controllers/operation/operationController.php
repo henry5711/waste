@@ -177,8 +177,12 @@ class operationController extends CrudController
                 //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
 
-               //cliente nr
+               if(count($clientenr->where('ids',$key->ids)->first())>0)
+               {
+                   //cliente nr
                $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+              
                  
                
             }
