@@ -174,13 +174,13 @@ class operationController extends CrudController
             foreach ($extra as $key)
             {
               
+                //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
-                 
 
-               foreach ($clientenr as $nr) 
-               {
-                   # code...
-               }
+               //cliente nr
+               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nrcliente;
+                 
+               
             }
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
             return $extra;
