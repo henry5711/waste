@@ -187,6 +187,6 @@ class operationController extends CrudController
                
             }
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
-            return $extra;
+            return $clientenr;
         }
 }
