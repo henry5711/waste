@@ -173,13 +173,9 @@ class operationController extends CrudController
 
             foreach ($extra as $key)
             {
-               foreach ($terminada as $ter) 
-               {
-                  if($key->ids==$ter->ids)
-                  {
-                      $key->terminadas=$ter->termi;
-                  }
-               }
+              
+               $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+                 
 
                foreach ($clientenr as $nr) 
                {
