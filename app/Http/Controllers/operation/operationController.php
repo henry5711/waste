@@ -221,10 +221,10 @@ class operationController extends CrudController
            ->getStartColor()->setRGB('416DA9');
 
         //titulos
-        $hoja->setCellValue('A4','SUCURSALES');
-        $hoja->setCellValue('B4','Total de lbs reciclado');
-        $hoja->setCellValue('C4','# de recolectas / local');
-        $hoja->setCellValue('D4','# de recolectas no relizadas / local');
+        $hoja->setCellValue('A3','SUCURSALES');
+        $hoja->setCellValue('B3','Total de lbs reciclado');
+        $hoja->setCellValue('C3','# de recolectas / local');
+        $hoja->setCellValue('D3','# de recolectas no relizadas / local');
        
         //TAMAÑO DEL TITULO
         $archivo->getActiveSheet()->getStyle('A3:D3')->getFont()
@@ -243,7 +243,7 @@ class operationController extends CrudController
                 $fila++;
             }
             
-            $hoja->setCellValue('B'.$fila,$total);
+            $hoja->setCellValue('B'.$fila,'TOTAL'.$total);
 
              //aqui para descargar excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
