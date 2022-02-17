@@ -165,10 +165,11 @@ class operationController extends CrudController
                 return $query->orwhere('status','Terminada')
                              ->orWhere('status','Cliente NR');
             })->get();
-           /*
+           
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
            $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
+
            $clientenr=$cope->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
 
             foreach ($extra as $key)
@@ -185,8 +186,8 @@ class operationController extends CrudController
               
                  
                
-            } */
+            } 
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
-            return $cope;
+            return $clientenr;
         }
 }
