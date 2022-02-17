@@ -188,4 +188,108 @@ class suscripcionesService extends CrudService
         return $this->repository->Filtro($request);
     }
 
+    public function calcularFacturas($request){
+        $ids = $request->all ?: $request->suscripciones;
+        $suscripciones = $this->repository->obtenerSuscripciones($ids);
+
+        $cantidad_facturas = $this->cantidadFacturas($suscripciones);
+        // return $cantidad_facturas;
+        
+        $cantidad_clientes = $this->cantidadClientes($suscripciones->load('Clientes'));
+        // return $cantidad_clientes;
+
+        $cantidad_dinero = $this->cantidadDinero($suscripciones);
+        // return $cantidad_dinero;
+
+        return [
+            'facturas_generadas'    => $cantidad_facturas,
+            'clientes_facturados'   => $cantidad_clientes,
+            'total_a_facturar'      => $cantidad_dinero
+        ];
+    }
+
+    private function cantidadFacturas($suscripciones){
+        
+        $total = 0;
+
+        foreach($suscripciones as $suscripcion){
+            $contador = 0;
+            $prox_cob  = Carbon::parse($suscripcion['prox_cob'])->startOfDay();
+            $fecha_ini = Carbon::parse($suscripcion['fec_ini'])->startOfDay();
+            $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->startOfDay();
+            $hoy = Carbon::now()->startOfDay();
+    
+            if($prox_cob->isBefore($fecha_ini)){
+                $prox_cob = $fecha_ini;
+            }
+            
+            if($hoy->isAfter($fecha_fin)){
+                // si hoy es despues a la fecha de vencimiento, se va a contar desde el ultimo pago hasta la fecha de fin
+                $hoy = $fecha_fin;
+            }
+            // return $hoy;
+            /**
+             * Verificar Ciclo de facturacion
+            */
+    
+            if($suscripcion['periodo'] == 'Diaria'){
+                $contador = $prox_cob->diffInDays($hoy);
+            }
+    
+    
+            if($suscripcion['periodo'] == 'Quincenal'){
+                /**
+                 * Facturas quincena
+                */
+                $quincena = $prox_cob;
+                $band = true;
+                $p = $quincena;
+                while ($band) {
+                    if($hoy->isBefore($p) || $hoy->equalTo($p)){
+                        $band= false;
+                    }else{
+                        $p->addDays(15);
+                        $contador += 1;
+                    }
+                }
+            }
+            if($suscripcion['periodo'] == 'Semanal'){
+                $contador = $prox_cob->diffInWeeks($hoy);
+            }
+            if($suscripcion['periodo'] == 'Mensual'){
+                $contador = $prox_cob->diffInMonths($hoy);
+            }
+            if($suscripcion['periodo'] == 'Anual'){
+                $contador = $prox_cob->diffInYears($hoy);
+            }
+
+            $total += $contador;
+        }
+        
+        return $total;
+
+    }
+
+    private function cantidadClientes($suscripciones){
+        
+        $clientes = collect();
+        foreach($suscripciones as $suscripcion){
+            $clientes_suscripcion = $suscripcion->clientes;
+            $ids = $clientes_suscripcion->keyBy('id_client')->keys();
+            $clientes = $clientes->concat($ids);
+        }
+        return $clientes->unique()->values()->count();
+    }
+
+    private function cantidadDinero($suscripciones){
+        $total_dinero = 0;
+        
+        foreach($suscripciones as $suscripcion){
+            $cantidad_facturas = $this->cantidadFacturas([$suscripcion]);
+            $cantidad_clientes = count($suscripcion->clientes);
+            $total_dinero += $cantidad_clientes * $cantidad_facturas * $suscripcion->total;
+        }
+
+        return number_format($total_dinero,3,',','.');
+    }
 }
