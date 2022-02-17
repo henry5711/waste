@@ -104,6 +104,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
     /** routes para rutas **/ 
  
+    $router->get('rutas/filtro', 'rutas\rutasController@filtro');
     $router->get('rutas', 'rutas\rutasController@_index');
     $router->get('rutas/all/{id}', 'rutas\rutasController@showrut');
     $router->get('rutas/{id}', 'rutas\rutasController@_show');
