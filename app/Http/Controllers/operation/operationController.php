@@ -195,6 +195,62 @@ class operationController extends CrudController
                
             } 
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
-            return $extra;
+           
+
+             //aqui se crea el excel
+       $archivo=new Spreadsheet();
+       //aqui la hoja
+      $hoja=$archivo->getActiveSheet();
+      $hoja->setTitle("Operaciones");
+
+      $hoja->mergeCells('A1:D1');
+      $hoja->setCellValue('A1','REPORTE MENSUAL DE SUCURSALES VISITADAS');
+
+      //ancho de las celdas
+      $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(220, 'px');
+
+        //AQUI CENTRO LOS TITULOS
+        $archivo->getActiveSheet()->getStyle('A:D')
+        ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        //COLOR  al primer cuadro
+        $archivo->getActiveSheet()->getStyle('A3:D3')->getFill()
+           ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+           ->getStartColor()->setRGB('416DA9');
+
+        //titulos
+        $hoja->setCellValue('A4','SUCURSALES');
+        $hoja->setCellValue('B4','Total de lbs reciclado');
+        $hoja->setCellValue('C4','# de recolectas / local');
+        $hoja->setCellValue('D4','# de recolectas no relizadas / local');
+       
+        //TAMAÑO DEL TITULO
+        $archivo->getActiveSheet()->getStyle('A3:D3')->getFont()
+        ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => '000000' ] ] );
+
+        $fila=4;
+
+            foreach ($extra as $value)
+            {
+                $hoja->setCellValue('A'.$fila,$value->name_sucursal);
+                $hoja->setCellValue('B'.$fila,$value->sum);
+                $hoja->setCellValue('C'.$fila,$value->terminadas);
+                $hoja->setCellValue('D'.$fila,$value->noatendidas);
+
+                $total=$value->sum + $value->sum;
+                $fila++;
+            }
+            
+            $hoja->setCellValue('B'.$fila,$total);
+
+             //aqui para descargar excel
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="Reporte mesual sucursal.xlsx"');
+        $writer=IOFactory::createWriter($archivo,'Xlsx');
+        $writer->save("php://output");
+        exit;
+
         }
 }
