@@ -44,7 +44,7 @@ class rutasController extends CrudController
             $date[0] = Carbon::parse($date[0])->format('Y-m-d');
             $date[1] = Carbon::parse($date[1])->format('Y-m-d');
             return $query->whereBetween(
-                DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+                DB::raw("TO_CHAR(fec_ruta,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             })
         ->when($request->cod,function($query,$code){
             //buscar sucursal o usuario
