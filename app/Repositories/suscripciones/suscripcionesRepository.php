@@ -111,4 +111,9 @@ class suscripcionesRepository extends CrudRepository
     public function Filtro($request){
         return null;
     }
+
+    public function obtenerSuscripciones($ids){
+        $suscripciones = ( $ids === true ) ? suscripciones::all() : suscripciones::find($ids);
+        return $suscripciones;
+    }
 }
