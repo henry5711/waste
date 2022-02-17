@@ -166,7 +166,13 @@ class operationController extends CrudController
                              ->orWhere('status','Cliente NR');
             });
            
-            $c=$cope;
+            $c=operation::whereYear('created_at',$year)->whereMonth('created_at',$mount)->where('usu/cli','cliente')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('status','Cliente NR');
+            });
+         
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
            $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
