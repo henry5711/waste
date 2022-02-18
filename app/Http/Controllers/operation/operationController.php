@@ -231,7 +231,7 @@ class operationController extends CrudController
         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => '000000' ] ] );
 
         $fila=4;
-
+        $total=0;
             foreach ($extra as $value)
             {
                 $hoja->setCellValue('A'.$fila,$value->name_sucursal);
