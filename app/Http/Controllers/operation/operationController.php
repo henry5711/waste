@@ -243,7 +243,7 @@ class operationController extends CrudController
                 $fila++;
             }
             
-            $hoja->setCellValue('B'.$fila,'TOTAL'.$total);
+            $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
 
              //aqui para descargar excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
