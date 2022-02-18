@@ -48,8 +48,12 @@ class BillingService extends ServicesMesh
     public function generarFacturas($json)
     {
         try {
+            $option = [
+                'header'    => $this->getHeaders($this->getRequest()),
+                'json'      => $json
+            ];
             $endpoint = env('BILLING_API').'/factura/suscripcion';
-            $response = $this->client->post($endpoint, $json);
+            $response = $this->client->post($endpoint, $option);
 
             if ($response->getStatusCode() !== 200){
                 Log::critical($response->getStatusCode() . ":   " .  $response->getBody());
@@ -64,7 +68,11 @@ class BillingService extends ServicesMesh
             Log::critical($exception->getMessage());
             Log::critical($exception->getFile());
 
-            return [$exception->getMessage()];
+            $res = [
+                'error'     => true,
+                'message'   => $exception->getMessage()
+            ];
+            return response()->json($res,422);
         }
 
 

@@ -125,9 +125,10 @@ class suscripcionesController extends CrudController
             'list' =>$cobrar
         ];
         
-        return $json;
+        // return $json;
         $client=new BillingService;
         return $client->generarFacturas($json);
+        
         return response()->json('las suscripciones estan siendo procesadas');
     }
 
