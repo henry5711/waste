@@ -228,7 +228,7 @@ class operationController extends CrudController
        
         //TAMAÑO DEL TITULO
         $archivo->getActiveSheet()->getStyle('A3:D3')->getFont()
-        ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => '000000' ] ] );
+        ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
 
         $fila=4;
         $total=0;
@@ -239,7 +239,7 @@ class operationController extends CrudController
                 $hoja->setCellValue('C'.$fila,$value->terminadas);
                 $hoja->setCellValue('D'.$fila,$value->noatendidas);
 
-                $total=$value->sum + $value->sum;
+                $total+=$value->sum;
                 $fila++;
             }
             
@@ -247,7 +247,7 @@ class operationController extends CrudController
 
              //aqui para descargar excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="Reporte mesual sucursal.xlsx"');
+        header('Content-Disposition: attachment; filename="Reporte mensual sucursal.xlsx"');
         $writer=IOFactory::createWriter($archivo,'Xlsx');
         $writer->save("php://output");
         exit;
