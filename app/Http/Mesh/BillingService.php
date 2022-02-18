@@ -52,7 +52,7 @@ class BillingService extends ServicesMesh
                 'header'    => $this->getHeaders($this->getRequest()),
                 'json'      => $json
             ];
-            $endpoint = '/factura/suscripcion';
+            $endpoint = 'api/factura/suscripcion';
             $response = $this->client->post($endpoint, $option);
 
             if ($response->getStatusCode() !== 200){
