@@ -210,7 +210,7 @@ class operationController extends CrudController
       $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
 
         //AQUI CENTRO LOS TITULOS
         $archivo->getActiveSheet()->getStyle('A:D')
