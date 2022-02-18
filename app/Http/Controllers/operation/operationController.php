@@ -239,7 +239,7 @@ class operationController extends CrudController
                 $hoja->setCellValue('C'.$fila,$value->terminadas);
                 $hoja->setCellValue('D'.$fila,$value->noatendidas);
 
-                $total=$value->sum + $value->sum;
+                $total+=$value->sum;
                 $fila++;
             }
             
