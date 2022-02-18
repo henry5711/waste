@@ -18,7 +18,7 @@ dev_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devrubick2waste.zippyttech.com;g" .env
     - echo "APP_URL=https://devrubick2waste.zippyttech.com" >> .env
-    - echo "BILLING_API=devrubick2billing.zippyttech.com/api" >> .env
+    - echo "BILLING_API=http://devrubick2billing-api" >> .env
     - echo "INVENTORY_API=http://devrubick2inventory-api" >> .env
     - docker build -t devrubick2waste-api .
   when: on_success

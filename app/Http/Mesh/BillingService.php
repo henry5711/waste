@@ -22,7 +22,7 @@ class BillingService extends ServicesMesh
     public function consultarSuscripciones($id,$fecha)
     {
         try {
-            $endpoint = env('BILLING_API').'/historial/'.$id.'?fecha='.$fecha;
+            $endpoint = '/historial/'.$id.'?fecha='.$fecha;
             $options = $this->getOptions($this->getHeaders($this->getRequest()));
             $response = $this->client->get($endpoint, $options);
 
@@ -52,7 +52,7 @@ class BillingService extends ServicesMesh
                 'header'    => $this->getHeaders($this->getRequest()),
                 'json'      => $json
             ];
-            $endpoint = env('BILLING_API').'/factura/suscripcion';
+            $endpoint = '/factura/suscripcion';
             $response = $this->client->post($endpoint, $option);
 
             if ($response->getStatusCode() !== 200){
