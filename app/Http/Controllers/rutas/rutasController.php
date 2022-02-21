@@ -61,4 +61,9 @@ class rutasController extends CrudController
 
         return ["list"=>$op,"total"=>count($op)];
     }
+
+    public function  repofil(Request $request)
+    {
+        
+    }
 }
