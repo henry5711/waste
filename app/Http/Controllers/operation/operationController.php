@@ -203,20 +203,21 @@ class operationController extends CrudController
       $hoja=$archivo->getActiveSheet();
       $hoja->setTitle("Operaciones");
 
-      $hoja->mergeCells('A1:D1');
+      $hoja->mergeCells('A1:E1');
       $hoja->setCellValue('A1','REPORTE MENSUAL DE SUCURSALES VISITADAS');
 
       //ancho de las celdas
-      $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
 
         //AQUI CENTRO LOS TITULOS
-        $archivo->getActiveSheet()->getStyle('A:D')
+        $archivo->getActiveSheet()->getStyle('A:E')
         ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         //COLOR  al primer cuadro
-        $archivo->getActiveSheet()->getStyle('A3:D3')->getFill()
+        $archivo->getActiveSheet()->getStyle('A3:E3')->getFill()
            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
            ->getStartColor()->setRGB('416DA9');
 
@@ -225,6 +226,7 @@ class operationController extends CrudController
         $hoja->setCellValue('B3','Total de lbs reciclado');
         $hoja->setCellValue('C3','# de recolectas / local');
         $hoja->setCellValue('D3','# de recolectas no relizadas / local');
+        $hoja->setCellValue('E3','Promedio');
        
         //TAMAÑO DEL TITULO
         $archivo->getActiveSheet()->getStyle('A3:D3')->getFont()
@@ -238,12 +240,23 @@ class operationController extends CrudController
                 $hoja->setCellValue('B'.$fila,$value->sum);
                 $hoja->setCellValue('C'.$fila,$value->terminadas);
                 $hoja->setCellValue('D'.$fila,$value->noatendidas);
+                if($value->terminadas !=null and $value->noatendidas !=null or $value->terminadas !=0 and $value->noatendidas !=0  )
+                {
+                    $hoja->setCellValue('E'.$fila,$value->terminadas/$value->noatendidas);
+                }
 
+                else
+                {
+                    $hoja->setCellValue('E'.$fila,0);
+                }
+               
                 $total+=$value->sum;
                 $fila++;
             }
             
-            $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
+            $t=count($extra);
+            $hoja->setCellValue('B'.$fila+1,'AVERAGE: '.$total/$t);
+            $hoja->setCellValue('B'.$fila+2,'TOTAL: '.$total);
 
              //aqui para descargar excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
