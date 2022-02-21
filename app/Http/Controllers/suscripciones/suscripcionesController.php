@@ -238,4 +238,26 @@ class suscripcionesController extends CrudController
         }
         return $this->service->calcularFacturas($request);
     }
+
+    public function detalleSuscripcionParaFacturar(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'suscripcion' => 'required'
+            ],
+            [
+                'required' => 'las sucripciones son requeridad'
+            ]
+        );
+
+        if($validator->fails()){
+            $error = [
+                'error' => true,
+                'message' => $validator->getMessageBag()->all()
+            ];
+            return response()->json($error,422);
+        }
+
+        return $this->service->detalleSuscripcionParaFacturar($request->suscripcion);
+    }
 }

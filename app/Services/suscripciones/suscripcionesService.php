@@ -34,6 +34,11 @@ class suscripcionesService extends CrudService
     protected $clientes;
     protected $productos;
 
+    /**
+     * Constructor, instancio clientes y productos
+     *
+     * @param suscripcionesRepository $repository
+     */
     public function __construct(suscripcionesRepository $repository)
     {
         parent::__construct($repository);
@@ -46,21 +51,26 @@ class suscripcionesService extends CrudService
         DB::beginTransaction();
         try{
             
-            $request['prox_cob']=$request->fec_ini;
+            $request['prox_cob']=Carbon::pase($request->fec_ini)->startOfDay();
             $request['sta']="Por Confirmar";
             
             if($request->ico != null || $request->ico != ''){
                 $request['ico'] = (new ImageService)->image($request->ico);
             }
-
+        
+            // creo la suscripcion
             $suscripcion = $this->repository->_store($request);
             $request['id'] = $suscripcion->id;
 
+            // Agrego productos
             $productos = $this->productos->_store($request);
             // return $productos;
+
+            // Agrego clientes
             $clientes = $this->clientes->_store($request);
             // return $clientes;
-                DB::commit();
+
+            DB::commit();
             return response()->json([
                 "status" => 201,
                 'suscripcion' => $request->all()],
@@ -130,6 +140,7 @@ class suscripcionesService extends CrudService
 
     public function generarNumero(){
         $bool = false;
+        $num = false;
         do {
             $num = random_int(0,9999);
             $bool = $this->repository->generarNumero($num);
@@ -202,7 +213,7 @@ class suscripcionesService extends CrudService
         // return $cantidad_dinero;
 
         return [
-            'facturas_generadas'    => $cantidad_facturas,
+            'facturas_generadas'    => $cantidad_facturas * $cantidad_clientes,
             'clientes_facturados'   => $cantidad_clientes,
             'total_a_facturar'      => $cantidad_dinero
         ];
@@ -214,14 +225,15 @@ class suscripcionesService extends CrudService
 
         foreach($suscripciones as $suscripcion){
             $contador = 0;
-            $prox_cob  = Carbon::parse($suscripcion['prox_cob'])->startOfDay();
+            $prox_cob  = Carbon::parse($suscripcion['prox_cob']);
             $fecha_ini = Carbon::parse($suscripcion['fec_ini'])->startOfDay();
-            $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->startOfDay();
+            $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->endOfDay();
             $hoy = Carbon::now()->startOfDay();
     
             if($prox_cob->isBefore($fecha_ini)){
                 $prox_cob = $fecha_ini;
             }
+            // return $prox_cob;
             
             if($hoy->isAfter($fecha_fin)){
                 // si hoy es despues a la fecha de vencimiento, se va a contar desde el ultimo pago hasta la fecha de fin
@@ -231,7 +243,7 @@ class suscripcionesService extends CrudService
             /**
              * Verificar Ciclo de facturacion
             */
-    
+            
             if($suscripcion['periodo'] == 'Diaria'){
                 $contador = $prox_cob->diffInDays($hoy);
             }
@@ -241,17 +253,18 @@ class suscripcionesService extends CrudService
                 /**
                  * Facturas quincena
                 */
-                $quincena = $prox_cob;
                 $band = true;
-                $p = $quincena;
+                $p = $prox_cob;
+                
                 while ($band) {
-                    if($hoy->isBefore($p) || $hoy->equalTo($p)){
-                        $band= false;
-                    }else{
-                        $p->addDays(15);
+                    $p->addDays(15);
+                    if($p->isBefore($hoy) || $hoy->equalTo($p)){
                         $contador += 1;
+                    }else{
+                        $band= false;
                     }
                 }
+                
             }
             if($suscripcion['periodo'] == 'Semanal'){
                 $contador = $prox_cob->diffInWeeks($hoy);
@@ -291,5 +304,58 @@ class suscripcionesService extends CrudService
         }
 
         return number_format($total_dinero,3,',','.');
+    }
+
+    private function cantidadProductos($suscripciones){
+        $total_productos = 0;
+
+        foreach($suscripciones->productos as $producto){
+            $total_productos += $producto->cantidad;
+        }
+
+        return $total_productos;
+    }
+
+    public function detalleSuscripcionParaFacturar($id){
+        try{
+
+            $suscripcion = $this->repository->obtenerSuscripciones($id);
+            // return $suscripcion;
+
+            $cantidad_productos = $this->cantidadProductos($suscripcion->load('Productos'));
+            // return $cantidad_productos;
+
+            $cantidad_facturas = $this->cantidadFacturas([$suscripcion]);
+            // return $cantidad_facturas;
+            
+            $clientes = $suscripcion->Clientes;
+            // return $clientes;
+
+            $total_productos = $cantidad_productos * $cantidad_facturas;
+            $total_facturado = $suscripcion->total * $cantidad_facturas;
+
+            $res = [];
+
+            foreach($clientes as $cliente){
+                $res[] = [
+                    'client_id'         => $cliente->id_client,
+                    'client'            => $cliente->nombre,
+                    'total_productos'   => $total_productos,
+                    'total_facturacion' => number_format($total_facturado,3,',','.'),
+                ];
+            }
+
+            return response()->json([
+                'status'    => 200,
+                'clients'   => $res
+            ],200);
+        }catch(Exception $e){
+            $error = [
+                'error' => true,
+                'message' => $e->getMessage()
+            ];
+            
+            return response()->json($error,422);
+        }
     }
 }

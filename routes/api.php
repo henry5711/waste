@@ -59,6 +59,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
     $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
     $router->post('calcular_facturas/suscripciones','suscripciones\suscripcionesController@calcularFacturas');
+    $router->get('detalle_facturas/suscripciones','suscripciones\suscripcionesController@detalleSuscripcionParaFacturar');
     $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
     $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
     $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
