@@ -45,7 +45,7 @@ class rutasService extends CrudService
     
             $bus=rutas::where('cod_rut',$codigo)->first();
 
-            if (!(isset($bus))) 
+            if ($bus==[] or count($bus)==0 or $bus==null) 
             {
                 $request['cod_rut']=$codigo;
                 $confi=true;

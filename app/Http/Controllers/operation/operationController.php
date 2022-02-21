@@ -256,9 +256,8 @@ class operationController extends CrudController
             
             $t=count($extra);
             $div=$total/$t;
-            dd($div);
-            $hoja->setCellValue('B'.$fila+1,'AVERAGE: '.$div);
-            $hoja->setCellValue('B'.$fila+2,'TOTAL: '.$total);
+            $hoja->setCellValue('B'.$fila,"AVERAGE: $div");
+            $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
 
              //aqui para descargar excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
