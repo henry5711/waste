@@ -51,7 +51,7 @@ class suscripcionesService extends CrudService
         DB::beginTransaction();
         try{
             
-            $request['prox_cob']=Carbon::pase($request->fec_ini)->startOfDay();
+            $request['prox_cob']=Carbon::parse($request->fec_ini)->startOfDay();
             $request['sta']="Por Confirmar";
             
             if($request->ico != null || $request->ico != ''){
