@@ -51,7 +51,7 @@ class rutasService extends CrudService
             }
           
           
-        } while ($confi);
+        } while ($confi==false);
        
         $request['status']='CREADA';
 
