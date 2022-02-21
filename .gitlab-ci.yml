@@ -76,7 +76,7 @@ qa_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=qarubick2waste.zippyttech.com;g" .env
     - echo "APP_URL=https://qarubick2waste.zippyttech.com" >> .env
-    - echo "BILLING_API=qarubick2billing.zippyttech.com/api" >> .env
+    - echo "BILLING_API=http://qarubick2billing-api" >> .env
     - echo "URL_API_ACCOUNT=https://qarubick2account.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://qarubick2client.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://qarubick2notifications.zippyttech.com" >> .env 
@@ -267,7 +267,7 @@ aguaseo_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-aguaseo.zippyttech.com;g" .env
     - echo "#API_URL:" >> .env
-    - echo "BILLING_API=billing.rubick.aguaseo.com/api" >> .env
+    - echo "BILLING_API=http://aguaseo-billing-api" >> .env
     - echo "URL_API_ACCOUNT=https://account-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://client-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications-aguaseo.zippyttech.com" >> .env 
