@@ -253,7 +253,7 @@ class operationController extends CrudController
                
                 $total+=$value->sum;
 
-                for ($i=1; $i = 31 ; $i++)
+                for ($i=0; $i = 30 ; $i++)
                 { 
                   $ox=operation::where('ids',$value->ids)->orderBy('fecha_ope')->get();
 
