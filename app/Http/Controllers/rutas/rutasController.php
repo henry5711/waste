@@ -90,7 +90,7 @@ class rutasController extends CrudController
 
         foreach ($op as $key) 
         {
-         $key->peso_total=$key->operaciones->sum('peso');
+         $key->peso_to=$key->operaciones->sum('peso');
         }
 
 
@@ -149,7 +149,7 @@ class rutasController extends CrudController
             $hoja->setCellValue('C'.$fila,$key->cho_name);
             $hoja->setCellValue('D'.$fila,$key->fec_ruta);
             $hoja->setCellValue('E'.$fila,$key->peso_recibio);
-            $hoja->setCellValue('F'.$fila,$key->peso_total);
+            $hoja->setCellValue('F'.$fila,$key->peso_to);
             $hoja->setCellValue('G'.$fila,$key->cod_rut);
             $hoja->setCellValue('H'.$fila,$key->pt_ini);
             $hoja->setCellValue('I'.$fila,$key->pt_fin);
