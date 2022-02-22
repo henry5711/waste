@@ -197,6 +197,7 @@ class operationController extends CrudController
             // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
            
 
+            $ar=['F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ'];
              //aqui se crea el excel
        $archivo=new Spreadsheet();
        //aqui la hoja
@@ -251,6 +252,17 @@ class operationController extends CrudController
                 }
                
                 $total+=$value->sum;
+
+                for ($i=1; $i = 31 ; $i++)
+                { 
+                  $ox=operation::where('ids',$value->ids)->orderBy('fecha_ope')->get();
+
+                  foreach ($ox as $rope) 
+                  {
+                    $hoja->setCellValue($ar[$i],$rope->peso);
+                  }
+                }
+
                 $fila++;
             }
             
