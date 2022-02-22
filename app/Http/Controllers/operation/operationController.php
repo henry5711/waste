@@ -253,14 +253,9 @@ class operationController extends CrudController
                
                 $total+=$value->sum;
 
-                for ($i=0; $i = 30 ; $i++)
+                for ($i=0; $i <= 30 ; $i++)
                 { 
                   $ox=operation::where('ids',$value->ids)->orderBy('fecha_ope')->get();
-
-                  foreach ($ox as $rope) 
-                  {
-                    $hoja->setCellValue($ar[$i].$fila,$rope->peso);
-                  }
                 }
 
                 $fila++;
