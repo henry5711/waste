@@ -260,7 +260,7 @@ class operationController extends CrudController
                   //aqui tarda optimizar
                   foreach ($ox as $rope) 
                   {
-                    $hoja->setCellValue($ar[$i].$fila,1);
+                    $hoja->setCellValue($ar[$i].$fila,$rope->peso);
                   }
                 }
 
