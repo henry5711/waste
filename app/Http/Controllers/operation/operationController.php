@@ -229,7 +229,7 @@ class operationController extends CrudController
         $hoja->setCellValue('E3','Promedio');
        
         //TAMAÑO DEL TITULO
-        $archivo->getActiveSheet()->getStyle('A3:D3')->getFont()
+        $archivo->getActiveSheet()->getStyle('A3:E3')->getFont()
         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
 
         $fila=4;
