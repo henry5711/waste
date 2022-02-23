@@ -41,7 +41,8 @@ class rutasController extends CrudController
 
     public function filtro(Request $request)
     {
-        $op=rutas::when($request->date, function($query, $interval){
+        $op=rutas::with('Operaciones')
+        ->when($request->date, function($query, $interval){
             $date = explode('_', $interval);
             $date[0] = Carbon::parse($date[0])->format('Y-m-d');
             $date[1] = Carbon::parse($date[1])->format('Y-m-d');
@@ -59,6 +60,10 @@ class rutasController extends CrudController
         ->when($request->sta,function($query,$sta){
             //buscar sucursal o usuario
             return $query->where('status','ILIKE',"%$sta%");
+        })
+        ->when($request->name,function($query,$name){
+            //buscar sucursal o usuario
+            return $query->whereHas('operaciones.name_sucursal','ILIKE',"%$name%");
         })->get();
 
         return ["list"=>$op,"total"=>count($op)];
@@ -85,6 +90,10 @@ class rutasController extends CrudController
         ->when($request->sta,function($query,$sta){
             //buscar sucursal o usuario
             return $query->where('status','ILIKE',"%$sta%");
+        })
+        ->when($request->name,function($query,$name){
+            //buscar sucursal o usuario
+            return $query->whereHas('operaciones.name_sucursal','ILIKE',"%$name%");
         })->get();
 
 
