@@ -63,7 +63,7 @@ class rutasController extends CrudController
         })
         ->when($request->name,function($query,$name){
             //buscar sucursal o usuario
-            return $query->whereHas('operaciones.name_sucursal','ILIKE',"%$name%");
+            return $query->where('operaciones.name_sucursal','ILIKE',"%$name%");
         })->get();
 
         return ["list"=>$op,"total"=>count($op)];
