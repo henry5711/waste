@@ -253,6 +253,8 @@ class operationController extends CrudController
                
                 $total+=$value->sum;
 
+
+                /*idea que no sirvio
                 $ox=operation::where('ids',$value->ids)->whereYear('created_at',$year)->whereMonth('created_at',$mount)->orderBy('fecha_ope')->get();
                 for ($i=0; $i = 30 ; $i++)
                 { 
@@ -261,7 +263,7 @@ class operationController extends CrudController
                   {
                     $hoja->setCellValue($ar[$i].$fila,$rope->peso);
                   }
-                }
+                } */
 
                 $fila++;
             }
