@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
+use Carbon\Carbon;
 
 class suscripciones extends CrudModel
 {
@@ -35,7 +36,12 @@ class suscripciones extends CrudModel
         }
         return $query
                     ->when($request->estado,function($query,$estado){
-                        return $query->where('sta','=',$estado);
+                        if($estado == 'Facturar'){
+                            return $query   ->where( 'sta','Activa')
+                                            ->whereTime( 'prox_cob','<',Carbon::now());
+                        }else{
+                            return $query->where('sta','=',$estado);
+                        }
                     })
                     ->when($request->numero,function($query,$numero){
                         return $query->where('numero','ilike',"%$numero%");
@@ -43,7 +49,7 @@ class suscripciones extends CrudModel
                     ->when($bool,function($query) use ($request){
                         return $query->whereBetween('prox_cob',[$request->fecha_ini,$request->fecha_fin]);
                     })
-                    ->OrderBy('id');
+                    ->OrderBy('id','desc');
     }
 
     /**
