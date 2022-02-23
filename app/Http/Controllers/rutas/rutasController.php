@@ -97,7 +97,10 @@ class rutasController extends CrudController
         })
         ->when($request->name,function($query,$name){
             //buscar sucursal o usuario
-            return $query->whereHas('operaciones.name_sucursal','ILIKE',"%$name%");
+            return $query->whereHas('operaciones', function (Builder $query) use ($name) {
+
+                $query->where('name_sucursal','ILIKE',"%$name%");
+            });
         })->get();
 
 
@@ -113,7 +116,7 @@ class rutasController extends CrudController
       $hoja=$archivo->getActiveSheet();
       $hoja->setTitle("rutas");
 
-      $hoja->mergeCells('A1:J1');
+      $hoja->mergeCells('A1:F1');
       $hoja->setCellValue('A1','REPORTE DE RUTAS');
 
       //ancho de las celdas
@@ -123,50 +126,39 @@ class rutasController extends CrudController
       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('G')->setWidth(220, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('H')->setWidth(300, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('I')->setWidth(300, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
 
         //AQUI CENTRO LOS TITULOS
-        $archivo->getActiveSheet()->getStyle('A:J')
+        $archivo->getActiveSheet()->getStyle('A:F')
         ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         //COLOR  al primer cuadro
-        $archivo->getActiveSheet()->getStyle('A3:J3')->getFill()
+        $archivo->getActiveSheet()->getStyle('A3:F3')->getFill()
            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
            ->getStartColor()->setRGB('416DA9');
 
         //titulos
-        $hoja->setCellValue('A3','ID');
-        $hoja->setCellValue('B3','NUMERO DE CHOFER');
-        $hoja->setCellValue('C3','NOMBRE DE CHOFER');
-        $hoja->setCellValue('D3','FECHA DE RUTA');
+        $hoja->setCellValue('A3','CODIGO');
+        $hoja->setCellValue('B3','FECHA DE RUTA');
+        $hoja->setCellValue('C3','CHOFER');
+        $hoja->setCellValue('D3','PESO TOTAL');
         $hoja->setCellValue('E3','PESO RECIBIDO');
-        $hoja->setCellValue('F3','PESO TOTAL');
-        $hoja->setCellValue('G3','CODIGO');
-        $hoja->setCellValue('H3','PUNTO DE INICIO');
-        $hoja->setCellValue('I3','PUNTO DE FIN');
-        $hoja->setCellValue('J3','ESTATUS');
+        $hoja->setCellValue('F3','ESTATUS');
 
        
         //TAMAÑO DEL TITULO
-        $archivo->getActiveSheet()->getStyle('A3:J3')->getFont()
+        $archivo->getActiveSheet()->getStyle('A3:F3')->getFont()
         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
 
         $fila=4;
 
         foreach ($op as $key)
         {
-            $hoja->setCellValue('A'.$fila,$key->id);
-            $hoja->setCellValue('B'.$fila,$key->cho_id);
+            $hoja->setCellValue('A'.$fila,$key->cod_rut);
+            $hoja->setCellValue('B'.$fila,$key->fec_ruta);
             $hoja->setCellValue('C'.$fila,$key->cho_name);
-            $hoja->setCellValue('D'.$fila,$key->fec_ruta);
+            $hoja->setCellValue('D'.$fila,$key->peso_to);
             $hoja->setCellValue('E'.$fila,$key->peso_recibio);
-            $hoja->setCellValue('F'.$fila,$key->peso_to);
-            $hoja->setCellValue('G'.$fila,$key->cod_rut);
-            $hoja->setCellValue('H'.$fila,$key->pt_ini);
-            $hoja->setCellValue('I'.$fila,$key->pt_fin);
-            $hoja->setCellValue('J'.$fila,$key->status);
+            $hoja->setCellValue('F'.$fila,$key->status);
+           
             $fila++;
         }
 
