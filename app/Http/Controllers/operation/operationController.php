@@ -74,8 +74,8 @@ class operationController extends CrudController
       $hoja=$archivo->getActiveSheet();
       $hoja->setTitle("Operaciones");
 
-      $hoja->mergeCells('A1:L1');
-      $hoja->mergeCells('A2:L2');
+      $hoja->mergeCells('A1:K1');
+      $hoja->mergeCells('A2:K2');
       $hoja->setCellValue('A1','OPERACIONES DE WASTE');
        if($request->date==0)
         {
@@ -99,13 +99,12 @@ class operationController extends CrudController
        $archivo->getActiveSheet()->getColumnDimension('I')->setWidth(220, 'px');
        $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
        $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(220, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('L')->setWidth(220, 'px');
 
          //AQUI CENTRO LOS TITULOS
-         $archivo->getActiveSheet()->getStyle('A:L')
+         $archivo->getActiveSheet()->getStyle('A:K')
          ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
          //COLOR  al primer cuadro
-         $archivo->getActiveSheet()->getStyle('A4:L4')->getFill()
+         $archivo->getActiveSheet()->getStyle('A4:K4')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setRGB('416DA9');
 
@@ -113,34 +112,32 @@ class operationController extends CrudController
          $hoja->setCellValue('A4','ID');
          $hoja->setCellValue('B4','ID CLIENTE O USUARIO');
          $hoja->setCellValue('C4','NOMBRE SUCURSAL/USUARIO');
-         $hoja->setCellValue('D4','COORDENADA');
-         $hoja->setCellValue('E4','FECHA DE OPERACION');
-         $hoja->setCellValue('F4','FECHA DE REGISTRO');
-         $hoja->setCellValue('G4','USUARIO/CLIENTE');
-         $hoja->setCellValue('H4','PESO');
-         $hoja->setCellValue('I4','TELEFONO');
-         $hoja->setCellValue('J4','WEB/APP');
-         $hoja->setCellValue('K4','REFERENCIA');
-         $hoja->setCellValue('L4','ESTADO');
+         $hoja->setCellValue('D4','FECHA DE OPERACION');
+         $hoja->setCellValue('E4','FECHA DE REGISTRO');
+         $hoja->setCellValue('F4','USUARIO/CLIENTE');
+         $hoja->setCellValue('G4','PESO');
+         $hoja->setCellValue('H4','TELEFONO');
+         $hoja->setCellValue('I4','WEB/APP');
+         $hoja->setCellValue('J4','REFERENCIA');
+         $hoja->setCellValue('K4','ESTADO');
         
          //TAMAÑO DEL TITULO
-         $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
-         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => '000000' ] ] );
+         $archivo->getActiveSheet()->getStyle('A4:K4')->getFont()
+         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => 'ffffff' ] ] );
          $fila=5;
          foreach ($op as $key) 
          {
             $hoja->setCellValue('A'.$fila,$key->id);
             $hoja->setCellValue('B'.$fila,$key->ids);
             $hoja->setCellValue('C'.$fila,$key->name_sucursal);
-            $hoja->setCellValue('D'.$fila,$key->coordenada);
-            $hoja->setCellValue('E'.$fila,$key->fec_ope);
-            $hoja->setCellValue('F'.$fila,$key->fecha);
-            $hoja->setCellValue('G'.$fila,$key['usu/cli']);
-            $hoja->setCellValue('H'.$fila,$key->peso);
-            $hoja->setCellValue('I'.$fila,$key->tlf);
-            $hoja->setCellValue('J'.$fila,$key->tipo);
-            $hoja->setCellValue('K'.$fila,$key->ref);
-            $hoja->setCellValue('L'.$fila,$key->status);
+            $hoja->setCellValue('D'.$fila,$key->fec_ope);
+            $hoja->setCellValue('E'.$fila,$key->fecha);
+            $hoja->setCellValue('F'.$fila,$key['usu/cli']);
+            $hoja->setCellValue('G'.$fila,$key->peso);
+            $hoja->setCellValue('H'.$fila,$key->tlf);
+            $hoja->setCellValue('I'.$fila,$key->tipo);
+            $hoja->setCellValue('J'.$fila,$key->ref);
+            $hoja->setCellValue('K'.$fila,$key->status);
             
             $fila++;
 
