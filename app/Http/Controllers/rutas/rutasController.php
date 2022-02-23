@@ -66,7 +66,7 @@ class rutasController extends CrudController
             //buscar sucursal o usuario
             return $query->whereHas('operaciones', function (Builder $query) use ($name) {
 
-                $query->where('operaciones.name_sucursal','ILIKE',"%$name%");
+                $query->where('name_sucursal','ILIKE',"%$name%");
             });
         })->get();
 
