@@ -77,11 +77,16 @@ class suscripcionesController extends CrudController
             [
                'numero' => [new CaseSensitiveId('suscripciones',$id)],
                'clientes' => [ 'required' ],
-               'titulo' => [ new CaseSensitiveId('suscripciones',$id) ]
+               'titulo' => [ new CaseSensitiveId('suscripciones',$id) ],
+               'periodo'   =>  [ 
+                    new CheckVerify($request->fec_ini,$request->fec_fin), 
+                    Rule::in(['Diaria','Semanal','Quincenal','Mensual','Anual', 'Por recogida'])
+                ],
             ],
             [
-                'required' => 'El campo :attribute es requerido'
-            ]
+                'required'  => 'El campo :attribute es requerido',
+                'in'        => 'El campo :attribute debe ser: :values'
+            ],
             );
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
