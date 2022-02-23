@@ -224,7 +224,9 @@ class suscripcionesService extends CrudService
         $total = 0;
 
         foreach($suscripciones as $suscripcion){
+            $cantidad_clientes = 0;
             $contador = 0;
+
             $prox_cob  = Carbon::parse($suscripcion['prox_cob']);
             $fecha_ini = Carbon::parse($suscripcion['fec_ini'])->startOfDay();
             $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->endOfDay();
@@ -276,7 +278,8 @@ class suscripcionesService extends CrudService
                 $contador = $prox_cob->diffInYears($hoy);
             }
 
-            $total += $contador;
+            $cantidad_clientes = $this->cantidadClientes([$suscripcion]);
+            $total += ( $contador * $cantidad_clientes);
         }
         
         return $total;
