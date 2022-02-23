@@ -280,7 +280,7 @@ class suscripcionesService extends CrudService
         }
         
         return $total;
-
+        
     }
 
     private function cantidadClientes($suscripciones){

@@ -8,6 +8,7 @@ use App\Http\Mesh\BillingService;
 use App\Models\suscripciones;
 use App\Rules\CaseSensitive;
 use App\Rules\CaseSensitiveId;
+use App\Rules\CheckVerify;
 use App\Services\suscripciones\suscripcionesService;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -42,16 +43,22 @@ class suscripcionesController extends CrudController
 
     public function _store(Request $request)
     {
-
+        
         $validator = Validator::make(
             $request->all(),
             [
-                'numero' => [new CaseSensitive('suscripciones')],
-                'clientes' => [ 'required' ],
-                'titulo' => [ new CaseSensitive('suscripciones') ]
+                'numero'    =>  [ new CaseSensitive('suscripciones') ],
+                'clientes'  =>  [ 'required' ],
+                'titulo'    =>  [ new CaseSensitive('suscripciones') ],
+                'periodo'   =>  [ 
+                                    new CheckVerify($request->fec_ini,$request->fec_fin), 
+                                    Rule::in(['Diaria','Semanal','Quincenal','Mensual','Anual', 'Por recogida'])
+                                ],
+
             ],
             [
-                'required' => 'El campo :attribute es requerido'
+                'required'  => 'El campo :attribute es requerido',
+                'in'        => 'El campo :attribute debe ser: :values'
             ],
             [
                 'numero' => 'numero de suscripcion'
