@@ -122,7 +122,7 @@ class rutasController extends CrudController
       //ancho de las celdas
       $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(300, 'px');
       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
