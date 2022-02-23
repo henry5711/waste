@@ -29,7 +29,7 @@ class suscripcionesController extends CrudController
         $validator = Validator::make(
             $request->all(),
             [
-                'estado' => Rule::in(['Activa','Pausada','Cancelada'])
+                'estado' => Rule::in(['Activa','Pausada','Cancelada','Facturar'])
             ],
             [
                 'in' => ':attribute debe ser :values'
@@ -152,6 +152,10 @@ class suscripcionesController extends CrudController
             $susc = $s['id'];
             $up=suscripciones::where('id',$susc)->first();
             $up->prox_cob=$s['cobro'];
+            $date = Carbon::parse($s['cobro'])->format('Y-m-d');
+            if($up->fec_fin == $date ){
+                $up->sta = 'Finalizada';
+            }
             $up->save();
         }
 
