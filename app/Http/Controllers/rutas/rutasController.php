@@ -8,6 +8,7 @@ use App\Models\operation;
 use App\Models\rutas;
 use App\Services\rutas\rutasService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -63,7 +64,10 @@ class rutasController extends CrudController
         })
         ->when($request->name,function($query,$name){
             //buscar sucursal o usuario
-            return $query->where('operaciones.name_sucursal','ILIKE',"%$name%");
+            return $query->whereHas('operaciones', function (Builder $query) use ($name) {
+
+                $query->where('operaciones.name_sucursal','ILIKE',"%$name%");
+            });
         })->get();
 
         return ["list"=>$op,"total"=>count($op)];
