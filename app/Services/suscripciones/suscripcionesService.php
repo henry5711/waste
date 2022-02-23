@@ -213,7 +213,7 @@ class suscripcionesService extends CrudService
         // return $cantidad_dinero;
 
         return [
-            'facturas_generadas'    => $cantidad_facturas * $cantidad_clientes,
+            'facturas_generadas'    => $cantidad_facturas,
             'clientes_facturados'   => $cantidad_clientes,
             'total_a_facturar'      => $cantidad_dinero
         ];

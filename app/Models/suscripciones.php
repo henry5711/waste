@@ -52,6 +52,11 @@ class suscripciones extends CrudModel
                     ->OrderBy('id','desc');
     }
 
+    public function scopeFacturar($query){
+        $query  ->where( 'sta','Activa')
+                ->whereTime( 'prox_cob','<',Carbon::now());
+    }
+
     /**
      * Get all of the Productos for the suscripciones
      *

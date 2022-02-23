@@ -113,7 +113,7 @@ class suscripcionesRepository extends CrudRepository
     }
 
     public function obtenerSuscripciones($ids){
-        $suscripciones = ( $ids === true ) ? suscripciones::all() : suscripciones::find($ids);
+        $suscripciones = ( $ids === true ) ? suscripciones::all() : suscripciones::facturar()->find($ids);
         return $suscripciones;
     }
 }
