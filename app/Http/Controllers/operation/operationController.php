@@ -253,10 +253,9 @@ class operationController extends CrudController
                
                 $total+=$value->sum;
 
+                $ox=operation::where('ids',$value->ids)->whereYear('created_at',$year)->whereMonth('created_at',$mount)->orderBy('fecha_ope')->get();
                 for ($i=0; $i <= 30 ; $i++)
                 { 
-                  $ox=operation::where('ids',$value->ids)->whereYear('created_at',$year)->whereMonth('created_at',$mount)->orderBy('fecha_ope')->get();
-
                   //aqui tarda optimizar
                   foreach ($ox as $rope) 
                   {
