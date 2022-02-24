@@ -82,8 +82,8 @@ class operationController extends CrudController
       $hoja=$archivo->getActiveSheet();
       $hoja->setTitle("Operaciones");
 
-      $hoja->mergeCells('A1:K1');
-      $hoja->mergeCells('A2:K2');
+      $hoja->mergeCells('A1:L1');
+      $hoja->mergeCells('A2:L2');
       $hoja->setCellValue('A1','OPERACIONES DE WASTE');
        if($request->date==0)
         {
@@ -106,13 +106,14 @@ class operationController extends CrudController
        $archivo->getActiveSheet()->getColumnDimension('H')->setWidth(220, 'px');
        $archivo->getActiveSheet()->getColumnDimension('I')->setWidth(220, 'px');
        $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
-       $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(220, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(260, 'px');
+       $archivo->getActiveSheet()->getColumnDimension('L')->setWidth(220, 'px');
 
          //AQUI CENTRO LOS TITULOS
-         $archivo->getActiveSheet()->getStyle('A:K')
+         $archivo->getActiveSheet()->getStyle('A:L')
          ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
          //COLOR  al primer cuadro
-         $archivo->getActiveSheet()->getStyle('A4:K4')->getFill()
+         $archivo->getActiveSheet()->getStyle('A4:L4')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setRGB('416DA9');
 
@@ -127,7 +128,8 @@ class operationController extends CrudController
          $hoja->setCellValue('H4','TELEFONO');
          $hoja->setCellValue('I4','WEB/APP');
          $hoja->setCellValue('J4','REFERENCIA');
-         $hoja->setCellValue('K4','ESTADO');
+         $hoja->setCellValue('K4','OBSERVACION');
+         $hoja->setCellValue('L4','ESTADO');
         
          //TAMAÑO DEL TITULO
          $archivo->getActiveSheet()->getStyle('A4:K4')->getFont()
@@ -145,7 +147,8 @@ class operationController extends CrudController
             $hoja->setCellValue('H'.$fila,$key->tlf);
             $hoja->setCellValue('I'.$fila,$key->tipo);
             $hoja->setCellValue('J'.$fila,$key->ref);
-            $hoja->setCellValue('K'.$fila,$key->status);
+            $hoja->setCellValue('K'.$fila,$key->obs);
+            $hoja->setCellValue('L'.$fila,$key->status);
             
             $fila++;
 
