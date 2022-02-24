@@ -130,8 +130,8 @@ class operationController extends CrudController
             $hoja->setCellValue('A'.$fila,$key->id);
             $hoja->setCellValue('B'.$fila,$key->ids);
             $hoja->setCellValue('C'.$fila,$key->name_sucursal);
-            $hoja->setCellValue('D'.$fila,$key->fec_ope);
-            $hoja->setCellValue('E'.$fila,$key->fecha);
+            $hoja->setCellValue('D'.$fila,$key->fecha);
+            $hoja->setCellValue('E'.$fila,$key->fecha_ope);
             $hoja->setCellValue('F'.$fila,$key['usu/cli']);
             $hoja->setCellValue('G'.$fila,$key->peso);
             $hoja->setCellValue('H'.$fila,$key->tlf);
