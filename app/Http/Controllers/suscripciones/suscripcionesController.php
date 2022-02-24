@@ -91,6 +91,15 @@ class suscripcionesController extends CrudController
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
+
+        $suscripcion = $this->_show($id);
+        if($suscripcion->sta != 'Por Confirmar'){
+            $error = [
+                'error' => true,
+                'message' => 'Solo se pueden editar las suscripciones en estado: Por Confirmar'
+            ];
+            return response()->json([$error,422]);
+        }
         return $this->service->_update($id,$request);
     }
 
