@@ -12,6 +12,7 @@ use App\Core\CrudService;
 use App\Models\operation;
 use App\Models\rutas;
 use App\Repositories\rutas\rutasRepository;
+use Faker\Factory;
 use Illuminate\Http\Request;
 
 /** @property rutasRepository $repository */
@@ -35,7 +36,24 @@ class rutasService extends CrudService
             $ope->status='En ruta';
             $ope->save();
         }
-        
+
+        $confi=false;
+        do {
+
+            $faker = Factory::create();
+            $codigo = $faker->regexify('[A-Z]{5}[0-9]{3}');
+    
+            $bus=rutas::where('cod_rut',$codigo)->first();
+
+            if ($bus==[] or count($bus)==0 or $bus==null) 
+            {
+                $request['cod_rut']=$codigo;
+                $confi=true;
+            }
+          
+          
+        } while ($confi==false);
+       
         $request['status']='CREADA';
 
         $rutu=$this->repository->_store($request);

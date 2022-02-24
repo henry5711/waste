@@ -97,6 +97,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('operations', 'operation\operationController@_index');
     $router->get('operations/creadas', 'operation\operationController@icreadas');
     $router->get('operations/filter/report', 'operation\operationController@reportope');
+    $router->get('operations/sucursal/mes/report', 'operation\operationController@repodias');
     $router->get('operations/{id}', 'operation\operationController@_show');
     $router->post('operations', 'operation\operationController@_store');
     $router->put('operations/{id}', 'operation\operationController@_update');
@@ -104,6 +105,8 @@ $router->group(['prefix' => 'api'], function (Router $router) {
 
     /** routes para rutas **/ 
  
+    $router->get('rutas/filtro', 'rutas\rutasController@filtro');
+    $router->get('rutas/filtro/report', 'rutas\rutasController@repofil');
     $router->get('rutas', 'rutas\rutasController@_index');
     $router->get('rutas/all/{id}', 'rutas\rutasController@showrut');
     $router->get('rutas/{id}', 'rutas\rutasController@_show');
