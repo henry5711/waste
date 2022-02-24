@@ -58,6 +58,10 @@ class operationController extends CrudController
         ->when($request->name,function($query,$name){
             //buscar sucursal o usuario
             return $query->where('name_sucursal','ILIKE',"%$name%");
+        })
+        ->when($request->sta,function($query,$sta){
+            //buscar por estatus
+            return $query->where('status','ILIKE',"%$sta%");
         })->get();
 
      
