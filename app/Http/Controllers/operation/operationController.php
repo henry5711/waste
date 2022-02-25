@@ -288,6 +288,61 @@ class operationController extends CrudController
         $writer=IOFactory::createWriter($archivo,'Xlsx');
         $writer->save("php://output");
         exit;
+        }
 
+        public function sucurconsulta(Request $request)
+        {
+            $date=$request->date;
+
+            $cope=operation::where('usu/cli','cliente')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('status','Cliente NR');
+            })
+            ->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+            });
+           
+            $c=operation::where('usu/cli','cliente')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('status','Cliente NR');
+            })
+            ->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+            });
+         
+           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+
+           $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
+
+           $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
+
+            foreach ($extra as $key)
+            {
+              
+                //terminada
+               $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+
+               if(count($clientenr->where('ids',$key->ids))>0)
+               {
+                   //cliente nr
+               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+              
+                 
+               
+            } 
+            return ["list"=>$extra,"total"=>count($extra)];
         }
 }
