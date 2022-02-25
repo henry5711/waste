@@ -338,7 +338,7 @@ class operationController extends CrudController
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
            $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
-
+           dd($terminada);
            $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
 
            $total=0;
