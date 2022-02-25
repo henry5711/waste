@@ -132,7 +132,7 @@ class operationController extends CrudController
          $hoja->setCellValue('L4','ESTADO');
         
          //TAMAÑO DEL TITULO
-         $archivo->getActiveSheet()->getStyle('A4:K4')->getFont()
+         $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
          ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => 'ffffff' ] ] );
          $fila=5;
          foreach ($op as $key) 
@@ -328,6 +328,7 @@ class operationController extends CrudController
 
            $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
 
+           $total=0;
             foreach ($extra as $key)
             {
               
@@ -340,9 +341,14 @@ class operationController extends CrudController
                $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
                }
               
-                 
+               $total+=$key->sum;
                
             } 
+
+            foreach ($extra as $val) 
+            {
+               $val->promedio=$val->terminadas/$val->noatendidas;
+            }
             return ["list"=>$extra,"total"=>count($extra)];
         }
 }
