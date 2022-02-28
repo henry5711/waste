@@ -203,8 +203,12 @@ class operationController extends CrudController
             foreach ($extra as $key)
             {
               
+                if(count($terminada->where('ids',$key->ids))>0)
+                {
                 //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+
+                }
 
                if(count($clientenr->where('ids',$key->ids))>0)
                {
@@ -372,7 +376,16 @@ class operationController extends CrudController
 
             foreach ($extra as $val) 
             {
-               $val->promedio=$val->terminadas/$val->noatendidas;
+                if($val->terminadas>0 and $val->noatendidas>0)
+                {
+                    $val->promedio=$val->terminadas/$val->noatendidas;
+                }
+
+                else
+                {
+                    $val->promedio=0; 
+                }
+             
             }
             return ["list"=>$extra,"total"=>count($extra)];
         }
