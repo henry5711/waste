@@ -344,14 +344,26 @@ class operationController extends CrudController
            $total=0;
             foreach ($extra as $key)
             {
-              
-                //terminada
+               if(count($terminada->where('ids',$key->ids))>0)
+               {
+               //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+               }
 
+               else
+               {
+                $key->terminadas=0;
+               }
+             
                if(count($clientenr->where('ids',$key->ids))>0)
                {
                    //cliente nr
                $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+
+               else
+               {
+                $key->noatendidas=0;
                }
               
                $total+=$key->sum;
