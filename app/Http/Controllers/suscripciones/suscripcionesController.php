@@ -67,6 +67,9 @@ class suscripcionesController extends CrudController
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
+
+        $request['prox_operation'] = $request->fec_ini;
+        
         return $this->service->_store($request);
     }
 
@@ -100,6 +103,9 @@ class suscripcionesController extends CrudController
             ];
             return response()->json([$error,422]);
         }
+
+        $request['prox_operation'] = $request->fec_ini;
+        
         return $this->service->_update($id,$request);
     }
 
@@ -284,5 +290,33 @@ class suscripcionesController extends CrudController
         }
 
         return $this->service->detalleSuscripcionParaFacturar($request->suscripcion);
+    }
+
+    public function generateOperations(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'suscripciones'    => 'required|integer',
+            ],
+            [
+                'integer'   => 'El campo :attribute debe ser un número',
+                'required'  => 'El campo :attribute es requerido',
+            ]
+        );
+
+        if($validator->fails()){
+            $error = [
+                'error' => true,
+                'message' => $validator->getMessageBag()->all()
+            ];
+            
+            return response()->json($error,422);
+        }
+
+        return $this->service->generateOperations($request);
+    }
+
+    public static function getGenerateOperations($request){
+        return self::getGenerateOperations($request);
     }
 }

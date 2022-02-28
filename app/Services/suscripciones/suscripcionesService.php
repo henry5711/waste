@@ -12,6 +12,7 @@ use App\Core\ImageService;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\prodetalle\prodetalleController;
 use App\Http\Mesh\BillingService;
+use App\Jobs\CreateSuscriptionOperations;
 use App\Models\Clientes;
 use App\Repositories\prodetalle\prodetalleRepository;
 use App\Services\prodetalle\prodetalleService;
@@ -360,5 +361,12 @@ class suscripcionesService extends CrudService
             
             return response()->json($error,422);
         }
+    }
+
+    public function generateOperations($request){
+        dispatch(new CreateSuscriptionOperations());
+        $ids = $request->all ?: $request->suscripciones;
+        $suscripciones = $this->repository->obtenerSuscripcionesOperaciones($ids);
+
     }
 }

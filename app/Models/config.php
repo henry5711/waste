@@ -9,5 +9,9 @@ class config extends CrudModel
 {
     protected $guarded = ['id'];
     protected $table='config';
-    protected $fillable = ['pt_ini_cfg','pt_fin_cfg'];
+    protected $fillable = [
+        'pt_ini_cfg',
+        'pt_fin_cfg',
+        'automatic_operations'
+    ];
 }

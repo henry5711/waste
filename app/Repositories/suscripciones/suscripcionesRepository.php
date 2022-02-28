@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 /** @property suscripciones $model */
 class suscripcionesRepository extends CrudRepository
 {
-    protected $id_cli;
+    
     public function __construct(suscripciones $model)
     {
         parent::__construct($model);
@@ -55,9 +55,9 @@ class suscripcionesRepository extends CrudRepository
      * Busca todas las suscripciones de un cliente
      */
     public function buscarClienteId($id_client){
-        $this->id_cli = $id_client;
-        $suscripciones = suscripciones::whereHas('Clientes', function($query){
-            return $query->where('id_client','=',$this->id_cli);
+        
+        $suscripciones = suscripciones::whereHas('Clientes', function($query) use ($id_client){
+            return $query->where('id_client','=',$id_client);
         })->get();
 
         return $suscripciones;
@@ -113,7 +113,12 @@ class suscripcionesRepository extends CrudRepository
     }
 
     public function obtenerSuscripciones($ids){
-        $suscripciones = ( $ids === true ) ? suscripciones::all() : suscripciones::facturar()->find($ids);
+        $suscripciones = ( $ids === true ) ? suscripciones::facturar()->get() : suscripciones::facturar()->find($ids);
+        return $suscripciones;
+    }
+
+    public function obtenerSuscripcionesOperaciones($ids){
+        $suscripciones = ( $ids === true ) ? suscripciones::operations()->get() : suscripciones::operations()->find($ids);
         return $suscripciones;
     }
 }
