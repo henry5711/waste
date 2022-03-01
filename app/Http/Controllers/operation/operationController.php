@@ -132,7 +132,7 @@ class operationController extends CrudController
          $hoja->setCellValue('L4','ESTADO');
         
          //TAMAÑO DEL TITULO
-         $archivo->getActiveSheet()->getStyle('A4:K4')->getFont()
+         $archivo->getActiveSheet()->getStyle('A4:L4')->getFont()
          ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>10, 'color' => [ 'rgb' => 'ffffff' ] ] );
          $fila=5;
          foreach ($op as $key) 
@@ -167,18 +167,31 @@ class operationController extends CrudController
         {
             $year=$request->year;
             $mount=$request->mes;
-            $cope=operation::whereYear('created_at',$year)->whereMonth('created_at',$mount)->where('usu/cli','cliente')
+            $cope=operation::where('usu/cli','cliente')
             ->where(function($query)
             {
                 return $query->orwhere('status','Terminada')
                              ->orWhere('status','Cliente NR');
+            })
+            ->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
            
-            $c=operation::whereYear('created_at',$year)->whereMonth('created_at',$mount)->where('usu/cli','cliente')
+            $c=operation::where('usu/cli','cliente')
             ->where(function($query)
             {
                 return $query->orwhere('status','Terminada')
                              ->orWhere('status','Cliente NR');
+            })->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
          
            $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
@@ -190,8 +203,12 @@ class operationController extends CrudController
             foreach ($extra as $key)
             {
               
+                if(count($terminada->where('ids',$key->ids))>0)
+                {
                 //terminada
                $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+
+                }
 
                if(count($clientenr->where('ids',$key->ids))>0)
                {
@@ -288,6 +305,88 @@ class operationController extends CrudController
         $writer=IOFactory::createWriter($archivo,'Xlsx');
         $writer->save("php://output");
         exit;
+        }
 
+        public function sucurconsulta(Request $request)
+        {
+            $date=$request->date;
+
+            $cope=operation::where('usu/cli','cliente')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('status','Cliente NR');
+            })
+            ->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+            });
+           
+            $c=operation::where('usu/cli','cliente')
+            ->where(function($query)
+            {
+                return $query->orwhere('status','Terminada')
+                             ->orWhere('status','Cliente NR');
+            })
+            ->when($request->date, function($query, $interval){
+                $date = explode('_', $interval);
+                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                return $query->whereBetween(
+                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+            });
+         
+           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+
+           $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
+        
+           $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
+
+           $total=0;
+            foreach ($extra as $key)
+            {
+               if(count($terminada->where('ids',$key->ids))>0)
+               {
+               //terminada
+               $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+               }
+
+               else
+               {
+                $key->terminadas=0;
+               }
+             
+               if(count($clientenr->where('ids',$key->ids))>0)
+               {
+                   //cliente nr
+               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+
+               else
+               {
+                $key->noatendidas=0;
+               }
+              
+               $total+=$key->sum;
+               
+            } 
+
+            foreach ($extra as $val) 
+            {
+                if($val->terminadas>0 and $val->noatendidas>0)
+                {
+                    $val->promedio=$val->terminadas/$val->noatendidas;
+                }
+
+                else
+                {
+                    $val->promedio=0; 
+                }
+             
+            }
+            return ["list"=>$extra,"total"=>count($extra)];
         }
 }
