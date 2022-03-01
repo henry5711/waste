@@ -318,7 +318,4 @@ class suscripcionesController extends CrudController
         return $this->service->generateOperations($request);
     }
 
-    public static function getGenerateOperations($request){
-        return self::GenerateOperations($request);
-    }
 }
