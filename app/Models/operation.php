@@ -9,7 +9,19 @@ class operation extends CrudModel
 {
     protected $guarded = ['id'];
     protected $table='operation';
-    protected $fillable = ['ids','name_sucursal','coordenada','fecha_ope','obs','tipo','peso','status','fecha','tlf','ref','usu/cli'];
+    protected $fillable = [
+        'ids', // id del sucursal / usuario
+        'name_sucursal',
+        'coordenada', 
+        'fecha_ope', // fecha en curso
+        'obs', // opcional
+        'tipo', // web (siempre)
+        'peso', // null
+        'status', // Creada
+        'fecha', // 
+        'tlf', // op
+        'ref', // op
+        'usu/cli']; // cliente
 
     public function Rutas()
     {

@@ -11,10 +11,12 @@ use App\Rules\CaseSensitiveId;
 use App\Rules\CheckVerify;
 use App\Services\suscripciones\suscripcionesService;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use InvalidArgumentException;
 
 /** @property suscripcionesService $service */
 class suscripcionesController extends CrudController
@@ -67,15 +69,19 @@ class suscripcionesController extends CrudController
         if ($validator->fails()) {
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
+
+        $request['prox_operation'] = $request->fec_ini;
+        
         return $this->service->_store($request);
     }
 
     public function _update($id, Request $request)
     {
+        $suscripcion = suscripciones::findOrFail($id);
         $validator = Validator::make(
             $request->all(),
             [
-               'numero' => [new CaseSensitiveId('suscripciones',$id)],
+               'numero' => [new CaseSensitiveId('suscripciones',$id) ],
                'clientes' => [ 'required' ],
                'titulo' => [ new CaseSensitiveId('suscripciones',$id) ],
                'periodo'   =>  [ 
@@ -92,7 +98,6 @@ class suscripcionesController extends CrudController
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
 
-        $suscripcion = $this->_show($id);
         if($suscripcion->sta != 'Por Confirmar'){
             $error = [
                 'error' => true,
@@ -100,6 +105,9 @@ class suscripcionesController extends CrudController
             ];
             return response()->json([$error,422]);
         }
+
+        $request['prox_operation'] = $request->fec_ini;
+        
         return $this->service->_update($id,$request);
     }
 
@@ -284,5 +292,33 @@ class suscripcionesController extends CrudController
         }
 
         return $this->service->detalleSuscripcionParaFacturar($request->suscripcion);
+    }
+
+    public function generateOperations(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'suscripciones'    => 'required|integer',
+            ],
+            [
+                'integer'   => 'El campo :attribute debe ser un número',
+                'required'  => 'El campo :attribute es requerido',
+            ]
+        );
+
+        if($validator->fails()){
+            $error = [
+                'error' => true,
+                'message' => $validator->getMessageBag()->all()
+            ];
+            
+            return response()->json($error,422);
+        }
+
+        return $this->service->generateOperations($request);
+    }
+
+    public static function getGenerateOperations($request){
+        return self::getGenerateOperations($request);
     }
 }

@@ -59,6 +59,7 @@ class prodetalleService extends CrudService
                 
                 $to = $item['precio'] * $item['cantidad'];
                 $item['sub_total'] = $to;
+                // dd($item['id']);
                 $this->repository->actualizar($item['id'],$item);
             }
         }

@@ -25,7 +25,8 @@ class suscripciones extends CrudModel
         'obs',
         'total',
         'ico',
-        'titulo'
+        'titulo',
+        'prox_operation'
     ];
     
 
@@ -52,9 +53,22 @@ class suscripciones extends CrudModel
                     ->OrderBy('id','desc');
     }
 
+    /**
+     * Encuentra todas las suscripciones que faltan por facturar
+     *
+     */
     public function scopeFacturar($query){
         $query  ->where( 'sta','Activa')
                 ->whereTime( 'prox_cob','<',Carbon::now());
+    }
+
+    /**
+     * Obtiene todas las suscripciones que hacen falta por generar operaciones
+     *
+     */
+    public function scopeOperations($query){
+        $query  ->where( 'sta','Activa')
+                ->whereTime( 'prox_operation','<',Carbon::now());
     }
 
     /**

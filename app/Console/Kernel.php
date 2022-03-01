@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Jobs\CreateSuscriptionOperations;
+use App\Models\config;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -25,5 +27,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //
+        $schedule->job(new CreateSuscriptionOperations)->when(function(){
+            $config = config::first();
+
+            return $config->automatic_operations;
+        });
     }
 }
