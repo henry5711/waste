@@ -38,7 +38,7 @@ class CreateSuscriptionOperations extends Job
     {
        // $this->susController = new suscripcionesController(new suscripcionesService(new suscripcionesRepository(new suscripciones())));
         
-        $this->suscripciones  = ( $suscripcion !== null) ? $suscripcion : suscripcionesController::getGenerateOperations(new Request(['all'=>true]));
+        // $this->suscripciones  = ( $suscripcion !== null) ? $suscripcion : suscripcionesController::getGenerateOperations(new Request(['all'=>true]));
         dd($this->suscripciones);
         $this->operation    = new operationController(new operationService(new operationRepository(new operation())));
     }
