@@ -46,8 +46,8 @@ class suscripcionesRepository extends CrudRepository
 
     public function _show($id)
     {
-        $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->get();
-        $suscripcion[0]['ico'] = env('APP_URL').$suscripcion[0]->ico;
+        $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->first();
+        $suscripcion['ico'] = env('APP_URL').$suscripcion->ico;
         return $suscripcion;
     }
 

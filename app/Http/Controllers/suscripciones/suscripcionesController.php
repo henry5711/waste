@@ -11,10 +11,12 @@ use App\Rules\CaseSensitiveId;
 use App\Rules\CheckVerify;
 use App\Services\suscripciones\suscripcionesService;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use InvalidArgumentException;
 
 /** @property suscripcionesService $service */
 class suscripcionesController extends CrudController
@@ -75,10 +77,11 @@ class suscripcionesController extends CrudController
 
     public function _update($id, Request $request)
     {
+        $suscripcion = suscripciones::findOrFail($id);
         $validator = Validator::make(
             $request->all(),
             [
-               'numero' => [new CaseSensitiveId('suscripciones',$id)],
+               'numero' => [new CaseSensitiveId('suscripciones',$id) ],
                'clientes' => [ 'required' ],
                'titulo' => [ new CaseSensitiveId('suscripciones',$id) ],
                'periodo'   =>  [ 
@@ -95,7 +98,6 @@ class suscripcionesController extends CrudController
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
 
-        $suscripcion = $this->_show($id);
         if($suscripcion->sta != 'Por Confirmar'){
             $error = [
                 'error' => true,
