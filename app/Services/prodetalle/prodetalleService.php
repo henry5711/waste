@@ -50,13 +50,12 @@ class prodetalleService extends CrudService
         $this->eliminarDetalle($eliminar);
         
         foreach ($productos as $item) {
-            if(!array_key_exists('id',$item)){
+            if(!array_key_exists('id',$item) || $item['id'] == 0){
                 $item['id_susp'] = $sus->id;
                 $to = $item['precio'] * $item['cantidad'];
                 $item['sub_total'] = $to;
                 $this->repository->guardar($item);
             }else{
-                
                 $to = $item['precio'] * $item['cantidad'];
                 $item['sub_total'] = $to;
                 // dd($item['id']);

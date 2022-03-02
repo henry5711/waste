@@ -10,10 +10,12 @@ namespace App\Services\suscripciones;
 use App\Core\CrudService;
 use App\Core\ImageService;
 use App\Http\Controllers\Clientes\ClientesController;
+use App\Http\Controllers\operation\operationController;
 use App\Http\Controllers\prodetalle\prodetalleController;
 use App\Http\Mesh\BillingService;
 use App\Jobs\CreateSuscriptionOperations;
 use App\Models\Clientes;
+use App\Models\operation;
 use App\Repositories\prodetalle\prodetalleRepository;
 use App\Services\prodetalle\prodetalleService;
 use App\Models\prodetalle;
@@ -21,10 +23,13 @@ use App\Repositories\suscripciones\suscripcionesRepository;
 use Illuminate\Http\Request;
 use App\Models\suscripciones;
 use App\Repositories\Clientes\ClientesRepository;
+use App\Repositories\operation\operationRepository;
 use App\Services\Clientes\ClientesService;
+use App\Services\operation\operationService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Monolog\Logger;
 
 /** @property suscripcionesRepository $repository */
 class suscripcionesService extends CrudService
@@ -34,6 +39,7 @@ class suscripcionesService extends CrudService
     protected $namePlural = "suscripciones";
     protected $clientes;
     protected $productos;
+    protected $operation;
 
     /**
      * Constructor, instancio clientes y productos
@@ -43,8 +49,9 @@ class suscripcionesService extends CrudService
     public function __construct(suscripcionesRepository $repository)
     {
         parent::__construct($repository);
-        $this->clientes = new ClientesController(new ClientesService(new ClientesRepository(new Clientes)));
+        $this->clientes  = new ClientesController(new ClientesService(new ClientesRepository(new Clientes)));
         $this->productos = new prodetalleController(new prodetalleService(new prodetalleRepository(new prodetalle())));
+        $this->operation = new operationController(new operationService(new operationRepository(new operation())));
     }
 
     public function _store(Request $request)
@@ -225,60 +232,7 @@ class suscripcionesService extends CrudService
         $total = 0;
 
         foreach($suscripciones as $suscripcion){
-            $cantidad_clientes = 0;
-            $contador = 0;
-
-            $prox_cob  = Carbon::parse($suscripcion['prox_cob']);
-            $fecha_ini = Carbon::parse($suscripcion['fec_ini'])->startOfDay();
-            $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->endOfDay();
-            $hoy = Carbon::now()->startOfDay();
-    
-            if($prox_cob->isBefore($fecha_ini)){
-                $prox_cob = $fecha_ini;
-            }
-            // return $prox_cob;
-            
-            if($hoy->isAfter($fecha_fin)){
-                // si hoy es despues a la fecha de vencimiento, se va a contar desde el ultimo pago hasta la fecha de fin
-                $hoy = $fecha_fin;
-            }
-            // return $hoy;
-            /**
-             * Verificar Ciclo de facturacion
-            */
-            
-            if($suscripcion['periodo'] == 'Diaria'){
-                $contador = $prox_cob->diffInDays($hoy);
-            }
-    
-    
-            if($suscripcion['periodo'] == 'Quincenal'){
-                /**
-                 * Facturas quincena
-                */
-                $band = true;
-                $p = $prox_cob;
-                
-                while ($band) {
-                    $p->addDays(15);
-                    if($p->isBefore($hoy) || $hoy->equalTo($p)){
-                        $contador += 1;
-                    }else{
-                        $band= false;
-                    }
-                }
-                
-            }
-            if($suscripcion['periodo'] == 'Semanal'){
-                $contador = $prox_cob->diffInWeeks($hoy);
-            }
-            if($suscripcion['periodo'] == 'Mensual'){
-                $contador = $prox_cob->diffInMonths($hoy);
-            }
-            if($suscripcion['periodo'] == 'Anual'){
-                $contador = $prox_cob->diffInYears($hoy);
-            }
-
+            $contador = $this->suscriptionCycle($suscripcion);
             $cantidad_clientes = $this->cantidadClientes([$suscripcion]);
             $total += ( $contador * $cantidad_clientes);
         }
@@ -364,9 +318,88 @@ class suscripcionesService extends CrudService
     }
 
     public function generateOperations($request){
-        dispatch(new CreateSuscriptionOperations());
-        $ids = $request->all ?: $request->suscripciones;
-        $suscripciones = $this->repository->obtenerSuscripcionesOperaciones($ids);
+        try{
+            $ids = $request->all ?: $request->suscripciones;
+            $suscripciones = $this->repository->obtenerSuscripcionesOperaciones($ids);
 
+            dispatch(new CreateSuscriptionOperations($suscripciones));
+            
+            return response()->json([
+                'status'  => 200,
+                'message' => 'Se están generando las operaciones'
+            ],200);
+        }catch(Exception $e){
+            return response()->json([
+                'error'     => 422,
+                'message'   => 'Ocurrió un error al generar las operaciones',
+                'exception' => $e->getMessage()
+            ],422);
+        }
+
+    }
+
+    /**
+     * Retorna un entero con el respectivo conteo de días, semanas, quincenas
+     * meses o años de una suscripción
+     * @param App\Models\suscripciones $suscripciones
+     * @return int
+     */
+    private function suscriptionCycle($suscripcion, $prox = 'prox_cob'){
+
+        $contador = 0;
+
+        $prox_cob  = Carbon::parse($suscripcion[$prox]);
+        $fecha_ini = Carbon::parse($suscripcion['fec_ini'])->startOfDay();
+        $fecha_fin = Carbon::parse($suscripcion['fec_fin'])->endOfDay();
+        $hoy = Carbon::now()->startOfDay();
+
+        if($prox_cob->isBefore($fecha_ini)){
+            $prox_cob = $fecha_ini;
+        }
+        // return $prox_cob;
+        
+        if($hoy->isAfter($fecha_fin)){
+            // si hoy es despues a la fecha de vencimiento, se va a contar desde el ultimo pago hasta la fecha de fin
+            $hoy = $fecha_fin;
+        }
+        // return $hoy;
+        /**
+         * Verificar Ciclo de facturacion
+        */
+        
+        if($suscripcion['periodo'] == 'Diaria'){
+            $contador = $prox_cob->diffInDays($hoy);
+        }
+
+
+        if($suscripcion['periodo'] == 'Quincenal'){
+            /**
+             * Facturas quincena
+            */
+            $band = true;
+            $p = $prox_cob;
+            
+            while ($band) {
+                $p->addDays(15);
+                if($p->isBefore($hoy) || $hoy->equalTo($p)){
+                    $contador += 1;
+                }else{
+                    $band= false;
+                }
+            }
+            
+        }
+        if($suscripcion['periodo'] == 'Semanal'){
+            $contador = $prox_cob->diffInWeeks($hoy);
+        }
+        if($suscripcion['periodo'] == 'Mensual'){
+            $contador = $prox_cob->diffInMonths($hoy);
+        }
+        if($suscripcion['periodo'] == 'Anual'){
+            $contador = $prox_cob->diffInYears($hoy);
+        }
+
+        return $contador;
+        
     }
 }
