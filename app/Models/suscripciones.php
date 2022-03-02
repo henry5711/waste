@@ -26,7 +26,8 @@ class suscripciones extends CrudModel
         'total',
         'ico',
         'titulo',
-        'prox_operation'
+        'prox_operation',
+        'sucursal_id'
     ];
     
 

@@ -298,7 +298,8 @@ class suscripcionesController extends CrudController
         $validator = Validator::make(
             $request->all(),
             [
-                'suscripciones'    => 'required|integer',
+                'suscripciones'    => 'required|array',
+                'suscripciones.*'  => 'integer'
             ],
             [
                 'integer'   => 'El campo :attribute debe ser un número',

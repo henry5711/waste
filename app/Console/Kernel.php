@@ -27,10 +27,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //
-        // $schedule->job(new CreateSuscriptionOperations)->when(function(){
+        // $schedule->job(new CreateSuscriptionOperations)->everyMinute()->when(function(){
         //     $config = config::first();
 
-        //     return $config->automatic_operations;
-        // });
+        //     if($config->automatic_operations)
+        //         return true;
+        // })->withoutOverlapping();
     }
 }
