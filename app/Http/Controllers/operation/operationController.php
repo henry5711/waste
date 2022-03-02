@@ -210,10 +210,20 @@ class operationController extends CrudController
 
                 }
 
+                else
+                {
+                 $key->terminadas=0;
+                }
+
                if(count($clientenr->where('ids',$key->ids))>0)
                {
                    //cliente nr
                $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+               }
+
+               else
+               {
+                $key->noatendidas=0;
                }
               
                  
