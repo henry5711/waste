@@ -72,6 +72,8 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->get('filtro/suscripcion','suscripciones\suscripcionesController@Filtro');
     
     $router->post('suscripciones/generate_operations','suscripciones\suscripcionesController@generateOperations');
+    $router->post('calcular_operaciones/suscripciones','suscripciones\suscripcionesController@calculateOperations');
+    $router->get('detalle_operaciones/suscripciones','suscripciones\suscripcionesController@detailSuscriptionForOperation');
     $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
     $router->post('estado/suscripciones','suscripciones\suscripcionesController@estado');
     /**----------------------------------------- */

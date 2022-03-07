@@ -239,14 +239,14 @@ class suscripcionesService extends CrudService
         ];
     }
 
-    private function cantidadFacturas($suscripciones){
+    private function cantidadFacturas($suscripciones, $prox = 'prox_cob'){
         
         $total = 0;
 
         foreach($suscripciones as $suscripcion){
-            $contador = $this->suscriptionCycle($suscripcion);
+            $contador = $this->suscriptionCycle($suscripcion,$prox);
             $cantidad_clientes = $this->cantidadClientes([$suscripcion]);
-            $total += ( $contador * $cantidad_clientes);
+            $total += ( $contador * $cantidad_clientes );
         }
         
         return $total;
@@ -411,7 +411,40 @@ class suscripcionesService extends CrudService
             $contador = $prox_cob->diffInYears($hoy);
         }
 
-        return $contador;
+        return $contador;   
+    }
+
+    public function calculateOperations($request){
+        $ids = $request->all ?: $request->suscripciones;
+        $suscripciones = $this->repository->obtenerSuscripcionesOperaciones($ids);
         
+        $cantidad_operaciones = self::cantidadFacturas($suscripciones,'prox_operation');
+        $cantidad_clientes = self::cantidadClientes($suscripciones->load('Clientes'));
+
+        return [
+            'operaciones_generadas' => $cantidad_operaciones,
+            'cantidad_clientes'     => $cantidad_clientes
+        ];
+    }
+
+    public function detailSuscriptionForOperation($id){
+        $suscripcion = $this->repository->obtenerSuscripcionesOperaciones($id);
+
+        $cantidad_facturas = self::cantidadFacturas([$suscripcion],'prox_operation');
+        
+        $res = [];
+
+        foreach ($suscripcion->Clientes as $sucursal) {
+            $res[]= [
+                'sucursal_id'       => $sucursal->id_sucursal,
+                'nombre_sucursal'   => $sucursal->nombre_sucursal,
+                'coordenadas'       => $sucursal->coordenada_sucursal
+            ];
+        }
+
+        return [
+            "cantidad_facturas" => $cantidad_facturas,
+            "sucursales"        => $res
+        ];
     }
 }
