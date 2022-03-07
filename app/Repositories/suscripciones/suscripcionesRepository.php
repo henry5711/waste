@@ -7,6 +7,8 @@
 namespace App\Repositories\suscripciones;
 
 use App\Core\CrudRepository;
+use App\Http\Mesh\ClientService;
+use App\Models\Branches;
 use App\Models\Clientes;
 use App\Models\suscripciones;
 use Illuminate\Support\Facades\DB;
@@ -46,7 +48,8 @@ class suscripcionesRepository extends CrudRepository
 
     public function _show($id)
     {
-        $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->first();
+        $suscripcion = suscripciones::with(['Productos','Clientes'])->find($id);
+        
         $suscripcion['ico'] = env('APP_URL').$suscripcion->ico;
         return $suscripcion;
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class suscripciones extends CrudModel
 {
@@ -90,5 +91,19 @@ class suscripciones extends CrudModel
     public function Clientes()
     {
         return $this->hasMany(Clientes::class, 'id_suscripcion', 'id');
+    }
+
+    public function Sucursales(){
+        return $this->hasMany(Sucursal::class,'suscripcion_id');
+    }
+
+    /**
+     * Get the branches that owns the suscripciones
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function branches()
+    {
+        return $this->hasMany(Branches::class,'suscripcion_id');
     }
 }

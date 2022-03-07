@@ -11,6 +11,7 @@
 */
 
 use App\Http\Controllers\suscripciones\suscripcionesController;
+use App\Models\Sucursal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Router;
@@ -152,3 +153,4 @@ $router->get('configs/{id}', 'config\configController@_show');
 $router->post('configs', 'config\configController@_store');
 $router->put('configs/{id}', 'config\configController@_update');
 $router->delete('configs/{id}', 'config\configController@_delete');
+ 

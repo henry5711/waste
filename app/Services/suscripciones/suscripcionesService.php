@@ -12,6 +12,7 @@ use App\Core\ImageService;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\operation\operationController;
 use App\Http\Controllers\prodetalle\prodetalleController;
+use App\Http\Controllers\Sucursal\SucursalController;
 use App\Http\Mesh\BillingService;
 use App\Jobs\CreateSuscriptionOperations;
 use App\Models\Clientes;
@@ -19,16 +20,20 @@ use App\Models\operation;
 use App\Repositories\prodetalle\prodetalleRepository;
 use App\Services\prodetalle\prodetalleService;
 use App\Models\prodetalle;
+use App\Models\Sucursal;
 use App\Repositories\suscripciones\suscripcionesRepository;
 use Illuminate\Http\Request;
 use App\Models\suscripciones;
 use App\Repositories\Clientes\ClientesRepository;
 use App\Repositories\operation\operationRepository;
+use App\Repositories\Sucursal\SucursalRepository;
 use App\Services\Clientes\ClientesService;
 use App\Services\operation\operationService;
+use App\Services\Sucursal\SucursalService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Monolog\Logger;
 
 /** @property suscripcionesRepository $repository */
@@ -74,8 +79,14 @@ class suscripcionesService extends CrudService
             $productos = $this->productos->_store($request);
             // return $productos;
 
+            //return $sucursales;
+
             // Agrego clientes
-            $clientes = $this->clientes->_store($request);
+            // edit: 03/03/21 -> agregando sucursales
+
+            $suscripcion->Clientes()->createMany($request->clientes);
+
+            // $clientes = $this->clientes->_store($request);
             // return $clientes;
 
             DB::commit();
@@ -85,6 +96,7 @@ class suscripcionesService extends CrudService
                 201);
             
         }catch(Exception $e){
+            Log::info($e->getMessage());
             DB::rollback();
 
             return $e;

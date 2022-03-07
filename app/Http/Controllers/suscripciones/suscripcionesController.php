@@ -299,11 +299,12 @@ class suscripcionesController extends CrudController
             $request->all(),
             [
                 'suscripciones'    => 'required|array',
-                'suscripciones.*'  => 'integer'
+                'suscripciones.*'  => 'integer|exists:suscripciones,id'
             ],
             [
                 'integer'   => 'El campo :attribute debe ser un número',
                 'required'  => 'El campo :attribute es requerido',
+                'exists'    => 'La id del campo :attribute no existe en la base de datos'
             ]
         );
 

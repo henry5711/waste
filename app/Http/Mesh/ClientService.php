@@ -3,7 +3,7 @@
 
 namespace App\Http\Mesh;
 
-
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,36 +11,38 @@ class ClientService extends ServicesMesh
 {
     public function __construct()
     {
-        parent::__construct($this->getRouteCustomer());
+        parent::__construct(env('CLIENT_API'));
     }
 
     /**
      * @param $id
      * @return null[]
      */
-    public function getClient($id): array
+    public function getSucursalClient($id): array
     {
-        $request = Request::capture();
-        $options = [
-            "headers" =>  $this->getHeaders($request)
-        ];
         try {
-            $response = $this->client->get('/cs/clients/'.$id, $options);
+            $endpoint = '/api/branch/client';
+            
+            $option = [
+                'header'    => $this->getHeaders($this->getRequest()),
+                'json'      => ['branches'=>$id]
+            ];
+            $response = $this->client->post($endpoint, $option);
 
             if ($response->getStatusCode() !== 200){
                 Log::critical($response->getStatusCode() . ":   " .  $response->getBody());
-                return ["id"=> null];
+                return [];
             }
 
             $client = json_decode($response->getBody(),true);
 
-            return $client['Cliente'] ?? ["id"=> null];
+            return $client;
 
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
             Log::critical($exception->getMessage());
             Log::critical($exception->getFile());
 
-            return ["id"=> null];
+            return [];
         }
 
 

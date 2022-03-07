@@ -1,32 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@marcoslopez95 
-marcoslopez95
-/
-TuSalud
-Public
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-TuSalud/config/database.php /
-@marcoslopez95
-marcoslopez95 first commit
-Latest commit 4a8d61d 24 days ago
- History
- 1 contributor
-Executable File  147 lines (126 sloc)  4.94 KB
- 
 <?php
 
 use Illuminate\Support\Str;
@@ -66,17 +37,13 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'schema' => 'public',
-            'sslmode' => 'prefer',
+     
+           
         ],
         'onlyRead' => [
             'driver' => 'pgsql',

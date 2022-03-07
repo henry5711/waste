@@ -105,7 +105,7 @@ $app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
 */
 $app->configure('cors');
 $app->configure('healthcheck');
-$app->configure('database');
+// $app->configure('database');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
