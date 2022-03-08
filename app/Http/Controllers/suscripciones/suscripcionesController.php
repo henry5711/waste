@@ -98,13 +98,13 @@ class suscripcionesController extends CrudController
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
 
-        if($suscripcion->sta != 'Por Confirmar'){
+        /* if($suscripcion->sta != 'Por Confirmar'){
             $error = [
                 'error' => true,
                 'message' => 'Solo se pueden editar las suscripciones en estado: Por Confirmar'
             ];
             return response()->json([$error,422]);
-        }
+        } */
 
         $request['prox_operation'] = $request->fec_ini;
         
@@ -318,6 +318,63 @@ class suscripcionesController extends CrudController
         }
 
         return $this->service->generateOperations($request);
+    }
+
+    public function calculateOperations(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'all' => 'nullable|boolean|required_without:suscripciones',
+                'suscripciones' => 'nullable|array|required_without:all'
+            ],
+            [
+                'boolean' => 'El campo :attribute debe ser True o False',
+                'array' => 'El campo :attribute debe ser un array de ids',
+                'required_without' => 'El campo :attribute es requerido si no envía el campo :values'
+            ]
+        );
+
+        if($validator->fails()){
+            $error = [
+                'error' => true,
+                'message' => $validator->getMessageBag()->all()
+            ];
+            
+            return response()->json($error,422);
+        }
+
+        if( ( !$request->all && count( $request->suscripciones ) == 0 ) || ( $request->all ) && count( $request->suscripciones) > 0 ){
+            $error = [
+                'error' => true,
+                'message' => 'No está permitida la combinación'
+            ];
+            
+            return response()->json($error,422);
+        }
+        return $this->service->calculateOperations($request);
+    }
+
+    public function detailSuscriptionForOperation(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'suscripcion' => 'required'
+            ],
+            [
+                'required' => 'las sucripciones son requeridad'
+            ]
+        );
+
+        if($validator->fails()){
+            $error = [
+                'error' => true,
+                'message' => $validator->getMessageBag()->all()
+            ];
+            return response()->json($error,422);
+        }
+
+        return $this->service->detailSuscriptionForOperation($request->suscripcion);
+
     }
 
 }
