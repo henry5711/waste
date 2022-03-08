@@ -12,6 +12,8 @@ use App\Services\operation\operationService;
 use App\Services\suscripciones\suscripcionesService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Log;
 
 class CreateSuscriptionOperations extends Job
 {
@@ -31,7 +33,7 @@ class CreateSuscriptionOperations extends Job
     {
        $this->susController = new suscripcionesController(new suscripcionesService(new suscripcionesRepository(new suscripciones())));
         
-        $this->suscripciones  = ( $suscripciones !== null) ? $suscripciones : suscripciones::operations()->get();
+        $this->suscripciones  = $suscripciones;
         $this->operation    = new operationController(new operationService(new operationRepository(new operation())));
     }
 
@@ -42,10 +44,18 @@ class CreateSuscriptionOperations extends Job
      */
     public function handle()
     {
+        $nueva_fecha = null;
+        if($this->suscripciones === null){
+            $this->suscripciones = suscripciones::operations()->get();
+            Log::info($this->suscripciones);
+        }
         foreach ($this->suscripciones as $suscripcion) {
+
             $ciclos = $this->suscriptionCycle($suscripcion,'prox_operation');
+
             $prox_operation = Carbon::parse($suscripcion->prox_operation);
             for($i = 1; $i <= $ciclos; $i++){
+                
                 if($suscripcion['periodo'] == 'Diaria'){
                     $nueva_fecha = $prox_operation->addDay();
                 }
@@ -62,19 +72,33 @@ class CreateSuscriptionOperations extends Job
                     $nueva_fecha = $prox_operation->addYear();
                 }
 
+            
+                Log::info($suscripcion->Clientes->count());
+                foreach($suscripcion->Clientes as $clientes){
+                    Log::info($clientes);
+                    
+                    $store = [
+                        'ids'           => $clientes['id_sucursal'],
+                        'name_sucursal' => $clientes['nombre_sucursal'],
+                        'coordenada'    => $clientes['coordenada_sucursal'],
+                        'fecha'         => $nueva_fecha,
+                        'tipo'          => 'web',
+                        'usu/cli'       => 'cliente',
+                        'fecha_ope'     => Carbon::now(),
+                        'status'        => 'Creada'
+                    ];
+                    Log::info($store);
+                    operation::create($store);
+                    $store = null;
+                }
+        
+                $suscripcion->prox_operation = $nueva_fecha;
+                if($nueva_fecha->format('Y-m-d') == $suscripcion->fec_fin){
+                    $suscripcion->sta = 'Finalizada';
+                }
+                $suscripcion->save();
             }
-            $store = [
-                'ids'           => $suscripcion->sucursal_id,
-                'name_sucursal' => $suscripcion->name_sucursal,
-                'coordenada'    => $suscripcion->coordenada_sucursal,
-                'fecha'         => $nueva_fecha,
-                'tipo'          => 'web',
-                'usu/cli'       => 'cliente'
-            ];
-    
-            $this->operation->_store(new Request($store));
-            $suscripcion->prox_operation = $nueva_fecha;
-            $suscripcion->save();
+            
         }
     }
 

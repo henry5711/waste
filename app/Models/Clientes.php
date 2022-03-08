@@ -13,7 +13,10 @@ class Clientes extends CrudModel
         'id_suscripcion',
         'id_client',
         'nombre',
-        'correo_ruc'
+        'correo_ruc',
+        'id_sucursal',
+        'nombre_sucursal',
+        'coordenada_sucursal'
     ];
     private $nomb;
     public function scopeFiltro($query,$request){
