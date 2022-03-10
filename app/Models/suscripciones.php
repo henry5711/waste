@@ -41,10 +41,10 @@ class suscripciones extends CrudModel
                     ->when($request->estado,function($query,$estado){
                         if($estado == 'Facturar'){
                             return $query   ->where( 'sta','Activa')
-                                            ->whereTime( 'prox_cob','<',Carbon::now());
+                                            ->whereTime( 'prox_cob','<',Carbon::now()->endOfDay());
                         }elseif($estado == 'Operaciones'){
                             return $query   ->where( 'sta','Activa')
-                                            ->whereTime( 'prox_operation','<',Carbon::now());
+                                            ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay());
                         }
                         else{
                             return $query->where('sta','=',$estado);
