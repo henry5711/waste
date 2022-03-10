@@ -31,7 +31,7 @@ class suscripcionesController extends CrudController
         $validator = Validator::make(
             $request->all(),
             [
-                'estado' => Rule::in(['Activa','Pausada','Cancelada','Facturar'])
+                'estado' => Rule::in(['Activa','Pausada','Cancelada','Facturar','Operaciones'])
             ],
             [
                 'in' => ':attribute debe ser :values'
