@@ -257,6 +257,7 @@ class suscripcionesService extends CrudService
         
         $clientes = collect();
         foreach($suscripciones as $suscripcion){
+
             $clientes_suscripcion = $suscripcion->clientes;
             $ids = $clientes_suscripcion->keyBy('id_client')->keys();
             $clientes = $clientes->concat($ids);
@@ -357,7 +358,7 @@ class suscripcionesService extends CrudService
      * @return int
      */
     private function suscriptionCycle($suscripcion, $prox = 'prox_cob'){
-
+        
         $contador = 0;
 
         $prox_cob  = Carbon::parse($suscripcion[$prox]);
@@ -419,7 +420,7 @@ class suscripcionesService extends CrudService
         $suscripciones = $this->repository->obtenerSuscripcionesOperaciones($ids);
         
         $cantidad_operaciones = self::cantidadFacturas($suscripciones,'prox_operation');
-        $cantidad_clientes = self::cantidadClientes($suscripciones->load('Clientes'));
+        $cantidad_clientes = self::cantidadClientes([$suscripciones]);
 
         return [
             'operaciones_generadas' => $cantidad_operaciones,

@@ -42,7 +42,11 @@ class suscripciones extends CrudModel
                         if($estado == 'Facturar'){
                             return $query   ->where( 'sta','Activa')
                                             ->whereTime( 'prox_cob','<',Carbon::now());
-                        }else{
+                        }elseif($estado == 'Operaciones'){
+                            return $query   ->where( 'sta','Activa')
+                                            ->whereTime( 'prox_operation','<',Carbon::now());
+                        }
+                        else{
                             return $query->where('sta','=',$estado);
                         }
                     })
@@ -61,7 +65,7 @@ class suscripciones extends CrudModel
      */
     public function scopeFacturar($query){
         $query  ->where( 'sta','Activa')
-                ->whereTime( 'prox_cob','<',Carbon::now());
+                ->whereTime( 'prox_cob','<',Carbon::now()->endOfDay());
     }
 
     /**
@@ -70,7 +74,7 @@ class suscripciones extends CrudModel
      */
     public function scopeOperations($query){
         $query  ->where( 'sta','Activa')
-                ->whereTime( 'prox_operation','<',Carbon::now());
+                ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay());
     }
 
     /**
