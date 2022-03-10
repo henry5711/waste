@@ -70,7 +70,7 @@ class suscripcionesController extends CrudController
             return response()->json(["error"=>true,"message"=>$this->parseMessageBag($validator->getMessageBag())[0][0]],422);
         }
 
-        $request['prox_operation'] = $request->fec_ini;
+        $request['prox_operation'] = Carbon::parse($request->fec_ini)->startOfDay();
         
         return $this->service->_store($request);
     }
@@ -106,7 +106,7 @@ class suscripcionesController extends CrudController
             return response()->json([$error,422]);
         } */
 
-        $request['prox_operation'] = $request->fec_ini;
+        $request['prox_operation'] = Carbon::parse($request->fec_ini)->startOfDay();
         
         return $this->service->_update($id,$request);
     }
@@ -291,6 +291,14 @@ class suscripcionesController extends CrudController
             return response()->json($error,422);
         }
 
+        $bool = suscripciones::Facturar()->find($request->suscripcion); 
+        if(!$bool){
+            $error = [
+                'error'   => true,
+                'message' => 'La operación no esta activa o no está lista para emitir una operacion'
+            ];
+            return response()->json($error,422);
+        }
         return $this->service->detalleSuscripcionParaFacturar($request->suscripcion);
     }
 
@@ -372,7 +380,15 @@ class suscripcionesController extends CrudController
             ];
             return response()->json($error,422);
         }
-
+        
+        $bool = suscripciones::Operations()->find($request->suscripcion); 
+        if(!$bool){
+            $error = [
+                'error'   => true,
+                'message' => 'La operación no esta activa o no está lista para emitir una operacion'
+            ];
+            return response()->json($error,422);
+        }
         return $this->service->detailSuscriptionForOperation($request->suscripcion);
 
     }
