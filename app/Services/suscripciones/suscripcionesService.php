@@ -443,7 +443,7 @@ class suscripcionesService extends CrudService
         }
 
         return [
-            "cantidad_facturas" => $cantidad_facturas,
+            "cantidad_operaciones" => $cantidad_facturas,
             "sucursales"        => $res
         ];
     }
