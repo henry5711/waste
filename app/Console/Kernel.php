@@ -33,6 +33,7 @@ class Kernel extends ConsoleKernel
             
             return $config->automatic_operations;
         })->withoutOverlapping();
+        
         $schedule->command('queue:retry all')->everyMinute()->when(function(){
             $job = DB::table('failed_jobs')->select('*')->get();
             
