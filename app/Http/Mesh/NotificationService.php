@@ -3,40 +3,40 @@
 
 namespace App\Http\Mesh;
 
-use Exception;
+
 use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
-class ClientService extends ServicesMesh
+class NotificationService extends ServicesMesh
 {
     public function __construct()
     {
-        parent::__construct(env('CLIENT_API'));
+        parent::__construct(env('NOTIFICATION_API','https://devrubick2notifications.zippyttech.com'));
     }
 
     /**
-     * @param $id
-     * @return null[]
+     * Muestra todos los clientes
+     *
+     * @return array
      */
-    public function getSucursalClient($id): array
-    {
+     public function enviar($data){
         try {
-            $endpoint = '/api/branch/client';
-            
+            // $client = new Client();
             $option = [
                 'header'    => $this->getHeaders($this->getRequest()),
-                'json'      => ['branches'=>$id]
+                'json'      => $data
             ];
-            $response = $this->client->post($endpoint, $option);
+            $response = $this->client->post('/nt/send/email/exception',$option);
 
             if ($response->getStatusCode() !== 200){
                 Log::critical($response->getStatusCode() . ":   " .  $response->getBody());
                 return [];
             }
 
-            $client = json_decode($response->getBody(),true);
+            $account = json_decode($response->getBody(),true);
 
-            return $client;
+            return $account['list'] ?? [];
 
         }catch (Exception $exception){
             Log::critical($exception->getMessage());
@@ -44,7 +44,6 @@ class ClientService extends ServicesMesh
 
             return [];
         }
-
-
-    }
+     }
+     
 }

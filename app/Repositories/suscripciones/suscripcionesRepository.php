@@ -7,13 +7,15 @@
 namespace App\Repositories\suscripciones;
 
 use App\Core\CrudRepository;
+use App\Http\Mesh\ClientService;
+use App\Models\Branches;
 use App\Models\Clientes;
 use App\Models\suscripciones;
 use Illuminate\Support\Facades\DB;
 /** @property suscripciones $model */
 class suscripcionesRepository extends CrudRepository
 {
-    protected $id_cli;
+    
     public function __construct(suscripciones $model)
     {
         parent::__construct($model);
@@ -46,8 +48,9 @@ class suscripcionesRepository extends CrudRepository
 
     public function _show($id)
     {
-        $suscripcion = suscripciones::with(['Clientes','Productos'])->where('id',$id)->get();
-
+        $suscripcion = suscripciones::with(['Productos','Clientes'])->find($id);
+        
+        $suscripcion['ico'] = env('APP_URL').$suscripcion->ico;
         return $suscripcion;
     }
 
@@ -55,9 +58,9 @@ class suscripcionesRepository extends CrudRepository
      * Busca todas las suscripciones de un cliente
      */
     public function buscarClienteId($id_client){
-        $this->id_cli = $id_client;
-        $suscripciones = suscripciones::whereHas('Clientes', function($query){
-            return $query->where('id_client','=',$this->id_cli);
+        
+        $suscripciones = suscripciones::whereHas('Clientes', function($query) use ($id_client){
+            return $query->where('id_client','=',$id_client);
         })->get();
 
         return $suscripciones;
@@ -98,5 +101,27 @@ class suscripcionesRepository extends CrudRepository
             'status' => 202,
             'message' => 'la suscripción está ahora en estado: ' .$estado
         ],200);
+    }
+
+    public function _delete($id)
+    {
+        $suscripcion = suscripciones::find($id);
+        $suscripcion->Productos()->delete();
+        $suscripcion->Clientes()->delete();
+        return parent::_delete($id);
+    }
+
+    public function Filtro($request){
+        return null;
+    }
+
+    public function obtenerSuscripciones($ids){
+        $suscripciones = ( $ids === true ) ? suscripciones::facturar()->get() : suscripciones::facturar()->find($ids);
+        return $suscripciones;
+    }
+
+    public function obtenerSuscripcionesOperaciones($ids){
+        $suscripciones = ( $ids === true ) ? suscripciones::operations()->get() : suscripciones::operations()->find($ids);
+        return $suscripciones;
     }
 }

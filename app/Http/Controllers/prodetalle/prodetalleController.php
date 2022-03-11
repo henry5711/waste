@@ -27,38 +27,9 @@ class prodetalleController extends CrudController
         return $this->service->_store($request);
     }
 
-    public function verificarExistencia($request){
+    public function verificarExistencia($productos, suscripciones $sus){
+        // return $productos;
+        return $this->service->verificarExistencia($productos,$sus);
         
-        $productos = suscripciones::find($request->id);
-        $productos = $productos->Productos;
-        
-        foreach ($productos as $viejo) {
-            $band = false;
-            foreach($request->productos as $nuevo){
-                if($viejo->id_pro == $nuevo['id_pro']){
-                    $band = true;
-                }
-            }
-
-            if(!$band){
-                $this->service->_delete($viejo['id']);
-            }
-        }
-        $todos = [];
-        
-        foreach ($request->productos as $prod) {
-            $nuevos = [];
-            $bool = $productos->where('id_pro',$prod['id_pro'])->first();
-            
-            if(!$bool){
-                $nuevos['productos'][] = $prod;
-                $nuevos['id'] = $request->id;
-                $todos[] = $this->service->_store(new Request($nuevos));
-            }else{
-                $todos[] = $this->service->_update($bool->id, new Request($prod));
-            }
-        }
-        
-        return $todos;
     }
 }

@@ -10,6 +10,8 @@
 |
 */
 
+use App\Http\Controllers\suscripciones\suscripcionesController;
+use App\Models\Sucursal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Router;
@@ -49,23 +51,29 @@ $router->group(['prefix' => 'api'], function (Router $router) {
     $router->put('planes/{id}', 'planes\planesController@_update');
     $router->delete('planes/{id}', 'planes\planesController@_delete');
 
-
+    /**
+    * Agregado por Marcos López
+    */
     /** routes para suscripciones **/ 
     $router->post('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
     $router->get('mostrar/facturas/suscripciones', 'suscripciones\suscripcionesController@mostrarFacturas');
     $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
     $router->get('suscripciones/usuario', 'suscripciones\suscripcionesController@usuariosus');
-   $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
-   $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
-   $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
-   $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
-   $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
+    $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
+    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
+    $router->post('calcular_facturas/suscripciones','suscripciones\suscripcionesController@calcularFacturas');
+    $router->get('detalle_facturas/suscripciones','suscripciones\suscripcionesController@detalleSuscripcionParaFacturar');
+    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
+    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
+    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
     $router->get('buscar/cliente/suscripciones/{id_client}','suscripciones\suscripcionesController@buscarClienteId');
     $router->get('numero/suscripcion','suscripciones\suscripcionesController@generarNumero');
     $router->get('filtro/cliente/suscripcion/{id_suscripcion}','suscripciones\suscripcionesController@buscarClienteFiltro');
-    /**
-    * Agregado por Marcos López
-    */
+    $router->get('filtro/suscripcion','suscripciones\suscripcionesController@Filtro');
+    
+    $router->post('suscripciones/generate_operations','suscripciones\suscripcionesController@generateOperations');
+    $router->post('calcular_operaciones/suscripciones','suscripciones\suscripcionesController@calculateOperations');
+    $router->get('detalle_operaciones/suscripciones','suscripciones\suscripcionesController@detailSuscriptionForOperation');
     $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
     $router->post('estado/suscripciones','suscripciones\suscripcionesController@estado');
     /**----------------------------------------- */
@@ -147,3 +155,4 @@ $router->get('configs/{id}', 'config\configController@_show');
 $router->post('configs', 'config\configController@_store');
 $router->put('configs/{id}', 'config\configController@_update');
 $router->delete('configs/{id}', 'config\configController@_delete');
+ 

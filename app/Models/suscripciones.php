@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class suscripciones extends CrudModel
 {
@@ -22,18 +24,57 @@ class suscripciones extends CrudModel
         'base_ip',
         'impuesto',
         'obs',
-        'total'
+        'total',
+        'ico',
+        'titulo',
+        'prox_operation',
+        'sucursal_id'
     ];
     
 
     public function scopeFiltro($query,$request){
+        $bool = false;
+        if($request->fecha_ini != null && $request->fecha_ini != '' && $request->fecha_fin != null && $request->fecha_fin != ''){
+            $bool = true;
+        }
         return $query
                     ->when($request->estado,function($query,$estado){
-                        return $query->where('sta','=',$estado);
+                        if($estado == 'Facturar'){
+                            return $query   ->where( 'sta','Activa')
+                                            ->whereTime( 'prox_cob','<',Carbon::now()->endOfDay());
+                        }elseif($estado == 'Operaciones'){
+                            return $query   ->where( 'sta','Activa')
+                                            ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay());
+                        }
+                        else{
+                            return $query->where('sta','=',$estado);
+                        }
                     })
                     ->when($request->numero,function($query,$numero){
                         return $query->where('numero','ilike',"%$numero%");
-                    });
+                    })
+                    ->when($bool,function($query) use ($request){
+                        return $query->whereBetween('prox_cob',[$request->fecha_ini,$request->fecha_fin]);
+                    })
+                    ->OrderBy('id','desc');
+    }
+
+    /**
+     * Encuentra todas las suscripciones que faltan por facturar
+     *
+     */
+    public function scopeFacturar($query){
+        $query  ->where( 'sta','Activa')
+                ->whereTime( 'prox_cob','<',Carbon::now()->endOfDay());
+    }
+
+    /**
+     * Obtiene todas las suscripciones que hacen falta por generar operaciones
+     *
+     */
+    public function scopeOperations($query){
+        $query  ->where( 'sta','Activa')
+                ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay());
     }
 
     /**
@@ -54,5 +95,19 @@ class suscripciones extends CrudModel
     public function Clientes()
     {
         return $this->hasMany(Clientes::class, 'id_suscripcion', 'id');
+    }
+
+    public function Sucursales(){
+        return $this->hasMany(Sucursal::class,'suscripcion_id');
+    }
+
+    /**
+     * Get the branches that owns the suscripciones
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function branches()
+    {
+        return $this->hasMany(Branches::class,'suscripcion_id');
     }
 }

@@ -17,7 +17,10 @@ dev_build_job:
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devrubick2waste.zippyttech.com;g" .env
-    - echo "BILLING_API=devrubick2billing.zippyttech.com/api" >> .env
+    - echo "APP_URL=https://devrubick2waste.zippyttech.com" >> .env
+    - echo "BILLING_API=http://devrubick2billing-api" >> .env
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t devrubick2waste-api .
   when: on_success
   tags:
@@ -73,13 +76,16 @@ qa_build_job:
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=qarubick2waste.zippyttech.com;g" .env
-    - echo "#API_URL:" >> .env
-    - echo "BILLING_API=qarubick2billing.zippyttech.com/api" >> .env
+    - echo "APP_URL=https://qarubick2waste.zippyttech.com" >> .env
+    - echo "BILLING_API=http://qarubick2billing-api" >> .env
+    - echo "INVENTORY_API=http://qarubick2inventory-api" >> .env
     - echo "URL_API_ACCOUNT=https://qarubick2account.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://qarubick2client.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://qarubick2notifications.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://qarubick2wallet.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://qarubick2user.zippyttech.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t qarubick2waste-api .
   when: on_success
   tags:
@@ -192,6 +198,8 @@ berygo_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications-berygo.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-berygo.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-berygo.zippyttech.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t waste-api .
   when: on_success
   tags:
@@ -231,6 +239,8 @@ cdg_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications-cdg.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-cdg.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-cdg.zippyttech.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t waste-api .
   when: on_success
   tags:
@@ -265,12 +275,14 @@ aguaseo_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-aguaseo.zippyttech.com;g" .env
     - echo "#API_URL:" >> .env
-    - echo "BILLING_API=billing.rubick.aguaseo.com/api" >> .env
+    - echo "BILLING_API=http://aguaseo-billing-api" >> .env
     - echo "URL_API_ACCOUNT=https://account-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://client-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-aguaseo.zippyttech.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t aguaseo-waste-api .
   when: on_success
   tags:
@@ -310,6 +322,8 @@ bukewallet_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications.bukewallet.com" >> .env 
     - echo "URL_API_WALLET=https://wallet.bukewallet.com" >> .env 
     - echo "URL_API_USER=https://user.bukewallet.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t bukewallet-waste-api .
   when: on_success
   tags:
@@ -349,6 +363,8 @@ admiral_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications.admiral.com" >> .env 
     - echo "URL_API_WALLET=https://wallet.admiral.com" >> .env 
     - echo "URL_API_USER=https://user.admiral.com" >> .env 
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t admiral-waste-api .
   when: on_success
   tags:
