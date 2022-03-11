@@ -62,7 +62,7 @@ class operationController extends CrudController
         ->when($request->sta,function($query,$sta){
             //buscar por estatus
             return $query->where('status','ILIKE',"%$sta%");
-        })->get();
+        })->orderBy('id','desc')->get();
 
      
         if($request->date==0)
