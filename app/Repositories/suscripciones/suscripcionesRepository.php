@@ -50,7 +50,7 @@ class suscripcionesRepository extends CrudRepository
     {
         $suscripcion = suscripciones::with(['Productos','Clientes'])->find($id);
         
-        $suscripcion['ico'] = env('APP_URL').$suscripcion->ico;
+        $suscripcion['ico'] = $suscripcion->ico ? env('APP_URL').$suscripcion->ico : null;
         return $suscripcion;
     }
 
