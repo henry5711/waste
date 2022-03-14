@@ -39,7 +39,7 @@ class prodetalleRepository extends CrudRepository
     
     public function actualizar($id, $data){
         $prodetalle = prodetalle::find($id);
-        return $prodetalle->update([$data]);
+        return $prodetalle->update($data);
     }
     public function verificarExistencia($id_productos, $viejos){
         $eliminar = $viejos->diff(prodetalle::whereIn('id',$id_productos)->get());
