@@ -128,6 +128,7 @@ class suscripcionesService extends CrudService
 
             $clientes = new Request($request->only('clientes'));
             $clientes['id'] = $id;
+            
             $actualizar_clientes = $this->clientes->verificarExistencia($clientes);
             // return $actualizar_clientes;
 

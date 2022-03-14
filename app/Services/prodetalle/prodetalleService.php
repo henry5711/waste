@@ -48,9 +48,9 @@ class prodetalleService extends CrudService
         $id_productos = $productos->keyBy('id')->keys()->filter();
         $eliminar = $this->repository->verificarExistencia($id_productos,$viejos);
         $this->eliminarDetalle($eliminar);
-        
         foreach ($productos as $item) {
             if(!array_key_exists('id',$item) || $item['id'] == 0){
+                
                 $item['id_susp'] = $sus->id;
                 $to = $item['precio'] * $item['cantidad'];
                 $item['sub_total'] = $to;
@@ -59,8 +59,10 @@ class prodetalleService extends CrudService
                 $to = $item['precio'] * $item['cantidad'];
                 $item['sub_total'] = $to;
                 // dd($item['id']);
+                
                 $this->repository->actualizar($item['id'],$item);
             }
+            
         }
         return $viejos;
     }
