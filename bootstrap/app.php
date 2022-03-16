@@ -66,14 +66,14 @@ $app->singleton(
 
 
 $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
- ]);
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 $app->routeMiddleware([
     'authorize' => App\Http\Middleware\Authorize::class,
 ]);
 $app->middleware([
-	'Nord\Lumen\Cors\CorsMiddleware',
+    'Nord\Lumen\Cors\CorsMiddleware',
 ]);
 
 /*
@@ -105,7 +105,7 @@ $app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
 */
 $app->configure('cors');
 $app->configure('healthcheck');
-// $app->configure('database');
+/* $app->configure('database'); */
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

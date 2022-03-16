@@ -28,27 +28,27 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //
-        $schedule->job(new CreateSuscriptionOperations())->everyMinute()->when(function(){
+        $schedule->job(new CreateSuscriptionOperations())->everyMinute()->when(function () {
             $config = config::first();
-            
+
             return $config->automatic_operations;
         })->withoutOverlapping();
-        
-        $schedule->command('queue:retry all')->everyMinute()->when(function(){
+
+        $schedule->command('queue:retry all')->everyMinute()->when(function () {
             $job = DB::table('failed_jobs')->select('*')->get();
-            
-            return (count($job) >= 3);
+
+            return (count($job) >= 3) ? true : false;
         })->withoutOverlapping();
 
-        $schedule->command('queue:work --stop-when-empty')->everyMinute()->when(function(){
+        $schedule->command('queue:work --stop-when-empty')->everyMinute()->when(function () {
             $job = DB::table('jobs')->select('*')->get();
-            return (count($job) > 0);
+            return (count($job) > 0) ? true : false;
         })->withoutOverlapping();
 
-        $schedule->command('queue:flush')->everyMinute()->when(function(){
+        $schedule->command('queue:flush')->everyMinute()->when(function () {
             $job = DB::table('failed_jobs')->select('*')->get();
 
-            return (count($job) >= 15);
+            return (count($job) >= 15) ? true : false;
         })->withoutOverlapping();
     }
 }
