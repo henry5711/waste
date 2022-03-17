@@ -439,6 +439,119 @@ class operationController extends CrudController
               }
            }
 
-           return $pintar;
+           return ["list"=>$pintar,"total"=>count($pintar)];
+        }
+
+        public function exceldiaswork(Request $request)
+        {
+             //esta funcion devuelve la consulta de los dias trabajados pero desde que encuentra la primera operacion de cada sucursal
+             $cope=operation::where('usu/cli','cliente')
+             ->where(function($query)
+             {
+                 return $query->orwhere('status','Terminada')
+                              ->orWhere('status','Cliente NR');
+             })
+             ->when($request->date, function($query, $interval){
+                 $date = explode('_', $interval);
+                 $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                 $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                 return $query->whereBetween(
+                     DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+             });
+ 
+             $date = explode('_', $request->date);
+             $dateone=Carbon::createFromFormat('Y-m-d', $date[0]);   
+             $datetow=Carbon::createFromFormat('Y-m-d', $date[1]);   
+             $diff=$dateone->diffInDays($datetow);
+             
+             $c=$cope;
+         
+             $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+         
+             $extra=$c->select('ids','name_sucursal','fecha',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal','fecha')->get();
+            
+ 
+            foreach($pintar as $key)
+            {
+                foreach($extra as $value)
+                {
+                    if ($key->ids==$value->ids)
+                    {
+                       $key->trabajados+=1;
+                    }
+                }
+            }
+ 
+            foreach($pintar as $key)
+            {
+                $fecno=operation::where('usu/cli','cliente')
+                ->where('ids',$key->ids)
+                ->where(function($query)
+                {
+                    return $query->orwhere('status','Terminada')
+                                 ->orWhere('status','Cliente NR');
+                })
+                ->when($request->date, function($query, $interval){
+                    $date = explode('_', $interval);
+                    $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                    $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                    return $query->whereBetween(
+                        DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+                })->first();
+                //dd($fecno);
+               $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
+              
+               $diffe=$dateini->diffInDays($datetow);
+               $key->notrabajados=$diffe-$key->trabajados;
+              
+              // $key->notrabajados= ;
+ 
+               if($key->trabajados>0 and $key->notrabajados>0)
+               {
+                   $key->promedio=$key->trabajados/$key->notrabajados;
+               }
+ 
+               else
+               {
+                 $key->promedio=0;
+               }
+            }
+            
+              //aqui se crea el excel
+       $archivo=new Spreadsheet();
+       //aqui la hoja
+      $hoja=$archivo->getActiveSheet();
+      $hoja->setTitle("Operaciones");
+
+      $hoja->mergeCells('A1:E1');
+      $hoja->setCellValue('A1','REPORTE MENSUAL DE SUCURSALES VISITADAS');
+
+      //ancho de las celdas
+      $archivo->getActiveSheet()->getColumnDimension('A')->setWidth(270, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
+
+        //AQUI CENTRO LOS TITULOS
+        $archivo->getActiveSheet()->getStyle('A:E')
+        ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        //COLOR  al primer cuadro
+        $archivo->getActiveSheet()->getStyle('A3:E3')->getFill()
+           ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+           ->getStartColor()->setRGB('416DA9');
+
+        //titulos
+        $hoja->setCellValue('A3','SUCURSALES');
+        $hoja->setCellValue('B3','Total de lbs reciclado');
+        $hoja->setCellValue('C3','# de recolectas / local');
+        $hoja->setCellValue('D3','# de recolectas no relizadas / local');
+        $hoja->setCellValue('E3','Promedio');
+       
+        //TAMAÑO DEL TITULO
+        $archivo->getActiveSheet()->getStyle('A3:E3')->getFont()
+        ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
+
+           
         }
 }
