@@ -292,7 +292,7 @@ class operationController extends CrudController
                 $fila++;
             }
             
-            $t=count($extra);
+            $t=count($pintar);
             $div=$total/$t;
             $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
             $hoja->setCellValue('A'.$fila,"AVERAGE: $div");
@@ -551,7 +551,43 @@ class operationController extends CrudController
         //TAMAÑO DEL TITULO
         $archivo->getActiveSheet()->getStyle('A3:E3')->getFont()
         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
+           
+        $fila=4;
 
+        $total=0;
+        foreach ($pintar as $value)
+        {
+            $hoja->setCellValue('A'.$fila,$value->name_sucursal);
+            $hoja->setCellValue('B'.$fila,$value->sum);
+            $hoja->setCellValue('C'.$fila,$value->trabajados);
+            $hoja->setCellValue('D'.$fila,$value->notrabajados);
+            if($value->trabajados !=null and $value->notrabajados !=null or $value->trabajados !=0 and $value->notrabajados !=0  )
+            {
+                $hoja->setCellValue('E'.$fila,$value->trabajados/$value->notrabajados);
+            }
+
+            else
+            {
+                $hoja->setCellValue('E'.$fila,0);
+            }
+           
+            $total+=$value->sum;
+
+            $fila++;
+        }
+        
+        $t=count($pintar);
+        $div=$total/$t;
+        $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
+        $hoja->setCellValue('A'.$fila,"AVERAGE: $div");
+        
+
+         //aqui para descargar excel
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="Reporte mensual sucursal.xlsx"');
+    $writer=IOFactory::createWriter($archivo,'Xlsx');
+    $writer->save("php://output");
+    exit;
            
         }
 }
