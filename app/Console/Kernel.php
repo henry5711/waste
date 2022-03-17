@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new CreateSuscriptionOperations())->everyMinute()->when(function () {
             $config = config::first();
 
-            return $config->automatic_operations;
+            return $config->automatic_operations ? true : false;
         })->withoutOverlapping();
 
         $schedule->command('queue:retry all')->everyMinute()->when(function () {
