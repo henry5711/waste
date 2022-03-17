@@ -293,7 +293,16 @@ class operationController extends CrudController
             }
             
             $t=count($pintar);
-            $div=$total/$t;
+            if($total >0 and $t >0)
+            {
+                $div=$total/$t;
+            }
+
+            else 
+            {
+                $div=0;
+            }
+           
             $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
             $hoja->setCellValue('A'.$fila,"AVERAGE: $div");
             
@@ -577,7 +586,16 @@ class operationController extends CrudController
         }
         
         $t=count($pintar);
-        $div=$total/$t;
+           if($total >0 and $t >0)
+            {
+                $div=$total/$t;
+            }
+
+            else 
+            {
+                $div=0;
+            }
+       
         $hoja->setCellValue('B'.$fila,'TOTAL: '.$total);
         $hoja->setCellValue('A'.$fila,"AVERAGE: $div");
         
