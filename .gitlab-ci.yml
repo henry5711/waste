@@ -85,8 +85,6 @@ qa_build_job:
     - echo "URL_API_NOTIFICATION=https://qarubick2notifications.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://qarubick2wallet.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://qarubick2user.zippyttech.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t qarubick2waste-api .
   when: on_success
   tags:
@@ -199,8 +197,6 @@ berygo_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications-berygo.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-berygo.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-berygo.zippyttech.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t waste-api .
   when: on_success
   tags:
@@ -240,8 +236,6 @@ cdg_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications-cdg.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-cdg.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-cdg.zippyttech.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t waste-api .
   when: on_success
   tags:
@@ -282,8 +276,6 @@ aguaseo_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_WALLET=https://wallet-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_USER=https://user-aguaseo.zippyttech.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t aguaseo-waste-api .
   when: on_success
   tags:
@@ -323,8 +315,6 @@ bukewallet_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications.bukewallet.com" >> .env 
     - echo "URL_API_WALLET=https://wallet.bukewallet.com" >> .env 
     - echo "URL_API_USER=https://user.bukewallet.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t bukewallet-waste-api .
   when: on_success
   tags:
@@ -364,8 +354,6 @@ admiral_build_job:
     - echo "URL_API_NOTIFICATION=https://notifications.admiral.com" >> .env 
     - echo "URL_API_WALLET=https://wallet.admiral.com" >> .env 
     - echo "URL_API_USER=https://user.admiral.com" >> .env 
-    - echo "QUEUE_DRIVER=database" >> .env
-    - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t admiral-waste-api .
   when: on_success
   tags:
