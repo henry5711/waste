@@ -165,8 +165,7 @@ class operationController extends CrudController
 
         public function repodias(Request $request)
         {
-            $year=$request->year;
-            $mount=$request->mes;
+        
             $cope=operation::where('usu/cli','cliente')
             ->where(function($query)
             {
@@ -180,56 +179,46 @@ class operationController extends CrudController
                 return $query->whereBetween(
                     DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
+
+            $date = explode('_', $request->date);
+            $dateone=Carbon::createFromFormat('Y-m-d', $date[0]);   
+            $datetow=Carbon::createFromFormat('Y-m-d', $date[1]);   
+            $diff=$dateone->diffInDays($datetow);
+            
+            $c=$cope;
+        
+            $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+        
+            $extra=$c->select('ids','name_sucursal','fecha',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal','fecha')->get();
            
-            $c=operation::where('usu/cli','cliente')
-            ->where(function($query)
-            {
-                return $query->orwhere('status','Terminada')
-                             ->orWhere('status','Cliente NR');
-            })->when($request->date, function($query, $interval){
-                $date = explode('_', $interval);
-                $date[0] = Carbon::parse($date[0])->format('Y-m-d');
-                $date[1] = Carbon::parse($date[1])->format('Y-m-d');
-                return $query->whereBetween(
-                    DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
-            });
-         
-           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
-           $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
-
-           $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
-
-            foreach ($extra as $key)
-            {
-              
-                if(count($terminada->where('ids',$key->ids))>0)
-                {
-                //terminada
-               $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
-
-                }
-
-                else
-                {
-                 $key->terminadas=0;
-                }
-
-               if(count($clientenr->where('ids',$key->ids))>0)
+           foreach($pintar as $key)
+           {
+               foreach($extra as $value)
                {
-                   //cliente nr
-               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
+                   if ($key->ids==$value->ids)
+                   {
+                      $key->trabajados+=1;
+                   }
                }
+           }
 
-               else
-               {
-                $key->noatendidas=0;
-               }
-              
-                 
-               
-            } 
-            // $cuadrito=$cuadrito->select('vehicleID',DB::raw('count ("vehicleID") as cu'),DB::raw('SUM(unload_weight)'),DB::raw('MAX(operations.time_in) AS ult'))->groupBy('operations.vehicleID')->get();
+           foreach($pintar as $key)
+           {
+              $key->notrabajados=$diff-$key->trabajados;
+
+              if($key->trabajados>0 and $key->notrabajados>0)
+              {
+                  $key->promedio=$key->trabajados/$key->notrabajados;
+              }
+
+              else
+              {
+                $key->promedio=0;
+              }
+           }
+
+          
            
 
             $ar=['F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ'];
@@ -270,15 +259,15 @@ class operationController extends CrudController
 
         $fila=4;
         $total=0;
-            foreach ($extra as $value)
+            foreach ($pintar as $value)
             {
                 $hoja->setCellValue('A'.$fila,$value->name_sucursal);
                 $hoja->setCellValue('B'.$fila,$value->sum);
-                $hoja->setCellValue('C'.$fila,$value->terminadas);
-                $hoja->setCellValue('D'.$fila,$value->noatendidas);
-                if($value->terminadas !=null and $value->noatendidas !=null or $value->terminadas !=0 and $value->noatendidas !=0  )
+                $hoja->setCellValue('C'.$fila,$value->trabajados);
+                $hoja->setCellValue('D'.$fila,$value->notrabajados);
+                if($value->trabajados !=null and $value->notrabajados !=null or $value->trabajados !=0 and $value->notrabajados !=0  )
                 {
-                    $hoja->setCellValue('E'.$fila,$value->terminadas/$value->noatendidas);
+                    $hoja->setCellValue('E'.$fila,$value->trabajados/$value->notrabajados);
                 }
 
                 else
@@ -319,8 +308,6 @@ class operationController extends CrudController
 
         public function sucurconsulta(Request $request)
         {
-            $date=$request->date;
-
             $cope=operation::where('usu/cli','cliente')
             ->where(function($query)
             {
@@ -334,8 +321,53 @@ class operationController extends CrudController
                 return $query->whereBetween(
                     DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
+
+            $date = explode('_', $request->date);
+            $dateone=Carbon::createFromFormat('Y-m-d', $date[0]);   
+            $datetow=Carbon::createFromFormat('Y-m-d', $date[1]);   
+            $diff=$dateone->diffInDays($datetow);
+            
+            $c=$cope;
+        
+            $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+        
+            $extra=$c->select('ids','name_sucursal','fecha',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal','fecha')->get();
            
-            $c=operation::where('usu/cli','cliente')
+
+           foreach($pintar as $key)
+           {
+               foreach($extra as $value)
+               {
+                   if ($key->ids==$value->ids)
+                   {
+                      $key->trabajados+=1;
+                   }
+               }
+           }
+
+           foreach($pintar as $key)
+           {
+              $key->notrabajados=$diff-$key->trabajados;
+
+              if($key->trabajados>0 and $key->notrabajados>0)
+              {
+                  $key->promedio=$key->trabajados/$key->notrabajados;
+              }
+
+              else
+              {
+                $key->promedio=0;
+              }
+           }
+
+            return ["list"=>$pintar,"total"=>count($pintar)];
+        }
+
+        public function diawork(Request $request)
+        {
+
+            //esta funcion devuelve la consulta de los dias trabajados pero desde que encuentra la primera operacion de cada sucursal
+            $cope=operation::where('usu/cli','cliente')
             ->where(function($query)
             {
                 return $query->orwhere('status','Terminada')
@@ -348,55 +380,65 @@ class operationController extends CrudController
                 return $query->whereBetween(
                     DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
-         
-           $extra=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
 
-           $terminada=$cope->select('ids',DB::raw('count(*) AS termi'))->where('status','Terminada')->groupBy('ids')->get();
+            $date = explode('_', $request->date);
+            $dateone=Carbon::createFromFormat('Y-m-d', $date[0]);   
+            $datetow=Carbon::createFromFormat('Y-m-d', $date[1]);   
+            $diff=$dateone->diffInDays($datetow);
+            
+            $c=$cope;
         
-           $clientenr=$c->select('ids',DB::raw('count(*) AS nr'))->where('status','Cliente NR')->groupBy('ids')->get();
+            $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
+        
+            $extra=$c->select('ids','name_sucursal','fecha',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal','fecha')->get();
+           
 
-           $total=0;
-            foreach ($extra as $key)
-            {
-               if(count($terminada->where('ids',$key->ids))>0)
+           foreach($pintar as $key)
+           {
+               foreach($extra as $value)
                {
-               //terminada
-               $key->terminadas=($terminada->where('ids',$key->ids)->first())->termi;
+                   if ($key->ids==$value->ids)
+                   {
+                      $key->trabajados+=1;
+                   }
                }
+           }
 
-               else
+           foreach($pintar as $key)
+           {
+               $fecno=operation::where('usu/cli','cliente')
+               ->where('ids',$key->ids)
+               ->where(function($query)
                {
-                $key->terminadas=0;
-               }
+                   return $query->orwhere('status','Terminada')
+                                ->orWhere('status','Cliente NR');
+               })
+               ->when($request->date, function($query, $interval){
+                   $date = explode('_', $interval);
+                   $date[0] = Carbon::parse($date[0])->format('Y-m-d');
+                   $date[1] = Carbon::parse($date[1])->format('Y-m-d');
+                   return $query->whereBetween(
+                       DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
+               })->first();
+               //dd($fecno);
+              $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
              
-               if(count($clientenr->where('ids',$key->ids))>0)
-               {
-                   //cliente nr
-               $key->noatendidas=($clientenr->where('ids',$key->ids)->first())->nr;
-               }
-
-               else
-               {
-                $key->noatendidas=0;
-               }
-              
-               $total+=$key->sum;
-               
-            } 
-
-            foreach ($extra as $val) 
-            {
-                if($val->terminadas>0 and $val->noatendidas>0)
-                {
-                    $val->promedio=$val->terminadas/$val->noatendidas;
-                }
-
-                else
-                {
-                    $val->promedio=0; 
-                }
+              $diffe=$dateini->diffInDays($datetow);
+              $key->notrabajados=$diffe-$key->trabajados;
              
-            }
-            return ["list"=>$extra,"total"=>count($extra)];
+             // $key->notrabajados= ;
+
+              if($key->trabajados>0 and $key->notrabajados>0)
+              {
+                  $key->promedio=$key->trabajados/$key->notrabajados;
+              }
+
+              else
+              {
+                $key->promedio=0;
+              }
+           }
+
+           return $pintar;
         }
 }

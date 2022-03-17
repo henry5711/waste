@@ -99,6 +99,7 @@ $router->group(['prefix' => 'api'], function (Router $router) {
  
     $router->get('operations/filter/range', 'operation\operationController@filtro');
     $router->get('sucursales/total', 'operation\operationController@sucurconsulta');
+    $router->get('sucursales/total/dia/work', 'operation\operationController@diawork');
     $router->get('operations', 'operation\operationController@_index');
     $router->get('operations/creadas', 'operation\operationController@icreadas');
     $router->get('operations/filter/report', 'operation\operationController@reportope');
