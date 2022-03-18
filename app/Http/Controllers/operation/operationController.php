@@ -486,7 +486,7 @@ class operationController extends CrudController
          
              $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
          
-             $extra=$c->select('ids','name_sucursal','fecha',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal','fecha')->get();
+             $extra=$c->select('ids','name_sucursal','fecha','peso')->groupBy('ids','name_sucursal','fecha','peso')->get();
             
  
             foreach($pintar as $key)
@@ -557,7 +557,7 @@ class operationController extends CrudController
       $archivo->getActiveSheet()->getColumnDimension('B')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
-      $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
 
 
@@ -578,11 +578,12 @@ class operationController extends CrudController
         $hoja->setCellValue('F3','Promedio');
        
         //TAMAÑO DEL TITULO
-        $archivo->getActiveSheet()->getStyle('A3:E3')->getFont()
+        $archivo->getActiveSheet()->getStyle('A3:F3')->getFont()
         ->applyFromArray( [ 'name' => 'Arial', 'bold' => TRUE, 'italic' => FALSE,'strikethrough' => FALSE,'size'=>12, 'color' => [ 'rgb' => 'ffffff' ] ] );
            
         $fila=4;
-
+        $columns=range('G','Z');
+      
         $total=0;
         foreach ($pintar as $value)
         {
@@ -600,6 +601,20 @@ class operationController extends CrudController
             {
                 $hoja->setCellValue('F'.$fila,0);
             }
+            $i=0;
+                foreach($extra as $value)
+                {
+        
+                    if ($key->ids==$value->ids)
+                    {
+                           
+                            $hoja->setCellValue($columns[$i].$fila,$value->peso);
+                            $i++; 
+                    }
+                 
+                }
+            
+
            
             $total+=$value->sum;
 
