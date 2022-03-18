@@ -558,21 +558,24 @@ class operationController extends CrudController
       $archivo->getActiveSheet()->getColumnDimension('C')->setWidth(220, 'px');
       $archivo->getActiveSheet()->getColumnDimension('D')->setWidth(270, 'px');
       $archivo->getActiveSheet()->getColumnDimension('E')->setWidth(220, 'px');
+      $archivo->getActiveSheet()->getColumnDimension('F')->setWidth(220, 'px');
+
 
         //AQUI CENTRO LOS TITULOS
-        $archivo->getActiveSheet()->getStyle('A:E')
+        $archivo->getActiveSheet()->getStyle('A:F')
         ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         //COLOR  al primer cuadro
-        $archivo->getActiveSheet()->getStyle('A3:E3')->getFill()
+        $archivo->getActiveSheet()->getStyle('A3:F3')->getFill()
            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
            ->getStartColor()->setRGB('416DA9');
 
         //titulos
         $hoja->setCellValue('A3','SUCURSALES');
         $hoja->setCellValue('B3','Total de lbs reciclado');
-        $hoja->setCellValue('C3','# de recolectas / local');
-        $hoja->setCellValue('D3','# de recolectas no relizadas / local');
-        $hoja->setCellValue('E3','Promedio');
+        $hoja->setCellValue('C3','Fecha inicial');
+        $hoja->setCellValue('D3','# de recolectas / local');
+        $hoja->setCellValue('E3','# de recolectas no relizadas / local');
+        $hoja->setCellValue('F3','Promedio');
        
         //TAMAÑO DEL TITULO
         $archivo->getActiveSheet()->getStyle('A3:E3')->getFont()
@@ -585,16 +588,17 @@ class operationController extends CrudController
         {
             $hoja->setCellValue('A'.$fila,$value->name_sucursal);
             $hoja->setCellValue('B'.$fila,$value->sum);
-            $hoja->setCellValue('C'.$fila,$value->trabajados);
-            $hoja->setCellValue('D'.$fila,$value->notrabajados);
+            $hoja->setCellValue('C'.$fila,$value->inicial);
+            $hoja->setCellValue('D'.$fila,$value->trabajados);
+            $hoja->setCellValue('E'.$fila,$value->notrabajados);
             if($value->trabajados !=null and $value->notrabajados !=null or $value->trabajados !=0 and $value->notrabajados !=0  )
             {
-                $hoja->setCellValue('E'.$fila,$value->trabajados/$value->notrabajados);
+                $hoja->setCellValue('F'.$fila,$value->trabajados/$value->notrabajados);
             }
 
             else
             {
-                $hoja->setCellValue('E'.$fila,0);
+                $hoja->setCellValue('F'.$fila,0);
             }
            
             $total+=$value->sum;
