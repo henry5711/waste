@@ -390,11 +390,11 @@ class operationController extends CrudController
                     DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
             });
 
+            
             $date = explode('_', $request->date);
             $dateone=Carbon::createFromFormat('Y-m-d', $date[0]);   
             $datetow=Carbon::createFromFormat('Y-m-d', $date[1]);   
-            $diff=$dateone->diffInDays($datetow);
-            
+          
             $c=$cope;
         
             $pintar=$cope->select('ids','name_sucursal',DB::raw('SUM(peso)'))->groupBy('ids','name_sucursal')->get();
@@ -433,9 +433,18 @@ class operationController extends CrudController
               $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
               $key->inicial=$fecno->fecha;
               $diffe=$dateini->diffInDays($datetow);
-              $key->notrabajados=$diffe-$key->trabajados;
+              if($diffe >0)
+              {
+                $key->notrabajados=$diffe-$key->trabajados;
+              }
+
+              else
+            {
+                $key->notrabajados=0;
+            }
+            
              
-             // $key->notrabajados= ;
+             
 
               if($key->trabajados>0 and $key->notrabajados>0)
               {
@@ -511,7 +520,15 @@ class operationController extends CrudController
                $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
                $key->inicial=$fecno->fecha;
                $diffe=$dateini->diffInDays($datetow);
-               $key->notrabajados=$diffe-$key->trabajados;
+               if($diffe >0)
+               {
+                 $key->notrabajados=$diffe-$key->trabajados;
+               }
+ 
+               else
+             {
+                 $key->notrabajados=0;
+             }
               
             
  
