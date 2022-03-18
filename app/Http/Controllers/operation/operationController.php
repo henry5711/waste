@@ -431,7 +431,7 @@ class operationController extends CrudController
                })->first();
                //dd($fecno);
               $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
-             
+              $key->inicial=$fecno->fecha;
               $diffe=$dateini->diffInDays($datetow);
               $key->notrabajados=$diffe-$key->trabajados;
              
@@ -507,13 +507,13 @@ class operationController extends CrudController
                     return $query->whereBetween(
                         DB::raw("TO_CHAR(fecha,'YYYY-MM-DD')"),[$date[0],$date[1]]);
                 })->first();
-                //dd($fecno);
+             
                $dateini=Carbon::createFromFormat('Y-m-d', $fecno->fecha);  
-              
+               $key->inicial=$fecno->fecha;
                $diffe=$dateini->diffInDays($datetow);
                $key->notrabajados=$diffe-$key->trabajados;
               
-              // $key->notrabajados= ;
+            
  
                if($key->trabajados>0 and $key->notrabajados>0)
                {
