@@ -488,7 +488,7 @@ class operationController extends CrudController
          
              $extra=$c->select('ids','name_sucursal','fecha','peso')->groupBy('ids','name_sucursal','fecha','peso')->get();
             
-            return $pintar;
+            
  
             foreach($pintar as $key)
             {
