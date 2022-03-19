@@ -488,6 +488,7 @@ class operationController extends CrudController
          
              $extra=$c->select('ids','name_sucursal','fecha','peso')->groupBy('ids','name_sucursal','fecha','peso')->get();
             
+            return $pintar;
  
             foreach($pintar as $key)
             {
@@ -602,13 +603,12 @@ class operationController extends CrudController
                 $hoja->setCellValue('F'.$fila,0);
             }
             $i=0;
-                foreach($extra as $value)
+                foreach($extra as $act)
                 {
-        
-                    if ($key->ids==$value->ids)
+                    if ($act->ids==$value->ids)
                     {
                            
-                            $hoja->setCellValue($columns[$i].$fila,$value->peso);
+                            $hoja->setCellValue($columns[$i].$fila,$act->peso);
                             $i++; 
                     }
                  
@@ -619,7 +619,10 @@ class operationController extends CrudController
             $total+=$value->sum;
 
             $fila++;
+
         }
+
+        
         
         $t=count($pintar);
            if($total >0 and $t >0)
