@@ -608,7 +608,7 @@ class operationController extends CrudController
                     if ($act->ids==$value->ids)
                     {
                            
-                            $hoja->setCellValue($columns[$i].$fila,$act->peso);
+                            $hoja->setCellValue($columns[$i].$fila,$act->peso.' - '.$act->fecha);
                             $i++; 
                     }
                  
