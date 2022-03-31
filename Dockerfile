@@ -1,11 +1,11 @@
-FROM alpine:3.10
+FROM alpine:3.13
 LABEL Maintainer="Zippyttech" \
       Description="Lightweight container with Nginx 1.14 & PHP-FPM 7.2 based on Alpine Linux."
 
 # Install packages
-RUN apk --no-cache add php7 php7-fpm php7-fileinfo php7-pgsql php7-pdo_pgsql  php7-json php7-openssl php7-curl \
-    php7-zlib php7-xml php7-phar php7-intl php7-dom php7-xmlreader php7-ctype php7-iconv php7-simplexml \
-    php7-zip php7-mbstring php7-gd php7-xml php7-xmlwriter php7-tokenizer php7-session nginx supervisor curl
+RUN apk --no-cache add php php-fpm php-fileinfo php-pgsql php-pdo_pgsql  php-json php-openssl php-curl \
+    php-zlib php-xml php-phar php-intl php-dom php-xmlreader php-ctype php-iconv php-simplexml \
+    php-zip php-mbstring php-gd php-xml php-xmlwriter php-tokenizer php-session nginx supervisor curl
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
@@ -14,8 +14,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Configure PHP-FPM
-COPY nginx/fpm-pool.conf /etc/php7/php-fpm.d/zzz_custom.conf
-COPY nginx/php.ini /etc/php7/conf.d/zzz_custom.ini
+COPY nginx/fpm-pool.conf /etc/php/php-fpm.d/zzz_custom.conf
+COPY nginx/php.ini /etc/php/conf.d/zzz_custom.ini
 
 # Configure supervisord
 COPY nginx/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

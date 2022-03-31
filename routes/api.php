@@ -1,158 +1,151 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application $router->|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
-|
-*/
-
+use App\Http\Controllers\Clientes\ClientesController;
+use App\Http\Controllers\config\configController;
+use App\Http\Controllers\operation\operationController;
+use App\Http\Controllers\planes\planesController;
+use App\Http\Controllers\prodetalle\prodetalleController;
+use App\Http\Controllers\rutas\rutasController;
 use App\Http\Controllers\suscripciones\suscripcionesController;
-use App\Models\Sucursal;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Laravel\Lumen\Routing\Router;
+use Illuminate\Support\Facades\Route;
 
 /*
-* ALL THE METHODS WITH A _ BEFORE THOSE NAME GOES DIRECTLY TO REPOSITORY THROUGH TATUCO METHODS
-* TODOS LOS METODOS CON UN _ EN EL PREFIJO DEL NOMBRE VAN DIRECTAMENTE AL REPOSITORIO POR MEDIO DE LOS METODOS DE TATUCO
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
 */
 
-$router->group(['prefix' => 'api'], function (Router $router) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-    $router->get('/', function () use ($router) {
 
-        return response()->json([
-            "version"=> $router->app->version(),
-            "time"   => Carbon::now()->toDateTime(),
-            "php"    =>  phpversion()
-        ]);
-    });
-    
-    /*
+Route::get('/', function () {
+
+    return response()->json([
+        //"version" => Route::app->version(),
+        "time"   => Carbon::now()->toDateTime(),
+        "php"    =>  phpversion()
+    ]);
+});
+
+/*
      *routes with report prefix
      * rutas con el prefijo report
     */
-    $router->group(['prefix' => 'report'], function () use ($router) {
-        $router->post('/automatic', 'ReportController@automatic');
+// Route::prefix('report')->group(function () {
+//     Route::post('/automatic', 'ReportController@automatic']);
+// });
 
-    });
-    
-    $router->group(['middleware' => ['auth']],function () use ($router) {
+// Route::middleware('auth')->group(function () {
 
-        /** routes para planes **/ 
-    $router->get('planes/tipo', 'planes\planesController@planetipo');
-    $router->get('planes', 'planes\planesController@_index');
-    $router->get('planes/{id}', 'planes\planesController@_show');
-    $router->post('planes/guardar/datos', 'planes\planesController@guardar');
-    $router->put('planes/{id}', 'planes\planesController@_update');
-    $router->delete('planes/{id}', 'planes\planesController@_delete');
+/** routes para planes **/
+Route::get('planes/tipo', [planesController::class, 'planetipo']);
+Route::get('planes', [planesController::class, '_index']);
+Route::get('planes/{id}', [planesController::class, '_show']);
+Route::post('planes/guardar/datos', [planesController::class, 'guardar']);
+Route::put('planes/{id}', [planesController::class, '_update']);
+Route::delete('planes/{id}', [planesController::class, '_delete']);
 
-    /**
-    * Agregado por Marcos López
-    */
-    /** routes para suscripciones **/ 
-    $router->post('suscripciones/facturar/activas', 'suscripciones\suscripcionesController@facturar');
-    $router->get('mostrar/facturas/suscripciones', 'suscripciones\suscripcionesController@mostrarFacturas');
-    $router->post('suscripciones/edit/proximo', 'suscripciones\suscripcionesController@editarproxifecha');
-    $router->get('suscripciones/usuario', 'suscripciones\suscripcionesController@usuariosus');
-    $router->get('suscripciones/{id}', 'suscripciones\suscripcionesController@_show');
-    $router->post('suscripciones', 'suscripciones\suscripcionesController@_store');
-    $router->post('calcular_facturas/suscripciones','suscripciones\suscripcionesController@calcularFacturas');
-    $router->get('detalle_facturas/suscripciones','suscripciones\suscripcionesController@detalleSuscripcionParaFacturar');
-    $router->put('suscripciones/{id}', 'suscripciones\suscripcionesController@_update');
-    $router->delete('suscripciones/{id}', 'suscripciones\suscripcionesController@_delete');
-    $router->get('suscripciones', 'suscripciones\suscripcionesController@_index');
-    $router->get('buscar/cliente/suscripciones/{id_client}','suscripciones\suscripcionesController@buscarClienteId');
-    $router->get('numero/suscripcion','suscripciones\suscripcionesController@generarNumero');
-    $router->get('filtro/cliente/suscripcion/{id_suscripcion}','suscripciones\suscripcionesController@buscarClienteFiltro');
-    $router->get('filtro/suscripcion','suscripciones\suscripcionesController@Filtro');
-    
-    $router->post('suscripciones/generate_operations','suscripciones\suscripcionesController@generateOperations');
-    $router->post('calcular_operaciones/suscripciones','suscripciones\suscripcionesController@calculateOperations');
-    $router->get('detalle_operaciones/suscripciones','suscripciones\suscripcionesController@detailSuscriptionForOperation');
-    $router->get('detalle/suscripciones/{id_suscripcion}', 'suscripciones\suscripcionesController@verDetalle');
-    $router->post('estado/suscripciones','suscripciones\suscripcionesController@estado');
-    /**----------------------------------------- */
+/**
+ * Agregado por Marcos López
+ */
+/** routes para suscripciones **/
+Route::post('suscripciones/facturar/activas', [suscripcionesController::class, 'facturar']);
+Route::get('mostrar/facturas/suscripciones', [suscripcionesController::class, 'mostrarFacturas']);
+Route::post('suscripciones/edit/proximo', [suscripcionesController::class, 'editarproxifecha']);
+Route::get('suscripciones/usuario', [suscripcionesController::class, 'usuariosus']);
+Route::get('suscripciones/{id}', [suscripcionesController::class, '_show']);
+Route::post('suscripciones', [suscripcionesController::class, '_store']);
+Route::post('calcular_facturas/suscripciones', [suscripcionesController::class, 'calcularFacturas']);
+Route::get('detalle_facturas/suscripciones', [suscripcionesController::class, 'detalleSuscripcionParaFacturar']);
+Route::put('suscripciones/{id}', [suscripcionesController::class, '_update']);
+Route::delete('suscripciones/{id}', [suscripcionesController::class, '_delete']);
+Route::get('suscripciones', [suscripcionesController::class, '_index']);
+Route::get('buscar/cliente/suscripciones/{id_client}', [suscripcionesController::class, 'buscarClienteId']);
+Route::get('numero/suscripcion', [suscripcionesController::class, 'generarNumero']);
+Route::get('filtro/cliente/suscripcion/{id_suscripcion}', [suscripcionesController::class, 'buscarClienteFiltro']);
+Route::get('filtro/suscripcion', [suscripcionesController::class, 'Filtro']);
 
-
-    /** routes para prodetalle **/ 
-    $router->get('prodetalles/suscripcion', 'prodetalle\prodetalleController@detallesus');
-    $router->get('prodetalles', 'prodetalle\prodetalleController@_index');
-    $router->get('prodetalles/{id}', 'prodetalle\prodetalleController@_show');
-    $router->post('prodetalles', 'prodetalle\prodetalleController@_store');
-    $router->put('prodetalles/{id}', 'prodetalle\prodetalleController@_update');
-    $router->delete('prodetalles/{id}', 'prodetalle\prodetalleController@_delete');
- 
-    /** routes para Clientes **/ 
-
-    $router->get('clientes', 'Clientes\ClientesController@_index');
-    $router->get('clientes/{id}', 'Clientes\ClientesController@_show');
-    $router->post('clientes', 'Clientes\ClientesController@_store');
-    $router->put('clientes/{id}', 'Clientes\ClientesController@_update');
-    $router->delete('clientes/{id}', 'Clientes\ClientesController@_destroy');
-
-    /** routes para operation **/ 
- 
-    $router->get('operations/filter/range', 'operation\operationController@filtro');
-    $router->get('sucursales/total', 'operation\operationController@sucurconsulta');
-    $router->get('operations', 'operation\operationController@_index');
-    $router->get('operations/creadas', 'operation\operationController@icreadas');
-    $router->get('operations/filter/report', 'operation\operationController@reportope');
-    $router->get('operations/sucursal/mes/report', 'operation\operationController@repodias');
-    $router->get('operations/{id}', 'operation\operationController@_show');
-    $router->post('operations', 'operation\operationController@_store');
-    $router->put('operations/{id}', 'operation\operationController@_update');
-    $router->delete('operations/{id}', 'operation\operationController@_delete');
-
-    /** routes para rutas **/ 
- 
-    $router->get('rutas/filtro', 'rutas\rutasController@filtro');
-    $router->get('rutas/filtro/report', 'rutas\rutasController@repofil');
-    $router->get('rutas', 'rutas\rutasController@_index');
-    $router->get('rutas/all/{id}', 'rutas\rutasController@showrut');
-    $router->get('rutas/{id}', 'rutas\rutasController@_show');
-    $router->post('rutas', 'rutas\rutasController@_store');
-    $router->put('rutas/{id}', 'rutas\rutasController@_update');
-    $router->delete('rutas/{id}', 'rutas\rutasController@_delete');
-
-    /** routes para config **/ 
- 
-    $router->get('configs', 'config\configController@_index');
-    $router->get('configs/{id}', 'config\configController@_show');
-    $router->post('configs', 'config\configController@_store');
-    $router->put('configs/{id}', 'config\configController@_update');
-    $router->delete('configs/{id}', 'config\configController@_delete');
+Route::post('suscripciones/generate_operations', [suscripcionesController::class, 'generateOperations']);
+Route::post('calcular_operaciones/suscripciones', [suscripcionesController::class, 'calculateOperations']);
+Route::get('detalle_operaciones/suscripciones', [suscripcionesController::class, 'detailSuscriptionForOperation']);
+Route::get('detalle/suscripciones/{id_suscripcion}', [suscripcionesController::class, 'verDetalle']);
+Route::post('estado/suscripciones', [suscripcionesController::class, 'estado']);
+/**----------------------------------------- */
 
 
-    $router->group(['middleware' => ['authorize']],function () use ($router) {
+/** routes para prodetalle **/
+Route::get('prodetalles/suscripcion', [prodetalleController::class, 'detallesus']);
+Route::get('prodetalles', [prodetalleController::class, '_index']);
+Route::get('prodetalles/{id}', [prodetalleController::class, '_show']);
+Route::post('prodetalles', [prodetalleController::class, '_store']);
+Route::put('prodetalles/{id}', [prodetalleController::class, '_update']);
+Route::delete('prodetalles/{id}', [prodetalleController::class, '_delete']);
 
-        $router->group(['namespace' => '\Rap2hpoutre\LaravelLogViewer'], function() use ($router) {
-            $router->get('logs', 'LogViewerController@index');
-        });
+/** routes para Clientes **/
 
-    });
+Route::get('clientes', [ClientesController::class, '_index']);
+Route::get('clientes/{id}', [ClientesController::class, '_show']);
+Route::post('clientes', [ClientesController::class, '_store']);
+Route::put('clientes/{id}', [ClientesController::class, '_update']);
+Route::delete('clientes/{id}', [ClientesController::class, '_destroy']);
 
+/** routes para operation **/
+
+Route::get('operations/filter/range', [operationController::class, 'filtro']);
+Route::get('sucursales/total', [operationController::class, 'sucurconsulta']);
+Route::get('operations', [operationController::class, '_index']);
+Route::get('operations/creadas', [operationController::class, 'icreadas']);
+Route::get('operations/filter/report', [operationController::class, 'reportope']);
+Route::get('operations/sucursal/mes/report', [operationController::class, 'repodias']);
+Route::get('operations/{id}', [operationController::class, '_show']);
+Route::post('operations', [operationController::class, '_store']);
+Route::put('operations/{id}', [operationController::class, '_update']);
+Route::delete('operations/{id}', [operationController::class, '_delete']);
+
+/** routes para rutas **/
+
+Route::get('rutas/filtro', [rutasController::class, 'filtro']);
+Route::get('rutas/filtro/report', [rutasController::class, 'repofil']);
+Route::get('rutas', [rutasController::class, '_index']);
+Route::get('rutas/all/{id}', [rutasController::class, 'showrut']);
+Route::get('rutas/{id}', [rutasController::class, '_show']);
+Route::post('rutas', [rutasController::class, '_store']);
+Route::put('rutas/{id}', [rutasController::class, '_update']);
+Route::delete('rutas/{id}', [rutasController::class, '_delete']);
+
+/** routes para config **/
+
+Route::get('configs', [configController::class, '_index']);
+Route::get('configs/{id}', [configController::class, '_show']);
+Route::post('configs', [configController::class, '_store']);
+Route::put('configs/{id}', [configController::class, '_update']);
+Route::delete('configs/{id}', [configController::class, '_delete']);
+
+
+Route::middleware('authorize')->group(function () {
+
+    // Route::namespace('\Rap2hpoutre\LaravelLogViewer'], function(){
+    //     Route::get('logs', 'LogViewerController@index']);
+    // });
 });
+// });
 
-    
-    
- 
 
-    
-});
 
- 
- 
- 
-/** routes para config **/ 
- 
-$router->get('configs', 'config\configController@_index');
-$router->get('configs/{id}', 'config\configController@_show');
-$router->post('configs', 'config\configController@_store');
-$router->put('configs/{id}', 'config\configController@_update');
-$router->delete('configs/{id}', 'config\configController@_delete');
- 
+
+/** routes para config **/
+
+Route::get('configs', [configController::class, '_index']);
+Route::get('configs/{id}', [configController::class, '_show']);
+Route::post('configs', [configController::class, '_store']);
+Route::put('configs/{id}', [configController::class, '_update']);
+Route::delete('configs/{id}', [configController::class, '_delete']);

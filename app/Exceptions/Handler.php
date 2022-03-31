@@ -2,81 +2,40 @@
 
 namespace App\Exceptions;
 
-use App\Traits\ApiResponse;
-use DomainException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
-use Illuminate\Validation\UnauthorizedException;
-use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    use ApiResponse;
     /**
-     * A list of the exception types that should not be reported.
+     * A list of the exception types that are not reported.
      *
-     * @var array
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
-        HttpException::class,
-        ModelNotFoundException::class,
-        DomainException::class,
+        //
     ];
 
     /**
-     * Report or log an exception.
+     * A list of the inputs that are never flashed for validation exceptions.
      *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $exception
-     * @return void
+     * @var array<int, string>
      */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
+    protected $dontFlash = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
 
     /**
-     * Render an exception into an HTTP response.
+     * Register the exception handling callbacks for the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\JsonResponse|Response
+     * @return void
      */
-    public function render($request, Exception $exception)
+    public function register()
     {
-        if ($exception instanceof HttpException) {
-            $code = $exception->getStatusCode();
-            $message = Response::$statusTexts[$code];
-
-            return $this->errorResponse($this->defaultResponse($message), $code);
-        }
-        if ($exception instanceof ModelNotFoundException) {
-            $message = $this->parseModelName($exception->getModel()) . " no existe";
-            return $this->errorResponse($this->defaultResponse($message), 404);
-        }
-        if ($exception instanceof DomainException) {
-            $message = $exception->getMessage();
-            return $this->errorResponse($this->defaultResponse($message), 400);
-        }
-        if ($exception instanceof UnauthorizedException) {
-            return $this->errorResponse(
-                $this->defaultResponse('unauthorized'),
-                403
-            );
-        }
-
-        if (env('APP_DEBUG', false)) {
-            return parent::render($request, $exception);
-        }
-
-        return $this->errorResponse($this->defaultResponse('Unexpected error. Try later'), Response::HTTP_INTERNAL_SERVER_ERROR);
-
-    }
-
-    public function parseModelName($model_name){
-        return last(explode("\\",$model_name));
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 }
