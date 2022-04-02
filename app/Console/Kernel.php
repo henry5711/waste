@@ -4,7 +4,9 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Jobs\CreateSuscriptionOperations;
+use App\Models\config;
+use Illuminate\Support\Facades\DB;
 class Kernel extends ConsoleKernel
 {
 
