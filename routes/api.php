@@ -149,3 +149,10 @@ Route::get('configs/{id}', [configController::class, '_show']);
 Route::post('configs', [configController::class, '_store']);
 Route::put('configs/{id}', [configController::class, '_update']);
 Route::delete('configs/{id}', [configController::class, '_delete']);
+/** routes para Acceso **/
+
+Route::get('accesos', [\App\Http\Controllers\Acceso\AccesoController::class, '_index']);
+Route::get('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_show']);
+Route::post('accesos', [\App\Http\Controllers\Acceso\AccesoController::class, '_store']);
+Route::put('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_update']);
+Route::delete('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_destroy']);
