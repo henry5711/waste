@@ -21,7 +21,7 @@ class planesRepository extends CrudRepository
 
     public function _index($request = null, $user = null)
     {
-        $planes = planes::with('accesos')->get();
+        $planes = planes::with('accesos')->filtro($request)->get();
 
         return $planes;
     }

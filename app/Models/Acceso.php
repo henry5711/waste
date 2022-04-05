@@ -23,4 +23,11 @@ class Acceso extends CrudModel
     {
         return $this->belongsToMany(planes::class, 'acceso_plan', 'plan_id', 'acceso_id');
     }
+
+    public function scopeFiltro($query, $request)
+    {
+        return $query->when($request->nombre, function ($query2, $nombre) {
+            return $query2->where('nombre', 'ilike', "%$nombre%");
+        });
+    }
 }
