@@ -20,6 +20,21 @@ class planes extends CrudModel
         'propietario'
     ];
 
+    public function scopeFiltro($query, $request)
+    {
+        return $query->when($request->plan, function ($query2, $plan) {
+            return $query2->where('plan', 'ilike', "%$plan%");
+        })
+            ->when($request->id_propietario, function ($query2, $id_propietario) {
+                return $query2->where('id_propietario', $id_propietario);
+            })
+            ->when($request->propietario, function ($query2, $propietario) {
+                return $query2->where('propietario', 'ilike', "%$propietario%");
+            })
+            ->when($request->Periodicidad, function ($query2, $periodo) {
+                return $query2->where('Periodicidad', $periodo);
+            });
+    }
     /**
      * The accesos that belong to the planes
      *

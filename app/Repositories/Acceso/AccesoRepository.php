@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: zippyttech
@@ -18,4 +19,10 @@ class AccesoRepository extends CrudRepository
         parent::__construct($model);
     }
 
+    public function _index($request = null, $user = null)
+    {
+        $accesos = Acceso::filtro($request)->get();
+
+        return $accesos;
+    }
 }
