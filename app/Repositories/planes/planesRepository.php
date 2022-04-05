@@ -21,12 +21,9 @@ class planesRepository extends CrudRepository
 
     public function _index($request = null, $user = null)
     {
-        $pl = planes::all();
-        foreach ($pl as $key) {
-            $f = json_decode($key->condi);
-            $key->condi = $f;
-        }
-        return $pl;
+        $planes = planes::with('accesos')->get();
+
+        return $planes;
     }
 
     public function _show($id)
