@@ -155,4 +155,4 @@ Route::get('accesos', [\App\Http\Controllers\Acceso\AccesoController::class, '_i
 Route::get('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_show']);
 Route::post('accesos', [\App\Http\Controllers\Acceso\AccesoController::class, '_store']);
 Route::put('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_update']);
-Route::delete('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, '_destroy']);
+Route::delete('accesos/{id}', [\App\Http\Controllers\Acceso\AccesoController::class, 'delete']);
