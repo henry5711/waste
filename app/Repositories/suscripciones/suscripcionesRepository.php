@@ -23,7 +23,13 @@ class suscripcionesRepository extends CrudRepository
 
     public function _index($request = null, $user = null)
     {
-        return suscripciones::Filtro($request)->with(['Clientes','Productos'])->get();
+        $suscripciones = suscripciones::Filtro($request)->with(['Clientes','Productos']);
+
+        $suscripciones = $request->has('paginate') ?
+            $suscripciones->paginate($request->paginate) :
+            $suscripciones->get();
+
+        return  $suscripciones;
     }
 
     public function verDetalle($id_suscripcion){
