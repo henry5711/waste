@@ -1,11 +1,13 @@
 <?php
 
+use App\Events\CheckHistorialBillingMasive;
 use App\Http\Controllers\Clientes\ClientesController;
 use App\Http\Controllers\config\configController;
 use App\Http\Controllers\operation\operationController;
 use App\Http\Controllers\planes\planesController;
 use App\Http\Controllers\prodetalle\prodetalleController;
 use App\Http\Controllers\rutas\rutasController;
+use App\Http\Controllers\suscripciones\HistorialBillingMasiveController;
 use App\Http\Controllers\suscripciones\suscripcionesController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -73,6 +75,11 @@ Route::get('buscar/cliente/suscripciones/{id_client}', [suscripcionesController:
 Route::get('numero/suscripcion', [suscripcionesController::class, 'generarNumero']);
 Route::get('filtro/cliente/suscripcion/{id_suscripcion}', [suscripcionesController::class, 'buscarClienteFiltro']);
 Route::get('filtro/suscripcion', [suscripcionesController::class, 'Filtro']);
+Route::get('historial-billing-masive',function(){
+    event(new CheckHistorialBillingMasive);
+    return ['api'];
+});
+
 
 Route::post('suscripciones/generate_operations', [suscripcionesController::class, 'generateOperations']);
 Route::post('calcular_operaciones/suscripciones', [suscripcionesController::class, 'calculateOperations']);
