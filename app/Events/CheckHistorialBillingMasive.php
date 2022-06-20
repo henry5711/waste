@@ -9,28 +9,33 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class CheckHistorialBillingMasive implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    protected $messaje;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($mensaje = '')
     {
+        Log::info('instanciando evento');
+        $this->messaje = $mensaje;
         //
     }
 
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return \Illuminate\Broadcasting\Channel|array
+     */
     public function broadcastOn()
-  {
-      return ['my-'];
-  }
-
-  public function broadcastAs()
-  {
-      return 'my-';
-  }
+    {
+        Log::info('canal');
+        return new Channel('home');
+    }
 }

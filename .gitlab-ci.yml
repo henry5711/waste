@@ -24,6 +24,8 @@ dev_build_job:
     - echo "APP_URL=https://devrubick2waste.zippyttech.com" >> .env
     - echo "BILLING_API=http://devrubick2billing-api" >> .env
     - echo "CLIENT_API=http://devrubick2client-api" >> .env
+    - echo "DB_USERNAME_READ=devrubick2" >> .env
+    - echo "DB_PASSWORD_READ=123qwe123" >> .env
     - echo "QUEUE_DRIVER=database" >> .env
     - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t devrubick2waste-api .
