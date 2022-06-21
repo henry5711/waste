@@ -166,16 +166,6 @@ class suscripcionesController extends CrudController
     public function editarproxifecha(Request $request)
     {
 
-        return [
-            'list' => array([
-                'id' => '$susc',
-                'cobro' => '$fecha_ult',
-                'cantidad esperada' => '$this->expected_counter',
-                'cantidad real'     => '$this->real_counter'
-            ]),
-            'total' => '1',
-        ];
-
         foreach($request->list as $s)
         {
             $susc = $s['id'];
