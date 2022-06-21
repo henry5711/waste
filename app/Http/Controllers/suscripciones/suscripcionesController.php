@@ -4,7 +4,10 @@ namespace App\Http\Controllers\suscripciones;
 
 use Illuminate\Http\Request;
 use App\Core\CrudController;
+use App\Events\CheckHistorialBillingMasive;
 use App\Http\Mesh\BillingService;
+use App\Jobs\SendBillingMasive;
+use App\Models\HistorialBillingMasive;
 use App\Models\suscripciones;
 use App\Rules\CaseSensitive;
 use App\Rules\CaseSensitiveId;
@@ -153,10 +156,8 @@ class suscripcionesController extends CrudController
         $json = [
             'list' =>$cobrar
         ];
-        
-        // return $json;
-        $client=new BillingService;
-        return $client->generarFacturas($json);
+       
+        SendBillingMasive::dispatch($request->suscripciones, $json);
         
         return response()->json('las suscripciones estan siendo procesadas');
     }
@@ -164,16 +165,38 @@ class suscripcionesController extends CrudController
 
     public function editarproxifecha(Request $request)
     {
+
+        return [
+            'list' => array([
+                'id' => '$susc',
+                'cobro' => '$fecha_ult',
+                'cantidad esperada' => '$this->expected_counter',
+                'cantidad real'     => '$this->real_counter'
+            ]),
+            'total' => '1',
+        ];
+
         foreach($request->list as $s)
         {
             $susc = $s['id'];
-            $up=suscripciones::where('id',$susc)->first();
+            $up=suscripciones::find($susc);
             $up->prox_cob=$s['cobro'];
             $date = Carbon::parse($s['cobro'])->format('Y-m-d');
             if($up->fec_fin == $date ){
                 $up->sta = 'Finalizada';
             }
             $up->save();
+            
+            $historial = HistorialBillingMasive::where('suscripcion_id',$s['id'])
+                            ->where('status','En Proceso')
+                            ->first();
+                            
+            $status = $s['cantidad esperada'] == $s['cantidad real'] ? 'Finalizada' : 'Error';
+            $historial->expected_quantity = $s['cantidad esperada'];
+            $historial->real_quantity = $s['cantidad real'];
+            $historial->status = $status;
+            $historial->save();
+            CheckHistorialBillingMasive::dispatch($s['id'], $s['cantidad esperada'], $s['cantidad real']);
         }
 
         return response()->json('Fechas editadas');

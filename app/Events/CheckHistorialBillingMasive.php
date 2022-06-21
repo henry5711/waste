@@ -15,17 +15,20 @@ class CheckHistorialBillingMasive implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $messaje;
+    protected $suscripcion;
+    protected $total_esperado;
+    protected $total_real;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($mensaje = '')
+    public function __construct($suscripcion, $total_esperado, $total_real)
     {
         Log::info('instanciando evento');
-        $this->messaje = $mensaje;
-        //
+        $this->suscripcion = $suscripcion;
+        $this->total_esperado = $total_esperado;
+        $this->total_real = $total_real;
     }
 
     /**

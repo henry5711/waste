@@ -110,4 +110,14 @@ class suscripciones extends CrudModel
     {
         return $this->hasMany(Branches::class,'suscripcion_id');
     }
+
+    /**
+     * Get all of the historialBillingMasive for the suscripciones
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function historialBillingMasive()
+    {
+        return $this->hasMany(HistorialBillingMasive::class, 'suscripcion_id');
+    }
 }
