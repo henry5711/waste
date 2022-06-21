@@ -240,7 +240,7 @@ class suscripcionesService extends CrudService
         ];
     }
 
-    private function cantidadFacturas($suscripciones, $prox = 'prox_cob'){
+    public function cantidadFacturas($suscripciones, $prox = 'prox_cob'){
         
         $total = 0;
 

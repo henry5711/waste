@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\CheckHistorialBillingMasive;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('historial-billing-masive',function(){
+    App\Events\CheckHistorialBillingMasive::dispatch('Hola');
+    //event(new CheckHistorialBillingMasive('asd'));
+    return 'api';
 });

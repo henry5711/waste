@@ -75,10 +75,8 @@ Route::get('buscar/cliente/suscripciones/{id_client}', [suscripcionesController:
 Route::get('numero/suscripcion', [suscripcionesController::class, 'generarNumero']);
 Route::get('filtro/cliente/suscripcion/{id_suscripcion}', [suscripcionesController::class, 'buscarClienteFiltro']);
 Route::get('filtro/suscripcion', [suscripcionesController::class, 'Filtro']);
-Route::get('historial-billing-masive',function(){
-    event(new CheckHistorialBillingMasive);
-    return ['api'];
-});
+
+
 
 
 Route::post('suscripciones/generate_operations', [suscripcionesController::class, 'generateOperations']);
