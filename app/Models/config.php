@@ -12,6 +12,7 @@ class config extends CrudModel
     protected $fillable = [
         'pt_ini_cfg',
         'pt_fin_cfg',
+        'url',
         'automatic_operations'
     ];
 }
