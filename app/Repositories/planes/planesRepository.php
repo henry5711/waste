@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: zippyttech
@@ -17,37 +18,20 @@ class planesRepository extends CrudRepository
     {
         parent::__construct($model);
     }
-     
+
     public function _index($request = null, $user = null)
     {
-        $pl=planes::all();
-        foreach ($pl as $key ) {
-            $f=json_decode($key->condi);
-            $key->condi=$f;
-          }
-          return $pl;
+        $planes = planes::with('accesos')->filtro($request)->get();
+
+        return $planes;
     }
 
     public function _show($id)
     {
-        
-        $pl=planes::where('id',$id)->get();
+        $plan = planes::find($id);
 
-        if(count($pl)>0)
-        {
-            foreach ($pl as $key ) {
-                $f=json_decode($key->condi);
-                $key->condi=$f;
-                $key->icon = ($key->icon != null) ? env('APP_URL').$key->icon : null ;
-              }
-    
-              return $pl[0];
-        }
-
-        else
-        {
-            return parent::_show($id);
-        }
-       
+        $plan['icon'] = $plan->icon != null && $plan->icon != '' ? env('APP_URL') . $plan->icon : null;
+        $plan->load('accesos');
+        return $plan;
     }
 }
