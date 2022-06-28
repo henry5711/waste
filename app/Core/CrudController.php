@@ -48,7 +48,11 @@ class CrudController extends BaseController
 
     public function _store(Request $request)
     {
-        $validator = Validator::make($request->all(), array_merge($this->validateStore, $this->validateDefault), $this->messages);
+        $validator = Validator::make(
+            $request->all(),
+            array_merge($this->validateStore, $this->validateDefault),
+            $this->messages
+        );
         if ($validator->fails()) {
             return response()->json(["error" => true, "message" => $this->parseMessageBag($validator->getMessageBag())], 422);
         }

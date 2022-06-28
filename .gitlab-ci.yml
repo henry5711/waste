@@ -16,10 +16,16 @@ dev_build_job:
     - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.26;g" .env
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_ID=.*;PUSHER_APP_ID=1425147;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_KEY=.*;PUSHER_APP_KEY=daa7e0ace90136be76da;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_SECRET=.*;PUSHER_APP_SECRET=3ce5af0911143475afa4;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_CLUSTER=.*;PUSHER_APP_CLUSTER=us2;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=devrubick2waste.zippyttech.com;g" .env
     - echo "APP_URL=https://devrubick2waste.zippyttech.com" >> .env
     - echo "BILLING_API=http://devrubick2billing-api" >> .env
     - echo "CLIENT_API=http://devrubick2client-api" >> .env
+    - echo "DB_USERNAME_READ=devrubick2" >> .env
+    - echo "DB_PASSWORD_READ=123qwe123" >> .env
     - echo "QUEUE_DRIVER=database" >> .env
     - echo "QUEUE_CONNECTION=database" >> .env
     - docker build -t devrubick2waste-api .

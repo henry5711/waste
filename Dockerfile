@@ -29,8 +29,8 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 RUN cd /var/www/html && composer install
-
+RUN php artisan key:generate
 RUN chmod -R 777 storage
 RUN chmod -R 777 public
-EXPOSE 80
+EXPOSE 80 6001
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
