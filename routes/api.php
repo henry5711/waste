@@ -63,6 +63,7 @@ Route::delete('planes/{id}', [planesController::class, '_delete']);
  * Agregado por Marcos López
  */
 /** routes para suscripciones **/
+Route::get('suscripciones/historial-facturacion-masiva', HistorialBillingMasiveController::class);
 Route::post('suscripciones/facturar/activas', [suscripcionesController::class, 'facturar']);
 Route::get('mostrar/facturas/suscripciones', [suscripcionesController::class, 'mostrarFacturas']);
 Route::post('suscripciones/edit/proximo', [suscripcionesController::class, 'editarproxifecha']);
