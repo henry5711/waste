@@ -12,6 +12,7 @@ use App\Models\operation;
 use App\Repositories\operation\operationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /** @property operationRepository $repository */
 class operationService extends CrudService
@@ -32,7 +33,25 @@ class operationService extends CrudService
         return parent::_store($request);
     }
 
+    public function topFour(Request $request)
+    {
+        $top = DB::select(
+            DB::raw('
+            select * from (
+                select
+                    o.name_sucursal,
+                    o.ids,
+                    sum(o.peso) peso
+                    from operation o
+                    group by (name_sucursal,ids)
+            ) t
+            where t.peso is not null
+            order by t.peso desc
+            limit(4)')
+        );
 
-    
+        return $top;
+ 
+    }
     
 }

@@ -118,7 +118,7 @@ Route::get('operations/{id}', [operationController::class, '_show']);
 Route::post('operations', [operationController::class, '_store']);
 Route::put('operations/{id}', [operationController::class, '_update']);
 Route::delete('operations/{id}', [operationController::class, '_delete']);
-
+Route::get('operation/top-four',[operationController::class, 'topFour']);
 /** routes para rutas **/
 
 Route::get('rutas/filtro', [rutasController::class, 'filtro']);

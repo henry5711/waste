@@ -43,6 +43,6 @@ class CheckHistorialBillingMasive implements ShouldBroadcast
         Log::info('canal');
         //return ['home'];
         //return new Channel('home');
-        return new PrivateChannel('historial-suscripcion.'.$this->suscripcion->id);
+        return new PrivateChannel('historial-suscripcion.'.$this->suscripcion);
     }
 }
