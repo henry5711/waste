@@ -40,7 +40,7 @@ dev_deploy_job:
   script:
     - docker stop devrubick2waste-api || true
     - docker rm devrubick2waste-api || true
-    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 9022:80 -p 6001:6001 -v devrubick2waste-api-images:/var/www/html/public/images -v devrubick2waste-api-images:/var/www/html/public/logos devrubick2waste-api
+    - docker run -d --restart always --name devrubick2waste-api --network devapp -p 9022:80 -v devrubick2waste-api-images:/var/www/html/public/images -v devrubick2waste-api-images:/var/www/html/public/logos devrubick2waste-api
     - docker exec devrubick2waste-api php artisan migrate
   when: on_success
   tags:

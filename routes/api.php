@@ -9,6 +9,7 @@ use App\Http\Controllers\prodetalle\prodetalleController;
 use App\Http\Controllers\rutas\rutasController;
 use App\Http\Controllers\suscripciones\HistorialBillingMasiveController;
 use App\Http\Controllers\suscripciones\suscripcionesController;
+use App\Models\suscripciones;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::get('/', function () {
         "php"    =>  phpversion()
     ]);
 });
+
+
 
 /*
      *routes with report prefix
@@ -75,7 +78,7 @@ Route::get('buscar/cliente/suscripciones/{id_client}', [suscripcionesController:
 Route::get('numero/suscripcion', [suscripcionesController::class, 'generarNumero']);
 Route::get('filtro/cliente/suscripcion/{id_suscripcion}', [suscripcionesController::class, 'buscarClienteFiltro']);
 Route::get('filtro/suscripcion', [suscripcionesController::class, 'Filtro']);
-
+Route::get('/suscripcion/socket/{id}',[suscripcionesController::class, 'SuscripcionMasiveCounter']);
 
 
 
