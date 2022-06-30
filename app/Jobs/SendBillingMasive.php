@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Http\Mesh\BillingService;
 use App\Models\HistorialBillingMasive;
 use App\Models\suscripciones;
+use App\Services\suscripciones\suscripcionesService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,15 +20,17 @@ class SendBillingMasive implements ShouldQueue
 
     protected $suscripciones;
     protected $json;
+    protected $service;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $suscripciones, $json)
+    public function __construct( $suscripciones, $json, suscripcionesService $service)
     {
         $this->suscripciones = $suscripciones;
         $this->json = $json;
+        $this->service = $service;
     }
 
     /**
