@@ -410,13 +410,17 @@ class suscripcionesController extends CrudController
 
     public function SuscripcionMasiveCounter($id, Request $request){
         $suscripcion = suscripciones::find($id);
-        $historial = HistorialBillingMasive::where('suscripcion_id',$id)->first();
-        $historial->real_quantity += 1;
-        $historial->save();
-        $historial->fresh();
+        if($suscripcion != '' && $suscripcion != null){
+            $historial = HistorialBillingMasive::where('suscripcion_id',$id)->first();
+            $historial->real_quantity += 1;
+            $historial->save();
+            $historial->fresh();
+    
+            CheckHistorialBillingMasive::dispatch($suscripcion->id,$historial->expected_quantity, $historial->real_quantity);
+            return response()->json(['ok']);
+        }
 
-        CheckHistorialBillingMasive::dispatch($suscripcion,$historial->expected_quantity, $historial->real_quantity);
-        return response()->json(['ok']);
+        return response()->json(['error'=>true],422);
     }
 
 }
