@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class suscripciones extends CrudModel
@@ -74,7 +75,12 @@ class suscripciones extends CrudModel
      */
     public function scopeOperations($query){
         $query  ->where( 'sta','Activa')
-                ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay());
+                ->whereTime( 'prox_operation','<',Carbon::now()->endOfDay())
+                ->whereHas('clientes',function(Builder $q2){
+                    $q2 ->whereNotNull('coordenada_sucursal')
+                        ->where('coordenada_sucursal','!=','');
+                })
+                ;
     }
 
     /**

@@ -24,7 +24,7 @@ class SendBillingMasive implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(array $suscripciones,array $json)
+    public function __construct( $suscripciones, $json)
     {
         $this->suscripciones = $suscripciones;
         $this->json = $json;
