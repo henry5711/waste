@@ -518,6 +518,13 @@ class operationController extends CrudController
         $archivo->getActiveSheet()->getColumnDimension('J')->setWidth(220, 'px');
         $archivo->getActiveSheet()->getColumnDimension('K')->setWidth(220, 'px');
         $archivo->getActiveSheet()->getColumnDimension('L')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('M')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('N')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('O')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('P')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('Q')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('X')->setWidth(220, 'px');
+        $archivo->getActiveSheet()->getColumnDimension('Z')->setWidth(220, 'px');
 
 
         //AQUI CENTRO LOS TITULOS
@@ -558,9 +565,13 @@ class operationController extends CrudController
             $i = 0;
             foreach ($extra as $act) {
                 if ($act->ids == $value->ids) {
-
-                    $hoja->setCellValue($columns[$i] . $fila, $act->peso . ' - ' . $act->fecha);
-                    $i++;
+                    if ($act->peso > 0) {
+                        $hoja->setCellValue($columns[$i] . $fila, $act->peso . ' - ' . $act->fecha);
+                        $i++;
+                    } else {
+                        $hoja->setCellValue($columns[$i] . $fila, '0  - ' . $act->fecha);
+                        $i++;
+                    }
                 }
             }
 
