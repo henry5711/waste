@@ -32,5 +32,5 @@ RUN cd /var/www/html && composer install
 RUN php artisan key:generate
 RUN chmod -R 777 storage
 RUN chmod -R 777 public
-EXPOSE 80 6001
+EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

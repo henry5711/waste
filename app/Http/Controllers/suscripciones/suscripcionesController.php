@@ -186,7 +186,7 @@ class suscripcionesController extends CrudController
             $historial->real_quantity = $s['cantidad real'];
             $historial->status = $status;
             $historial->save();
-            CheckHistorialBillingMasive::dispatch($s['id'], $s['cantidad esperada'], $s['cantidad real']);
+            CheckHistorialBillingMasive::dispatch($s['id'], $s['cantidad esperada'], $s['cantidad real'], $status);
         }
 
         return response()->json('Fechas editadas');
@@ -404,6 +404,17 @@ class suscripcionesController extends CrudController
         }
         return $this->service->detailSuscriptionForOperation($request->suscripcion);
 
+    }
+
+    public function SuscripcionMasiveCounter($id, Request $request){
+        $suscripcion = suscripciones::find($id);
+        $historial = HistorialBillingMasive::where('suscripcion_id',$id)->first();
+        $historial->real_quantity += 1;
+        $historial->save();
+        $historial->fresh();
+
+        CheckHistorialBillingMasive::dispatch($suscripcion,$historial->expected_quantity, $historial->real_quantity);
+        return response()->json(['ok']);
     }
 
 }

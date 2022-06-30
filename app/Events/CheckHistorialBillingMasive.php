@@ -15,20 +15,22 @@ class CheckHistorialBillingMasive implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $suscripcion;
-    protected $total_esperado;
-    protected $total_real;
+    public $suscripcion;
+    public $total_esperado;
+    public $total_real;
+    public $status;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($suscripcion, $total_esperado, $total_real)
+    public function __construct($suscripcion, $total_esperado, $total_real, $status = 'En Proceso')
     {
         Log::info('instanciando evento');
         $this->suscripcion = $suscripcion;
         $this->total_esperado = $total_esperado;
         $this->total_real = $total_real;
+        $this->status = $status;
     }
 
     /**
@@ -39,6 +41,8 @@ class CheckHistorialBillingMasive implements ShouldBroadcast
     public function broadcastOn()
     {
         Log::info('canal');
-        return new Channel('home');
+        //return ['home'];
+        //return new Channel('home');
+        return new PrivateChannel('historial-suscripcion.'.$this->suscripcion->id);
     }
 }
