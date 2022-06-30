@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
@@ -166,6 +167,7 @@ class suscripcionesController extends CrudController
     public function editarproxifecha(Request $request)
     {
 
+        Log::info('llego el json: ', $request->all());
         foreach($request->list as $s)
         {
             $susc = $s['id'];
