@@ -43,6 +43,7 @@ class operationService extends CrudService
                     o.ids,
                     sum(o.peso) peso
                     from operation o
+                    where "usu/cli" = \'cliente\'
                     group by (name_sucursal,ids)
             ) t
             where t.peso is not null
