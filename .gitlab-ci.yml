@@ -86,6 +86,7 @@ qa_build_job:
     - echo "APP_URL=https://qarubick2waste.zippyttech.com" >> .env
     - echo "BILLING_API=http://qarubick2billing-api" >> .env
     - echo "INVENTORY_API=http://qarubick2inventory-api" >> .env
+    - echo "CLIENT_API=http://qarubick2client-api" >> .env
     - echo "URL_API_ACCOUNT=https://qarubick2account.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://qarubick2client.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://qarubick2notifications.zippyttech.com" >> .env 
@@ -147,6 +148,7 @@ prod_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=reservas.berygo.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://rubick2client-api" >> .env
     - echo "URL_API_ACCOUNT=https://rubick2account.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://rubick2client.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://rubick2notifications.zippyttech.com" >> .env 
@@ -198,6 +200,7 @@ berygo_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-berygo.zippyttech.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://client-api" >> .env
     - echo "URL_API_ACCOUNT=https://account-berygo.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://client-berygo.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications-berygo.zippyttech.com" >> .env 
@@ -237,6 +240,7 @@ cdg_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-cdg.zippyttech.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://client-api" >> .env
     - echo "URL_API_ACCOUNT=https://account-cdg.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://client-cdg.zippyttech.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications-cdg.zippyttech.com" >> .env 
@@ -276,6 +280,7 @@ aguaseo_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste-aguaseo.zippyttech.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://aguaseo-client-api" >> .env
     - echo "BILLING_API=http://aguaseo-billing-api" >> .env
     - echo "URL_API_ACCOUNT=https://account-aguaseo.zippyttech.com" >> .env 
     - echo "URL_API_CLIENT=https://client-aguaseo.zippyttech.com" >> .env 
@@ -316,6 +321,7 @@ bukewallet_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste.bukewallet.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://bukewallet-client-api" >> .env
     - echo "URL_API_ACCOUNT=https://account.bukewallet.com" >> .env 
     - echo "URL_API_CLIENT=https://client.bukewallet.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications.bukewallet.com" >> .env 
@@ -355,6 +361,7 @@ admiral_build_job:
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=0;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=waste.admiral.com;g" .env
     - echo "#API_URL:" >> .env
+    - echo "CLIENT_API=http://admiral-client-api" >> .env
     - echo "URL_API_ACCOUNT=https://account.admiral.com" >> .env 
     - echo "URL_API_CLIENT=https://client.admiral.com" >> .env 
     - echo "URL_API_NOTIFICATION=https://notifications.admiral.com" >> .env 
