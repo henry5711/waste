@@ -44,7 +44,33 @@ class ClientService extends ServicesMesh
 
             return [];
         }
+    }
 
+    public function getFilterBranches($query): array
+    {
+        try {
+            $endpoint = '/api/filtro/branches';
+            
+            $option = [
+                'header'    => $this->getHeaders($this->getRequest()),
+                'json'      => $query
+            ];
+            $response = $this->client->get($endpoint, $option);
 
+            if ($response->getStatusCode() !== 200){
+                Log::critical($response->getStatusCode() . ":   " .  $response->getBody());
+                return [];
+            }
+
+            $client = json_decode($response->getBody(),true);
+
+            return $client['list'];
+
+        }catch (Exception $exception){
+            Log::critical($exception->getMessage());
+            Log::critical($exception->getFile());
+
+            return [];
+        }
     }
 }

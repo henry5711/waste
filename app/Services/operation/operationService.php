@@ -8,6 +8,7 @@ namespace App\Services\operation;
 
 
 use App\Core\CrudService;
+use App\Http\Mesh\ClientService;
 use App\Models\operation;
 use App\Repositories\operation\operationRepository;
 use Carbon\Carbon;
@@ -50,7 +51,24 @@ class operationService extends CrudService
             order by t.peso desc
             limit(4)')
         );
+        
+        $ids = [];
+        foreach($top as $item){
+            $ids[] = $item->ids;
+        }
+        
+        $query = [
+            'ids' => $ids
+        ];
 
+        $branches = collect((new ClientService)->getFilterBranches($query));
+
+        foreach($top as $item){
+            
+            $client = $branches->where('id',$item->ids)->first();
+            $item->client = $client != null ? $client['client'] : null;
+        }
+        
         return $top;
  
     }
