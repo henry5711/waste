@@ -40,7 +40,7 @@ Route::get('/', function () {
 });
 
 Route::get('prueba-socket',function(){
-    $id_suscripcion = suscripciones::select('id')->orderBy('id','DESC')->limit(1);
+    $id_suscripcion = suscripciones::select('id')->orderBy('id','DESC')->first()['id'];
     $number         = rand(0,10);
     $number2        = rand(0,10);
     $total_esperado = $number >= $number2 ? $number : $number2;
