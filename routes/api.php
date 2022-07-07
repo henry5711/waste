@@ -39,6 +39,29 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('prueba-socket',function(){
+    $id_suscripcion = suscripciones::select('id')->orderBy('id','DESC')->limit(1);
+    $number         = rand(0,10);
+    $number2        = rand(0,10);
+    $total_esperado = $number >= $number2 ? $number : $number2;
+    $total_real     = $number <= $number2 ? $number : $number2;
+    $number3        = rand(1,3);
+    switch ($number3) {
+        case 1:
+            $status = 'En Proceso';
+            break;
+        case 2:
+            $status = 'Finalizada';
+            break;
+        case 3:
+            $status = 'Error';
+            break;
+    }
+
+    CheckHistorialBillingMasive::dispatch($id_suscripcion,$total_esperado,$total_real, $status);
+    return response()->json(['socket socket']);
+});
+
 
 
 /*
@@ -120,6 +143,7 @@ Route::post('operations', [operationController::class, '_store']);
 Route::put('operations/{id}', [operationController::class, '_update']);
 Route::delete('operations/{id}', [operationController::class, '_delete']);
 Route::get('operation/top-four',[operationController::class, 'topFour']);
+Route::get('operation/Client-Weight-Total',[operation::class, 'ClientWeightTotal']);
 /** routes para rutas **/
 
 Route::get('rutas/filtro', [rutasController::class, 'filtro']);

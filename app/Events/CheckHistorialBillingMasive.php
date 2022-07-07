@@ -24,10 +24,10 @@ class CheckHistorialBillingMasive implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($suscripcion, $total_esperado, $total_real, $status = 'En Proceso')
+    public function __construct($id_suscripcion, $total_esperado, $total_real, $status = 'En Proceso')
     {
         Log::info('instanciando evento');
-        $this->suscripcion = $suscripcion;
+        $this->suscripcion = $id_suscripcion;
         $this->total_esperado = $total_esperado;
         $this->total_real = $total_real;
         $this->status = $status;
