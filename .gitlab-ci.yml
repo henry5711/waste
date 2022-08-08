@@ -13,7 +13,7 @@ dev_build_job:
     - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=devrubick2waste;g" .env
     - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=devrubick2waste;g" .env
     - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$DEV_DB_PASS;g" .env
-    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.26;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=172.17.0.2;g" .env
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*PUSHER_APP_ID=.*;PUSHER_APP_ID=1425147;g" .env
