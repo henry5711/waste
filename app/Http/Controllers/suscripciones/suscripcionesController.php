@@ -159,8 +159,11 @@ class suscripcionesController extends CrudController
         ];
        
         SendBillingMasive::dispatch($request->suscripciones, $json);
-        
-        return response()->json('las suscripciones estan siendo procesadas',201);
+        $json = [
+            'status' => 201,
+            'message' =>'las suscripciones estan siendo procesadas'
+        ];
+        return response()->json($json,201);
     }
 
 
