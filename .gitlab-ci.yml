@@ -66,7 +66,7 @@ qa_backup_job:
   script:
     - docker image tag qarubick2waste-api:latest qarubick2waste-api:prev || true
   tags:
-    - qarubick2
+    - ifx1
   only :
     - qa
     
@@ -79,7 +79,7 @@ qa_build_job:
     - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=qarubick2waste;g" .env
     - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=qarubick2waste;g" .env
     - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$QA_DB_PASS;g" .env
-    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.25;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.12;g" .env
     - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
     - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
     - sed -i -e "s;^\s*APP_URL=.*;APP_URL=qarubick2waste.zippyttech.com;g" .env
@@ -95,7 +95,7 @@ qa_build_job:
     - docker build -t qarubick2waste-api .
   when: on_success
   tags:
-    - qarubick2
+    - ifx1
   only :
     - qa
 
@@ -104,11 +104,11 @@ qa_deploy_job:
   script:
     - docker stop qarubick2waste-api || true
     - docker rm qarubick2waste-api || true
-    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 8119:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
+    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 9093:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
     - docker exec qarubick2waste-api php artisan migrate
   when: on_success
   tags:
-    - qarubick2
+    - ifx1
   only:
     - qa
 
@@ -118,10 +118,10 @@ qa_rollback_job:
     - docker stop qarubick2waste-api || true
     - docker rm qarubick2waste-api || true
     - docker image tag qarubick2waste-api:prev qarubick2waste-api:latest || true
-    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 8119:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
+    - docker run -d --restart always --name qarubick2waste-api --network qaapp -p 9093:80 -v qarubick2waste-api-images:/var/www/html/public/images -v qarubick2waste-api-logos:/var/www/html/public/logos qarubick2waste-api
   when: manual
   tags:
-    - qarubick2
+    - ifx1
   only:
     - qa
 
