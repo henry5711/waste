@@ -53,6 +53,8 @@ class Kernel extends ConsoleKernel
 
             return (count($job) >= 15) ? true : false;
         })->withoutOverlapping();
+
+        $schedule->exec("bash /var/www/html/nginx/AccessLog.sh")->daily();
     }
 
     /**

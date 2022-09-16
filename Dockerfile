@@ -27,7 +27,8 @@ RUN mkdir -p /var/www/html
 
 WORKDIR /var/www/html
 
-COPY ["composer.json","storage","public", "./"] && [".env.example",".env"]
+COPY ["composer.json","storage","public","nginx", "./"] && [".env.example",".env"]
+RUN ["chmod","755","./nginx/AccessLog.sh"]
 RUN composer install
 COPY [".", "./"]
 RUN ["chmod","-R","777","storage"] && ["chmod","-R","777","public"]
