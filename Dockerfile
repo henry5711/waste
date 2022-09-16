@@ -27,10 +27,10 @@ RUN mkdir -p /var/www/html
 
 WORKDIR /var/www/html
 
-COPY ["composer.json","storage","public","nginx", "./"] && [".env.example",".env"]
-RUN ["chmod","755","./nginx/AccessLog.sh"]
+COPY ["composer.json","./"] && ["storage","./storage"] && ["public","./public"] && ["nginx", "./ngix"] && [".env.example",".env"]
 RUN composer install
 COPY [".", "./"]
+RUN ["chmod","755","./nginx/AccessLog.sh"]
 RUN ["chmod","-R","777","storage"] && ["chmod","-R","777","public"]
 RUN php artisan package:discover --ansi \
     && php artisan vendor:publish --tag=laravel-assets --ansi --force
