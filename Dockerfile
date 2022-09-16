@@ -26,11 +26,12 @@ ENV APP_LOG errorlog
 RUN mkdir -p /var/www/html
 
 WORKDIR /var/www/html
-COPY . /var/www/html
 
-RUN cd /var/www/html && composer install
-RUN php artisan key:generate
-RUN chmod -R 777 storage
-RUN chmod -R 777 public
+COPY ["composer.json","storage","public", "./"] && [".env.example",".env"]
+RUN composer install
+COPY [".", "./"]
+RUN ["chmod","-R","777","storage"] && ["chmod","-R","777","public"]
+RUN php artisan package:discover --ansi \
+    && php artisan vendor:publish --tag=laravel-assets --ansi --force
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
