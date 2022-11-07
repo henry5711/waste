@@ -386,3 +386,47 @@ admiral_deploy_job:
     - admiral
   only:
     - admiral
+
+stable_build_job:
+  stage: build
+  script:
+    - cp .env.example .env
+    - sed -i -e "s;^\s*SECRET_KEY=.*;SECRET_KEY=$SECRET_KEY;g" .env
+    - sed -i -e "s;^\s*DB_CONNECTION=.*;DB_CONNECTION=pgsql;g" .env
+    - sed -i -e "s;^\s*DB_DATABASE=.*;DB_DATABASE=stablewaste;g" .env
+    - sed -i -e "s;^\s*DB_USERNAME=.*;DB_USERNAME=stablewaste;g" .env
+    - sed -i -e "s;^\s*DB_PASSWORD=.*;DB_PASSWORD=$STABLE_DB_PASS;g" .env
+    - sed -i -e "s;^\s*DB_HOST=.*;DB_HOST=10.0.0.81;g" .env
+    - sed -i -e "s;^\s*DB_PORT=.*;DB_PORT=5432;g" .env
+    - sed -i -e "s;^\s*DEBUG=.*;DEBUG=1;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_ID=.*;PUSHER_APP_ID=1425147;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_KEY=.*;PUSHER_APP_KEY=daa7e0ace90136be76da;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_SECRET=.*;PUSHER_APP_SECRET=3ce5af0911143475afa4;g" .env
+    - sed -i -e "s;^\s*PUSHER_APP_CLUSTER=.*;PUSHER_APP_CLUSTER=us2;g" .env
+    - sed -i -e "s;^\s*APP_URL=.*;APP_URL=stablewaste.zippyttech.com;g" .env
+    - echo "APP_URL=https://stablewaste.zippyttech.com" >> .env
+    - echo "BILLING_API=http://stablebilling-api" >> .env
+    - echo "CLIENT_API=http://stableclient-api" >> .env
+    - echo "DB_USERNAME_READ=rubick2" >> .env
+    - echo "DB_PASSWORD_READ=123qwe123" >> .env
+    - echo "QUEUE_DRIVER=database" >> .env
+    - echo "QUEUE_CONNECTION=database" >> .env
+    - docker build -t stablewaste-api .
+  when: on_success
+  tags:
+    - stable
+  only :
+    - stable
+
+stable_deploy_job:
+  stage: deploy
+  script:
+    - docker stop stablewaste-api || true
+    - docker rm stablewaste-api || true
+    - docker run -d --restart always --name stablewaste-api --network stable -p 9022:80 -v stablewaste-api-images:/var/www/html/public/images -v stablewaste-api-images:/var/www/html/public/logos stablewaste-api
+    - docker exec stablewaste-api php artisan migrate
+  when: on_success
+  tags:
+    - stable
+  only:
+    - stable
